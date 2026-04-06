@@ -1,0 +1,16 @@
+# video-producer 依赖说明
+
+## 系统依赖（需提前安装）
+- ffmpeg: https://ffmpeg.org/download.html
+- node.js: v24+ (https://nodejs.org)
+- lark-cli: npm install -g @larksuite/cli
+
+## Python 依赖
+# 当前无第三方 Python 库依赖（仅标准库）
+# 如需 YAML 支持可安装：pip install pyyaml
+
+## 配置
+编辑 config.json 填入 API keys：
+- minimax.api_key, minimax.group_id
+- stepfun.api_key
+- tencent.secret_id, tencent.secret_key (可选)

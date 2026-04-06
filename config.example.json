@@ -1,0 +1,28 @@
+{
+  "minimax": {
+    "api_key": "YOUR_MINIMAX_API_KEY",
+    "group_id": "YOUR_GROUP_ID",
+    "model": "speech-2.8-hd",
+    "voice_id": "female-tianmei"
+  },
+  "tencent": {
+    "secret_id": "YOUR_TENCENT_SECRET_ID",
+    "secret_key": "YOUR_TENCENT_SECRET_KEY",
+    "region": "ap-shanghai"
+  },
+  "stepfun": {
+    "api_key": "YOUR_STEPFUN_API_KEY"
+  },
+  "paths": {
+    "ffmpeg": "/usr/local/bin/ffmpeg",
+    "lark_cli": "/Users/teeclaw/.nvm/versions/node/v24.14.1/lib/node_modules/@larksuite/cli/bin/lark-cli",
+    "node": "/Users/teeclaw/.local/node-stable/node-v24.4.1-darwin-arm64/bin/node"
+  },
+  "tts": {
+    "provider": "minimax"
+  },
+  "llm": {
+    "provider": "stepfun",
+    "model": "step-1-8k"
+  }
+}
