@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>{{TITLE}}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1920px; height: 1080px;
+    background: #fafafa;
+    font-family: 'Poppins', 'PingFang SC', sans-serif;
+    color: #2d2d2d;
+    padding: 80px 120px;
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .shape-1 { position: absolute; width: 480px; height: 480px; background: #ffd6e0; border-radius: 50%; top: -140px; right: -60px; opacity: 0.65; }
+  .shape-2 { position: absolute; width: 360px; height: 360px; background: #d4f7f2; border-radius: 50%; bottom: -80px; left: -40px; opacity: 0.60; }
+  .shape-3 { position: absolute; width: 160px; height: 160px; background: #fff3b0; border-radius: 50%; top: 160px; right: 300px; opacity: 0.55; }
+  .eyebrow {
+    display: inline-block;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.20em;
+    color: #cc7a9a; text-transform: uppercase;
+    background: rgba(255,214,224,0.55);
+    border-radius: 100px; padding: 6px 20px;
+    margin-bottom: 28px; position: relative; z-index: 2;
+  }
+  .title {
+    font-size: 72px; font-weight: 800; line-height: 1.05;
+    letter-spacing: -0.03em; color: #2d2d2d;
+    margin-bottom: 48px; max-width: 1100px;
+    position: relative; z-index: 2;
+  }
+  .body-text {
+    font-size: 23px; font-weight: 400; line-height: 1.75;
+    color: #555; max-width: 980px; margin-bottom: 24px;
+    position: relative; z-index: 2;
+  }
+  .secondary {
+    font-size: 20px; font-weight: 300; line-height: 1.7;
+    color: #999; max-width: 860px;
+    position: relative; z-index: 2;
+  }
+  .page-num { position: absolute; bottom: 48px; right: 80px; font-size: 13px; color: #ccc; font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="shape-1"></div>
+<div class="shape-2"></div>
+<div class="shape-3"></div>
+<div class="eyebrow">{{EYEBROW}}</div>
+<h1 class="title">{{TITLE}}</h1>
+<p class="body-text">{{BODY}}</p>
+<p class="secondary">{{SECONDARY}}</p>
+<span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
+</body>
+</html>

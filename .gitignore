@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+
+# Environment (contains secrets)
+.env
+
+# Generated output
+*.mp4
+*.mp3
+*.wav
+*.aiff
+output/
+project/
+
+# Test artifacts
+test_output/
+test_full/
+test_step0/
+test_step1/
+test_project/
+test_themes/
+test_e2e/
+debug_html/
+preview/
+preview_*.html
+test_icon_fix.html
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*

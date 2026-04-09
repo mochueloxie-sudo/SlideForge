@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>{{TITLE}}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1920px; height: 1080px;
+    background: linear-gradient(90deg, #ffd6ec 50%, #d6f4ff 50%);
+    font-family: 'Nunito', 'PingFang SC', sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .blob-1 {
+    position: absolute; width: 500px; height: 500px;
+    background: #ffb3c1; border-radius: 50%;
+    top: -160px; left: -100px; opacity: 0.35;
+  }
+  .blob-2 {
+    position: absolute; width: 400px; height: 400px;
+    background: #87ceeb; border-radius: 50%;
+    bottom: -100px; right: -80px; opacity: 0.35;
+  }
+  .blob-3 {
+    position: absolute; width: 220px; height: 220px;
+    background: #ffffff; border-radius: 50%;
+    top: 80px; right: 400px; opacity: 0.5;
+  }
+  .card {
+    position: relative; z-index: 2;
+    background: #ffffff;
+    border-radius: 32px;
+    padding: 80px 100px;
+    width: 1100px;
+    text-align: center;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+  }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 13px; font-weight: 600; letter-spacing: 0.18em;
+    color: #cc6b8e; text-transform: uppercase; margin-bottom: 36px;
+  }
+  .eyebrow-dot {
+    width: 8px; height: 8px; background: #ffb3c1; border-radius: 50%;
+  }
+  .title {
+    font-size: 88px; font-weight: 800; line-height: 1.05;
+    letter-spacing: -0.03em; color: #1a1a1a; margin-bottom: 32px;
+  }
+  .divider {
+    width: 80px; height: 4px;
+    background: linear-gradient(90deg, #ffb3c1, #87ceeb);
+    border-radius: 2px; margin: 0 auto 32px;
+  }
+  .subtitle {
+    font-size: 22px; font-weight: 300; line-height: 1.65;
+    color: #888; max-width: 640px; margin: 0 auto;
+  }
+  .page-num {
+    position: absolute; bottom: 32px; right: 52px;
+    font-size: 13px; color: #bbb; font-weight: 500;
+  }
+</style>
+</head>
+<body>
+<div class="blob-1"></div>
+<div class="blob-2"></div>
+<div class="blob-3"></div>
+<div class="card">
+  <div class="eyebrow"><span class="eyebrow-dot"></span>{{EYEBROW}}</div>
+  <h1 class="title">{{TITLE}}</h1>
+  <div class="divider"></div>
+  <p class="subtitle">{{SUBTITLE}}</p>
+</div>
+<span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>Neon Cyber — Panel</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { width: 1920px; height: 1080px; overflow: hidden; }
+
+  body {
+    width: 1920px; height: 1080px;
+    background: radial-gradient(circle at 20% 15%, rgba(0,245,212,0.10) 0%, rgba(10,10,18,0) 28%),
+                linear-gradient(180deg, #0f0f14 0%, #14141f 55%, #0a0a10 100%);
+    font-family: 'Space Grotesk', 'PingFang SC', sans-serif;
+    color: #f0f0f8;
+    padding: 80px 120px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .label {
+    font-size: 13px; font-weight: 500; letter-spacing: 0.15em;
+    color: #00f5d4; text-transform: uppercase; margin-bottom: 20px;
+    flex-shrink: 0;
+  }
+  .title {
+    font-size: 58px; font-weight: 700; line-height: 1.08;
+    letter-spacing: -0.03em; color: #f0f0f8; margin-bottom: 44px;
+    flex-shrink: 0;
+  }
+  .panel {
+    background: rgba(15,15,20,0.75);
+    border: 1px solid rgba(139,92,246,0.20);
+    border-top: 1px solid rgba(0,245,212,0.12);
+    border-bottom: 1px solid rgba(0,0,0,0.35);
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.45), 0 4px 12px rgba(0,0,0,0.35),
+                inset 0 1px 0 rgba(0,245,212,0.10), inset 0 1px 0 rgba(200,220,255,0.08);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 48px 60px;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 0;
+  }
+  .panel-eyebrow {
+    font-size: 13px; color: #00f5d4; font-weight: 500;
+    letter-spacing: 0.1em; margin-bottom: 20px;
+  }
+  .panel-eyebrow:empty { display: none; }
+  .panel-title {
+    font-size: 28px; font-weight: 700; color: #f0f0f8;
+    line-height: 1.2; margin-bottom: 24px;
+  }
+  .panel-title:empty { display: none; margin-bottom: 0; }
+  .kp-list { list-style: none; display: flex; flex-direction: column; flex: 1; }
+  .kp-item {
+    display: flex; align-items: center; gap: 20px;
+    font-size: {{KP_FONT_SIZE}}px; line-height: 1.45; color: #b0b0c8;
+    flex: 1;
+    border-bottom: 1px solid rgba(139,92,246,0.12);
+  }
+  .kp-item:last-child { border-bottom: none; }
+  .kp-arrow {
+    flex-shrink: 0; width: {{KP_DOT_SIZE}}px; height: {{KP_DOT_SIZE}}px;
+    background: #00f5d4; border-radius: 50%;
+    box-shadow: 0 0 12px rgba(0,245,212,0.9);
+  }
+  .hairline {
+    position: absolute; bottom: 80px; left: 120px; right: 120px;
+    height: 1px; background: rgba(139,92,246,0.35);
+  }
+  .page-num {
+    position: absolute; bottom: 56px; right: 120px;
+    font-size: 13px; color: rgba(154,167,189,0.6);
+  }
+
+  /* ── layout hints ─────────────────────────────────────────────────────── */
+  /* grid-3: 3列水平网格 */
+  body.layout-grid-3 .kp-list {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; flex: unset;
+  }
+  body.layout-grid-3 .kp-item {
+    flex-direction: column; align-items: flex-start; gap: 14px; padding: 28px 28px;
+    border-radius: 16px; border: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03);
+  }
+  /* sidebar-left: CSS grid 把 panel-title 放左列，kp-list 放右列 */
+  body.layout-sidebar-left .panel {
+    display: grid; grid-template-columns: 280px 1fr;
+    grid-template-rows: auto 1fr; gap: 0 56px;
+  }
+  body.layout-sidebar-left .panel-eyebrow { grid-column:1; grid-row:1; }
+  body.layout-sidebar-left .panel-title   { grid-column:1; grid-row:2; font-size:32px; align-self:start; margin-bottom:0; }
+  body.layout-sidebar-left .kp-list       { grid-column:2; grid-row:1/3; }
+  /* cards: 每条目有卡片边框 */
+  body.layout-cards .kp-list { gap: 16px; }
+  body.layout-cards .kp-item {
+    padding: 20px 28px; border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.08); border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.04);
+  }
+  /* numbered: 圆点替换为自动计数编号 */
+  body.layout-numbered .kp-list { counter-reset: kp-item; }
+  body.layout-numbered .kp-item { counter-increment: kp-item; }
+  body.layout-numbered .kp-arrow {
+    background: transparent !important; box-shadow: none !important;
+    border-radius: 0 !important; width: auto !important; height: auto !important;
+    font-size: 20px; font-weight: 800; letter-spacing: 0.05em; opacity: 0.7;
+  }
+  body.layout-numbered .kp-arrow::before { content: counter(kp-item, decimal-leading-zero); }
+
+  /* kp-item: title + optional desc (KEY_POINTS_HTML) */
+  .kp-content { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; }
+  .kp-title   { font-size: inherit; font-weight: 600; line-height: 1.3; }
+  .kp-desc    { font-size: 0.72em; opacity: 0.65; line-height: 1.55; }
+  body.layout-grid-3  .kp-item { align-items: flex-start; }
+  body.layout-cards   .kp-item { align-items: flex-start; }
+  </style>
+</head>
+<body>
+  <div class="label">{{EYEBROW}}</div>
+  <h1 class="title">{{TITLE}}</h1>
+  <div class="panel">
+    <div class="panel-eyebrow">{{PANEL_EYEBROW}}</div>
+    <div class="panel-title">{{PANEL_TITLE}}</div>
+    <ul class="kp-list">
+      {{KEY_POINTS_HTML}}
+    </ul>
+  </div>
+  <div class="hairline"></div>
+  <span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
+</body>
+</html>

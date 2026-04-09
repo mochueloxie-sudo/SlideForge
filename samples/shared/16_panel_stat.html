@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>{{TITLE}}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700;800&family=Manrope:wght@400;500;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { width: 1920px; height: 1080px; overflow: hidden; }
+  body {
+    width: 1920px; height: 1080px;
+    background: {{BODY_BG}};
+    font-family: '{{FONT}}', 'PingFang SC', sans-serif;
+    color: {{TEXT_PRIMARY}};
+    display: flex; align-items: stretch;
+    position: relative; overflow: hidden;
+  }
+  /* ── Left: panel with key points ───────────────────────── */
+  .left {
+    flex: 0 0 1100px;
+    padding: 80px 80px 80px 120px;
+    display: flex; flex-direction: column; justify-content: center;
+    border-right: 1px solid {{HAIRLINE_COLOR}};
+  }
+  .eyebrow {
+    font-size: 13px; font-weight: 800; letter-spacing: 0.2em;
+    color: {{EYEBROW_COLOR}}; text-transform: uppercase; margin-bottom: 18px;
+  }
+  .title {
+    font-size: 52px; font-weight: 800; line-height: 1.05;
+    color: {{TEXT_PRIMARY}}; margin-bottom: 40px;
+  }
+  .panel {
+    background: {{PANEL_BG}};
+    border: {{PANEL_BORDER}};
+    border-top: {{PANEL_BORDER_TOP}};
+    border-bottom: {{PANEL_BORDER_BOTTOM}};
+    box-shadow: {{PANEL_SHADOW}};
+    border-radius: {{PANEL_RADIUS}};
+    backdrop-filter: blur({{PANEL_BLUR}});
+    -webkit-backdrop-filter: blur({{PANEL_BLUR}});
+    padding: 32px 40px;
+    flex: 1;
+    display: flex; flex-direction: column; justify-content: space-around;
+  }
+  .kp-item {
+    display: flex; align-items: center; gap: 16px;
+    font-size: 22px; line-height: 1.5; color: {{TEXT_SECONDARY}};
+    padding: 10px 0;
+    border-bottom: 1px solid {{HAIRLINE_COLOR}};
+  }
+  .kp-item:last-child { border-bottom: none; }
+  .kp-dot {
+    flex-shrink: 0; width: 8px; height: 8px;
+    background: {{ACCENT}}; border-radius: 50%;
+  }
+  /* ── Right: stat callout ────────────────────────────────── */
+  .right {
+    flex: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 80px 60px;
+    gap: 0;
+  }
+  .stat-label-top {
+    font-size: 15px; font-weight: 600; letter-spacing: 0.18em;
+    color: {{EYEBROW_COLOR}}; text-transform: uppercase; margin-bottom: 24px;
+  }
+  .stat-value {
+    font-size: 140px; font-weight: 800; line-height: 0.9;
+    letter-spacing: -0.05em;
+    color: {{ACCENT_LIGHT}};
+  }
+  .stat-unit {
+    font-size: 48px; font-weight: 300;
+    color: {{TEXT_MUTED}}; margin-left: 8px; vertical-align: super;
+  }
+  .stat-name {
+    font-size: 24px; font-weight: 500; color: {{TEXT_SECONDARY}};
+    margin-top: 24px; text-align: center; line-height: 1.4;
+  }
+  .stat-caption {
+    font-size: 16px; color: {{TEXT_MUTED}};
+    margin-top: 12px; text-align: center; line-height: 1.5; max-width: 500px;
+  }
+  .stat-ring {
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    border: 1px solid {{HAIRLINE_COLOR}};
+    opacity: 0.3;
+    pointer-events: none;
+  }
+  /* ── Footer ─────────────────────────────────────────────── */
+  .hairline {
+    position: absolute; bottom: 80px; left: 120px; right: 120px;
+    height: 1px; background: {{HAIRLINE_COLOR}};
+  }
+  .page-num {
+    position: absolute; bottom: 56px; right: 120px;
+    font-size: 13px; color: {{TEXT_MUTED}};
+  }
+
+  /* ── layout hints ─────────────────────────────────────────── */
+  body.layout-sidebar-left .left { flex: 0 0 800px; }
+  body.layout-sidebar-left .title { font-size: 44px; }
+  body.layout-sidebar-left .stat-value { font-size: 160px; }
+  body.layout-wide-stat .left { flex: 0 0 900px; }
+  body.layout-wide-stat .stat-value { font-size: 180px; }
+</style>
+</head>
+<body>
+  <div class="left">
+    <div class="eyebrow">{{EYEBROW}}</div>
+    <h1 class="title">{{TITLE}}</h1>
+    <div class="panel">
+      <div class="kp-item"><span class="kp-dot"></span><span>{{KEY_POINT}}</span></div>
+    </div>
+  </div>
+  <div class="right">
+    <div class="stat-ring"></div>
+    <div class="stat-label-top">{{STAT_EYEBROW}}</div>
+    <div class="stat-value">{{STAT_VALUE}}<span class="stat-unit">{{STAT_UNIT}}</span></div>
+    <div class="stat-name">{{STAT_LABEL}}</div>
+    <div class="stat-caption">{{STAT_CAPTION}}</div>
+  </div>
+  <div class="hairline"></div>
+  <span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
+</body>
+</html>

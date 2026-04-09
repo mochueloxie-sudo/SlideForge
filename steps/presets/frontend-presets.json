@@ -1,0 +1,321 @@
+{
+  "presets": {
+    "bold-signal": {
+      "name": "Bold Signal",
+      "vibe": "Confident, bold, modern, high-impact",
+      "layoutHint": "center_focus",
+      "cssVars": {
+        "--bg-primary": "#1a1a1a",
+        "--bg-gradient": "linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%)",
+        "--card-bg": "#FF5722",
+        "--text-primary": "#ffffff",
+        "--text-on-card": "#1a1a1a"
+      },
+      "displayFont": "Archivo Black",
+      "bodyFont": "Space Grotesk",
+      "signatureElements": [
+        "colored-card",
+        "section-numbers",
+        "nav-breadcrumbs"
+      ],
+      "panel": {
+        "enabled": true,
+        "background": "rgba(35,35,35,0.80)",
+        "border": "1px solid rgba(255,87,34,0.25)",
+        "borderTop": "1px solid rgba(255,150,100,0.15)",
+        "borderBottom": "1px solid rgba(0,0,0,0.35)",
+        "shadow": "0 20px 60px rgba(0,0,0,0.45), 0 4px 12px rgba(0,0,0,0.25)",
+        "innerGlow": "inset 0 1px 0 rgba(255,150,100,0.12)",
+        "radius": "20px",
+        "blur": "8px"
+      }
+    },
+    "electric-studio": {
+      "name": "Electric Studio",
+      "vibe": "Bold, clean, professional, high contrast",
+      "layoutHint": "left_text_right_space",
+      "cssVars": {
+        "--bg-dark": "#0a0a0a",
+        "--bg-white": "#ffffff",
+        "--accent-blue": "#4361ee",
+        "--text-dark": "#0a0a0a",
+        "--text-light": "#ffffff"
+      },
+      "displayFont": "Manrope",
+      "bodyFont": "Manrope",
+      "signatureElements": [
+        "split-panel",
+        "accent-bar",
+        "quote-hero"
+      ],
+      "panel": {
+        "enabled": true,
+        "background": "rgba(20,20,20,0.82)",
+        "border": "1px solid rgba(67,97,238,0.30)",
+        "borderTop": "1px solid rgba(100,130,255,0.15)",
+        "borderBottom": "1px solid rgba(0,0,0,0.35)",
+        "shadow": "0 20px 60px rgba(0,0,0,0.45), 0 4px 12px rgba(67,97,238,0.15)",
+        "innerGlow": "inset 0 1px 0 rgba(100,130,255,0.12)",
+        "radius": "16px",
+        "blur": "8px"
+      }
+    },
+    "creative-voltage": {
+      "name": "Creative Voltage",
+      "vibe": "Bold, creative, energetic, retro-modern",
+      "layoutHint": "center_focus",
+      "cssVars": {
+        "--bg-primary": "#0066ff",
+        "--bg-dark": "#1a1a2e",
+        "--accent-neon": "#d4ff00",
+        "--text-light": "#ffffff"
+      },
+      "displayFont": "Syne",
+      "bodyFont": "Space Mono",
+      "signatureElements": [
+        "electric-split",
+        "halftone-texture",
+        "neon-badges"
+      ],
+      "panel": {
+        "enabled": true,
+        "background": "rgba(26,26,46,0.85)",
+        "border": "1px solid rgba(0,102,255,0.30)",
+        "borderTop": "1px solid rgba(100,150,255,0.15)",
+        "borderBottom": "1px solid rgba(0,0,0,0.35)",
+        "shadow": "0 20px 60px rgba(0,0,0,0.45), 0 4px 12px rgba(0,102,255,0.20)",
+        "innerGlow": "inset 0 1px 0 rgba(212,255,0,0.08)",
+        "radius": "16px",
+        "blur": "8px"
+      }
+    },
+    "dark-botanical": {
+      "name": "Dark Botanical",
+      "vibe": "Elegant, sophisticated, artistic, premium",
+      "layoutHint": "center_focus",
+      "cssVars": {
+        "--bg-primary": "#0f0f0f",
+        "--text-primary": "#e8e4df",
+        "--text-secondary": "#9a9590",
+        "--accent-warm": "#d4a574",
+        "--accent-pink": "#e8b4b8",
+        "--accent-gold": "#c9b896"
+      },
+      "displayFont": "Cormorant",
+      "bodyFont": "IBM Plex Sans",
+      "signatureElements": [
+        "soft-gradient-circles",
+        "warm-accents",
+        "vertical-lines",
+        "italic-typography"
+      ],
+      "panel": {
+        "enabled": true,
+        "background": "rgba(25,25,22,0.82)",
+        "border": "1px solid rgba(212,165,116,0.25)",
+        "borderTop": "1px solid rgba(232,180,168,0.12)",
+        "borderBottom": "1px solid rgba(0,0,0,0.35)",
+        "shadow": "0 20px 60px rgba(0,0,0,0.45), 0 4px 12px rgba(212,165,116,0.10)",
+        "innerGlow": "inset 0 1px 0 rgba(232,180,168,0.10)",
+        "radius": "20px",
+        "blur": "8px"
+      }
+    },
+    "notebook-tabs": {
+      "name": "Notebook Tabs",
+      "vibe": "Editorial, organized, elegant, tactile",
+      "layoutHint": "left_text_right_space",
+      "cssVars": {
+        "--bg-outer": "#2d2d2d",
+        "--bg-page": "#f8f6f1",
+        "--text-primary": "#1a1a1a",
+        "--tab-1": "#98d4bb",
+        "--tab-2": "#c7b8ea",
+        "--tab-3": "#f4b8c5",
+        "--tab-4": "#a8d8ea",
+        "--tab-5": "#ffe6a7"
+      },
+      "displayFont": "Bodoni Moda",
+      "bodyFont": "DM Sans",
+      "signatureElements": [
+        "cream-paper-card",
+        "colorful-tabs",
+        "editorial-typography"
+      ]
+    },
+    "neon-cyber": {
+      "name": "Neon Cyber",
+      "vibe": "Futuristic, edgy, digital, high-energy",
+      "layoutHint": "center_focus",
+      "cssVars": {
+        "--bg-primary": "#0a0a0a",
+        "--accent-pink": "#ff006e",
+        "--accent-cyan": "#00f5d4",
+        "--accent-purple": "#8b5cf6",
+        "--text-light": "#ffffff"
+      },
+      "displayFont": "Orbitron",
+      "bodyFont": "JetBrains Mono",
+      "signatureElements": [
+        "neon-glow",
+        "grid-lines",
+        "cyber-shapes"
+      ],
+      "panel": {
+        "enabled": true,
+        "background": "rgba(15,15,20,0.85)",
+        "border": "1px solid rgba(139,92,246,0.30)",
+        "borderTop": "1px solid rgba(0,245,212,0.12)",
+        "borderBottom": "1px solid rgba(0,0,0,0.35)",
+        "shadow": "0 20px 60px rgba(0,0,0,0.50), 0 4px 12px rgba(139,92,246,0.20), 0 0 30px rgba(0,245,212,0.05)",
+        "innerGlow": "inset 0 1px 0 rgba(0,245,212,0.10)",
+        "radius": "12px",
+        "blur": "6px"
+      }
+    },
+    "split-pastel": {
+      "name": "Split Pastel",
+      "vibe": "Soft, friendly, approachable, modern",
+      "layoutHint": "left_text_right_space",
+      "cssVars": {
+        "--bg-left": "#ffd6ec",
+        "--bg-right": "#d6f4ff",
+        "--text-primary": "#1a1a1a",
+        "--accent-1": "#ffb3c1",
+        "--accent-2": "#87ceeb"
+      },
+      "displayFont": "Nunito",
+      "bodyFont": "Nunito",
+      "signatureElements": [
+        "split-background",
+        "soft-curves",
+        "pastel-accents"
+      ]
+    },
+    "swiss-modern": {
+      "name": "Swiss Modern",
+      "vibe": "Clean, precise, minimalist, professional",
+      "layoutHint": "left_text_right_space",
+      "cssVars": {
+        "--bg-primary": "#ffffff",
+        "--text-primary": "#1a1a1a",
+        "--accent-red": "#ff3b30",
+        "--accent-blue": "#007aff",
+        "--grid-color": "#e5e5e5"
+      },
+      "displayFont": "Helvetica Now",
+      "bodyFont": "Helvetica Now",
+      "signatureElements": [
+        "grid-system",
+        "bold-accent-lines",
+        "asymmetric-layout"
+      ]
+    },
+    "vintage-editorial": {
+      "name": "Vintage Editorial",
+      "vibe": "Classic, authoritative, timeless, print-inspired",
+      "layoutHint": "center_focus",
+      "cssVars": {
+        "--bg-paper": "#f5f3ee",
+        "--text-primary": "#2c2c2c",
+        "--accent-sepia": "#8b7355",
+        "--border-color": "#d4d0c8"
+      },
+      "displayFont": "Playfair Display",
+      "bodyFont": "Georgia",
+      "signatureElements": [
+        "paper-texture",
+        "serif-headlines",
+        "drop-caps"
+      ]
+    },
+    "pastel-geometry": {
+      "name": "Pastel Geometry",
+      "vibe": "Playful, modern, geometric, fresh",
+      "layoutHint": "center_focus",
+      "cssVars": {
+        "--bg-primary": "#fafafa",
+        "--shape-1": "#ffd6e0",
+        "--shape-2": "#d4f7f2",
+        "--shape-3": "#fff3b0",
+        "--text-primary": "#2d2d2d"
+      },
+      "displayFont": "Poppins",
+      "bodyFont": "Poppins",
+      "signatureElements": [
+        "geometric-shapes",
+        "pastel-palette",
+        "circle-overlays"
+      ]
+    },
+    "terminal-green": {
+      "name": "Terminal Green",
+      "vibe": "Developer-first, hacker aesthetic",
+      "layoutHint": "left_text_right_space",
+      "cssVars": {
+        "--bg-primary": "#0d1117",
+        "--text-primary": "#c9d1d9",
+        "--accent-blue": "#58a6ff",
+        "--accent-neon": "#39d353"
+      },
+      "displayFont": "JetBrains Mono",
+      "bodyFont": "JetBrains Mono",
+      "signatureElements": [
+        "scanlines",
+        "blinking-cursor",
+        "terminal-ui"
+      ],
+      "panel": {
+        "enabled": true,
+        "background": "rgba(22,27,34,0.88)",
+        "border": "1px solid rgba(57,211,83,0.25)",
+        "borderTop": "1px solid rgba(88,166,255,0.12)",
+        "borderBottom": "1px solid rgba(0,0,0,0.40)",
+        "shadow": "0 20px 60px rgba(0,0,0,0.50), 0 4px 12px rgba(57,211,83,0.10)",
+        "innerGlow": "inset 0 1px 0 rgba(88,166,255,0.08)",
+        "radius": "10px",
+        "blur": "6px"
+      }
+    },
+    "paper-ink": {
+      "name": "Paper & Ink",
+      "vibe": "Editorial, literary, reflective",
+      "layoutHint": "center_focus",
+      "cssVars": {
+        "--bg-primary": "#faf9f7",
+        "--text-primary": "#1a1a1a",
+        "--accent-warm": "#c41e3a",
+        "--border-color": "#d8d2c8"
+      },
+      "displayFont": "Cormorant Garamond",
+      "bodyFont": "Source Serif 4",
+      "signatureElements": [
+        "drop-cap",
+        "pull-quote",
+        "editorial-divider"
+      ]
+    }
+  },
+  "fontMap": {
+    "Archivo Black": "https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap",
+    "Manrope": "https://fonts.googleapis.com/css2?family=Manrope:wght@400;800&display=swap",
+    "Syne": "https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap",
+    "Cormorant": "https://fonts.googleapis.com/css2?family=Cormorant:wght@400;600&display=swap",
+    "IBM Plex Sans": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400&display=swap",
+    "Bodoni Moda": "https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400&display=swap",
+    "DM Sans": "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap",
+    "Orbitron": "https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap",
+    "JetBrains Mono": "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap",
+    "Nunito": "https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap",
+    "Helvetica Now": "https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap",
+    "Playfair Display": "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap",
+    "Poppins": "https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap",
+    "Georgia": "https://fonts.googleapis.com/css2?family=Georgia&display=swap",
+    "Source Serif Pro": "https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;700&display=swap",
+    "Inter": "https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap",
+    "Space Grotesk": "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap",
+    "Noto Sans SC": "https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap",
+    "SF Pro Display": "https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap",
+    "SF Pro Text": "https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap"
+  }
+}

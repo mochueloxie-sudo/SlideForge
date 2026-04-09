@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>Electric Studio — Content</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { width: 1920px; height: 1080px; overflow: hidden; }
+
+  body {
+    width: 1920px; height: 1080px;
+    background: #0a0a0a;
+    font-family: 'Manrope', sans-serif;
+    color: #ffffff;
+    padding: 80px 120px;
+    position: relative;
+  }
+  .eyebrow {
+    font-size: 13px; font-weight: 800; letter-spacing: 0.2em;
+    color: #4361ee; text-transform: uppercase; margin-bottom: 20px;
+  }
+  .title {
+    font-size: 58px; font-weight: 800; line-height: 1.05;
+    color: #ffffff; margin-bottom: 48px; max-width: 800px;
+  }
+  {{PANEL_CSS}}
+  .page-num {
+    position: absolute; bottom: 56px; right: 120px;
+    font-size: 13px; color: rgba(255,255,255,0.3);
+  }
+</style>
+</head>
+<body>
+  <div class="eyebrow">{{EYEBROW}}</div>
+  <h1 class="title">{{TITLE}}</h1>
+  {{PANEL_BODY}}
+  <div class="page-num">{{PAGE_NUM}} / {{TOTAL}}</div>
+</body>
+</html>

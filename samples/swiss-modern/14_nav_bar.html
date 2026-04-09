@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>{{TITLE}}</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { width: 1920px; height: 1080px; overflow: hidden; }
+  body {
+    width: 1920px; height: 1080px;
+    background: #ffffff;
+    font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', sans-serif;
+    color: #1a1a1a;
+    padding-top: 0;
+    position: relative;
+    display: flex; flex-direction: column;
+  }
+  .topbar {
+    background: #1a1a1a;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    padding: 0 60px;
+    height: 72px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .logo { font-size: 18px; font-weight: 700; color: #ffffff; letter-spacing: -0.02em; }
+  .logo span { color: #ff3b30; }
+  .nav-items { display: flex; gap: 40px; align-items: center; }
+  .nav-item { font-size: 15px; color: #ffffff; opacity: 0.55; }
+  .nav-item.active { color: #ff3b30; opacity: 1; font-weight: 600; }
+  .nav-item.active::after { content: ''; display: block; height: 2px; background: #ff3b30; margin-top: 2px; border-radius: 1px; }
+  .progress-bar { height: 3px; background: rgba(0,0,0,0.08); flex-shrink: 0; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg,#ff3b30,#007aff); transition: width 0.3s ease; }
+  .content { flex: 1; padding: 80px 120px; display: flex; flex-direction: column; justify-content: center; }
+  .section-label { font-size: 13px; color: #ff3b30; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 20px; }
+  .title { font-size: 58px; font-weight: 700; line-height: 1.08; letter-spacing: -0.02em; color: #1a1a1a; margin-bottom: 24px; }
+  .body { font-size: 22px; line-height: 1.7; color: #666666; max-width: 800px; }
+  .bottombar { padding: 0 60px 28px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+  .bottom-text { font-size: 13px; color: rgba(100,100,100,0.45); }
+  .page-num { font-size: 13px; color: rgba(100,100,100,0.5); }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="logo">{{NAV_LOGO_A}}<span>{{NAV_LOGO_B}}</span></div>
+    <div class="nav-items">
+{{NAV_ITEMS_HTML}}
+    </div>
+    <div style="font-size:14px;color:#ffffff;opacity:0.55">{{AUTHOR_DATE}}</div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:{{PROGRESS_PCT}}%"></div></div>
+  <div class="content">
+    <div class="section-label">{{SECTION_LABEL}}</div>
+    <h1 class="title">{{TITLE}}</h1>
+    <p class="body">{{SUBTITLE}}</p>
+  </div>
+  <div class="bottombar">
+    <div class="bottom-text">{{BOTTOM_TEXT}}</div>
+    <div class="page-num">{{PAGE_NUM}} / {{TOTAL}}</div>
+  </div>
+</body>
+</html>

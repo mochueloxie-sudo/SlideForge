@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>Creative Voltage — Content</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Mono:wght@400&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { width: 1920px; height: 1080px; overflow: hidden; }
+
+  body {
+    width: 1920px; height: 1080px;
+    background: linear-gradient(135deg, #0066ff 0%, #1a1a2e 100%);
+    font-family: 'Syne', sans-serif;
+    color: #ffffff;
+    padding: 80px 120px;
+    position: relative;
+  }
+  .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 0.2em; color: #d4ff00; text-transform: uppercase; margin-bottom: 20px; }
+  .title { font-size: 58px; font-weight: 800; line-height: 1.05; color: #ffffff; margin-bottom: 48px; max-width: 800px; }
+  .panel {
+    background: rgba(26,26,46,0.85);
+    border: 1px solid rgba(0,102,255,0.30);
+    border-top: 1px solid rgba(100,150,255,0.15);
+    border-bottom: 1px solid rgba(0,0,0,0.35);
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.45), 0 4px 12px rgba(0,102,255,0.20), inset 0 1px 0 rgba(212,255,0,0.08);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 48px 56px; max-width: 760px;
+  }
+  .panel-body { font-size: 18px; line-height: 1.7; color: rgba(255,255,255,0.75); }
+  .page-num { position: absolute; bottom: 56px; right: 120px; font-size: 13px; color: rgba(255,255,255,0.3); }
+  {{PANEL_CSS}}
+</style>
+</head>
+<body>
+  <div class="eyebrow">{{EYEBROW}}</div>
+  <h1 class="title">Creative Voltage<br>Panel 精修版</h1>
+  <div class="panel">
+    <div class="panel-body">{{PANEL_BODY}}</div>
+  </div>
+  <div class="page-num">{{PAGE_NUM}} / {{TOTAL}}</div>
+</body>
+</html>

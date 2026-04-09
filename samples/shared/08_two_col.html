@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>Two Column</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Manrope:wght@400;500;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { width: 1920px; height: 1080px; overflow: hidden; }
+
+  body {
+    width: 1920px; height: 1080px;
+    background: {{BODY_BG}};
+    font-family: '{{FONT}}', 'PingFang SC', sans-serif;
+    color: {{TEXT_PRIMARY}};
+    padding: 80px 120px;
+    position: relative;
+  }
+  .eyebrow {
+    font-size: 13px; font-weight: 800; letter-spacing: 0.2em;
+    color: {{EYEBROW_COLOR}}; text-transform: uppercase; margin-bottom: 20px;
+  }
+  .title {
+    font-size: 58px; font-weight: 800; line-height: 1.05;
+    color: {{TEXT_PRIMARY}}; margin-bottom: 52px; max-width: 1100px;
+  }
+  .cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  /* Left column — flowing prose */
+  .col-left .body-text {
+    font-size: 24px; font-weight: 400;
+    color: {{TEXT_SECONDARY}};
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  /* Right column — glass panel with key points */
+  .col-right {
+    background: {{PANEL_BG}};
+    border: {{PANEL_BORDER}};
+    border-top: {{PANEL_BORDER_TOP}};
+    border-bottom: {{PANEL_BORDER_BOTTOM}};
+    box-shadow: {{PANEL_SHADOW}};
+    border-radius: {{PANEL_RADIUS}};
+    backdrop-filter: blur({{PANEL_BLUR}});
+    -webkit-backdrop-filter: blur({{PANEL_BLUR}});
+    padding: 40px 48px;
+  }
+  .col-right-label {
+    font-size: 13px; font-weight: 800; letter-spacing: 0.15em;
+    color: {{ACCENT}}; text-transform: uppercase; margin-bottom: 24px;
+  }
+  .kp-list { list-style: none; display: flex; flex-direction: column; gap: 20px; }
+  .kp-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    font-size: 21px; color: {{TEXT_PRIMARY}}; line-height: 1.45;
+  }
+  .kp-arrow { color: {{ACCENT}}; flex-shrink: 0; font-size: 18px; padding-top: 2px; }
+  .hairline {
+    position: absolute; bottom: 80px; left: 120px; right: 120px;
+    height: 1px; background: {{HAIRLINE_COLOR}};
+  }
+  .page-num {
+    position: absolute; bottom: 56px; right: 120px;
+    font-size: 13px; color: {{TEXT_MUTED}};
+  }
+
+  /* ── layout hints ─────────────────────────────────────────────────────── */
+  /* wide-left: 60/40 */
+  body.layout-wide-left  .cols { grid-template-columns: 1.5fr 1fr; }
+  /* wide-right: 40/60 */
+  body.layout-wide-right .cols { grid-template-columns: 1fr 1.5fr; }
+  </style>
+</head>
+<body>
+  <div class="eyebrow">{{EYEBROW}}</div>
+  <h1 class="title">{{TITLE}}</h1>
+  <div class="cols">
+    <div class="col-left">{{LEFT_BODY}}</div>
+    <div class="col-right">
+      <div class="col-right-label">{{RIGHT_LABEL}}</div>
+      <ul class="kp-list">{{RIGHT_POINTS}}</ul>
+    </div>
+  </div>
+  <div class="hairline"></div>
+  <span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
+</body>
+</html>

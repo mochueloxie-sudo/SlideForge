@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>{{TITLE}}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1920px; height: 1080px;
+    background: #f5f3ee;
+    font-family: Georgia, 'Times New Roman', serif;
+    color: #2c2c2c;
+    padding: 64px 120px;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+  .frame { position: absolute; inset: 16px; border: 1px solid #d4d0c8; pointer-events: none; }
+  .eyebrow {
+    font-size: 11px; letter-spacing: 0.26em; color: #8b7355;
+    text-transform: uppercase; margin-bottom: 12px; flex-shrink: 0;
+  }
+  .deco-rule {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 24px; flex-shrink: 0;
+  }
+  .deco-rule .l { width: 40px; height: 1px; background: #d4d0c8; }
+  .deco-rule .s { color: #8b7355; font-size: 11px; }
+  .title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 56px; font-weight: 700; line-height: 1.1;
+    color: #2c2c2c; margin-bottom: 28px; flex-shrink: 0;
+  }
+  .panel {
+    background: #faf8f4;
+    border: 1px solid #d4d0c8;
+    border-left: 3px solid #8b7355;
+    padding: 32px 44px;
+    flex: 1; display: flex; flex-direction: column;
+  }
+  .panel-eyebrow {
+    font-size: 11px; letter-spacing: 0.22em; color: #8b7355;
+    text-transform: uppercase; margin-bottom: 10px;
+  }
+  .panel-eyebrow:empty { display: none; }
+  .panel-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px; font-weight: 700; color: #2c2c2c; margin-bottom: 20px;
+  }
+  .panel-title:empty { display: none; margin-bottom: 0; }
+  .kp-list { list-style: none; display: flex; flex-direction: column; flex: 1; }
+  .kp-item {
+    display: flex; align-items: center; gap: 18px;
+    font-size: {{KP_FONT_SIZE}}px; line-height: 1.55; color: #4a4540;
+    flex: 1; border-bottom: 1px solid #e8e4dc;
+  }
+  .kp-item:last-child { border-bottom: none; }
+  .kp-arrow {
+    flex-shrink: 0; width: {{KP_DOT_SIZE}}px; height: {{KP_DOT_SIZE}}px;
+    background: #c9a96e;
+  }
+  .hairline { position: absolute; bottom: 60px; left: 120px; right: 120px; height: 1px; background: #d4d0c8; }
+  .page-num {
+    position: absolute; bottom: 36px;
+    left: 50%; transform: translateX(-50%);
+    font-size: 12px; color: #b0aa9e; letter-spacing: 0.15em;
+  }
+</style>
+</head>
+<body>
+<div class="frame"></div>
+<div class="eyebrow">{{EYEBROW}}</div>
+<div class="deco-rule"><div class="l"></div><span class="s">✦</span></div>
+<h1 class="title">{{TITLE}}</h1>
+<div class="panel">
+  <div class="panel-eyebrow">{{PANEL_EYEBROW}}</div>
+  <div class="panel-title">{{PANEL_TITLE}}</div>
+  <ul class="kp-list">
+      {{KEY_POINTS_HTML}}
+  </ul>
+</div>
+<div class="hairline"></div>
+<div class="page-num">— {{PAGE_NUM}} / {{TOTAL}} —</div>
+</body>
+</html>

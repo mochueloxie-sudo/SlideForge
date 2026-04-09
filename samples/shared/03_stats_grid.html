@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>Stats Grid</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Manrope:wght@400;500;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { width: 1920px; height: 1080px; overflow: hidden; }
+
+  body {
+    width: 1920px; height: 1080px;
+    background: {{BODY_BG}};
+    font-family: '{{FONT}}', 'PingFang SC', sans-serif;
+    color: {{TEXT_PRIMARY}};
+    padding: 80px 120px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .eyebrow {
+    font-size: 13px; font-weight: 800; letter-spacing: 0.2em;
+    color: {{EYEBROW_COLOR}}; text-transform: uppercase; margin-bottom: 20px;
+  }
+  .title {
+    font-size: 58px; font-weight: 800; line-height: 1.05;
+    color: {{TEXT_PRIMARY}}; margin-bottom: 64px; max-width: 900px;
+  }
+  .stats-row {
+    display: flex;
+    gap: 32px;
+    align-items: stretch;
+  }
+  .stat-card {
+    flex: 1;
+    background: {{PANEL_BG}};
+    border: {{PANEL_BORDER}};
+    border-top: {{PANEL_BORDER_TOP}};
+    border-bottom: {{PANEL_BORDER_BOTTOM}};
+    box-shadow: {{PANEL_SHADOW}};
+    border-radius: {{PANEL_RADIUS}};
+    backdrop-filter: blur({{PANEL_BLUR}});
+    -webkit-backdrop-filter: blur({{PANEL_BLUR}});
+    padding: 40px 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .stat-number {
+    font-size: 88px; font-weight: 800; line-height: 1;
+    letter-spacing: -0.04em;
+    color: {{ACCENT_LIGHT}};
+    font-family: '{{FONT}}', sans-serif;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .stat-unit {
+    font-size: 36px; font-weight: 300;
+    color: {{TEXT_MUTED}};
+    margin-left: 6px; vertical-align: super;
+  }
+  .stat-label {
+    font-size: 20px; font-weight: 500;
+    color: {{TEXT_SECONDARY}};
+    line-height: 1.4;
+    margin-top: 4px;
+  }
+  .stat-desc {
+    font-size: 15px;
+    color: {{TEXT_MUTED}};
+    line-height: 1.5;
+    margin-top: 2px;
+  }
+  .hairline {
+    position: absolute; bottom: 80px; left: 120px; right: 120px;
+    height: 1px; background: {{HAIRLINE_COLOR}};
+  }
+  .page-num {
+    position: absolute; bottom: 56px; right: 120px;
+    font-size: 13px; color: {{TEXT_MUTED}};
+  }
+
+  /* ── layout hints ─────────────────────────────────────────────────────── */
+  /* hero-1: 第一个数据块放大，其余缩小 */
+  body.layout-hero-1 .stats-row { align-items: stretch; gap: 24px; }
+  body.layout-hero-1 .stat-card:first-child { flex: 2.5; }
+  body.layout-hero-1 .stat-card:first-child .stat-number { font-size: 160px; }
+  body.layout-hero-1 .stat-card:first-child .stat-label  { font-size: 26px; }
+  /* 2x2: 2×2 网格（适合4个数据）*/
+  body.layout-2x2 .stats-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr; gap: 24px; max-width: 1400px;
+  }
+  body.layout-2x2 .stat-card { flex: unset; }
+  body.layout-2x2 .stat-number { font-size: 72px; }
+  </style>
+</head>
+<body>
+  <div class="eyebrow">{{EYEBROW}}</div>
+  <h1 class="title">{{TITLE}}</h1>
+  <div class="stats-row">{{STATS_HTML}}</div>
+  <div class="hairline"></div>
+  <span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>Cover — Deep Tech Keynote</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { width: 1920px; height: 1080px; overflow: hidden; }
+
+  body {
+    width: 1920px; height: 1080px;
+    background: radial-gradient(circle at 20% 15%, rgba(83,120,255,0.16) 0%, rgba(11,16,32,0) 28%),
+                linear-gradient(180deg, #0b1020 0%, #0e1428 55%, #0a0f1d 100%);
+    font-family: 'Space Grotesk', 'PingFang SC', sans-serif;
+    color: #f5f7fb;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+  /* Glow */
+  .glow {
+    position: absolute;
+    width: 680px; height: 680px;
+    top: -160px; right: -120px;
+    background: radial-gradient(circle, rgba(93,139,255,0.12) 0%, transparent 70%);
+    filter: blur(0px);
+    pointer-events: none;
+  }
+  /* Hairline top */
+  .hairline-top {
+    position: absolute;
+    top: 0; left: 60px; right: 60px;
+    height: 1px;
+    background: rgba(124,199,255,0.35);
+  }
+  /* Content */
+  .content {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    padding: 0 120px;
+  }
+  .eyebrow {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    color: #7cc7ff;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .title {
+    font-size: 78px;
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    color: #f5f7fb;
+    margin-bottom: 28px;
+  }
+  .accent-line {
+    width: 80px; height: 4px;
+    background: #7cc7ff;
+    margin: 0 auto 28px;
+  }
+  .subtitle {
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.55;
+    color: #9aa7bd;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  /* Bottom bar */
+  .bottom-bar {
+    position: absolute;
+    bottom: 60px; left: 60px; right: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .bottom-text {
+    font-size: 13px;
+    color: rgba(154,167,189,0.6);
+    letter-spacing: 0.05em;
+  }
+  .page-num {
+    font-size: 13px;
+    color: rgba(154,167,189,0.6);
+  }
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="hairline-top"></div>
+<div class="content">
+  <div class="eyebrow">Deep Tech Keynote · 2026</div>
+  <h1 class="title">构建 AI 原生<br>研发组织</h1>
+  <div class="accent-line"></div>
+  <p class="subtitle">从信息流管理到智能基础设施，<br>探索千店规模餐饮企业的 AI 落地路径</p>
+</div>
+<div class="bottom-bar">
+  <span class="bottom-text">新能源 · 餐饮科技</span>
+  <span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
+</div>
+</body>
+</html>

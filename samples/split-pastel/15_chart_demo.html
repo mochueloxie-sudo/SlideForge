@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>{{TITLE}}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { width: 1920px; height: 1080px; overflow: hidden; }
+  body {
+    width: 1920px; height: 1080px;
+    background: linear-gradient(135deg, #ffd6ec 0%, #d6f4ff 100%);
+    font-family: 'Nunito', 'PingFang SC', sans-serif;
+    color: #1a1a1a;
+    padding: 80px 120px;
+    position: relative;
+    display: flex; flex-direction: column;
+  }
+  .title { font-size: 58px; font-weight: 700; line-height: 1.08; letter-spacing: -0.02em; color: #1a1a1a; margin-bottom: 12px; }
+  .subtitle { font-size: 18px; color: #888888; margin-bottom: 32px; }
+  .chart-area {
+    display: flex; align-items: flex-end; gap: 40px;
+    flex: 1; min-height: 260px; padding-bottom: 40px;
+    border-bottom: 1px solid rgba(204,107,142,0.25);
+    max-width: 1100px;
+  }
+  .bar-group { display: flex; flex-direction: column; align-items: center; gap: 12px; flex: 1; }
+  .bar-wrap { display: flex; align-items: flex-end; gap: 8px; height: 280px; }
+  .bar { width: 52px; border-radius: 6px 6px 0 0; position: relative; }
+  .bar-blue { background: linear-gradient(180deg,#ffb3c1,#cc6b8e); }
+  .bar-purple { background: linear-gradient(180deg,#87ceeb,#5ba8cc); }
+  .bar-val { position: absolute; top: -28px; left: 50%; transform: translateX(-50%); font-size: 14px; font-weight: 700; color: #cc6b8e; white-space: nowrap; }
+  .bar-label { font-size: 14px; color: #888888; text-align: center; margin-top: 8px; }
+  .stats-row { display: flex; gap: 48px; margin-top: 48px; }
+  .stat-val { font-size: 48px; font-weight: 700; color: #cc6b8e; line-height: 1; }
+  .stat-label { font-size: 15px; color: #888888; margin-top: 6px; }
+  .legend { display: flex; gap: 32px; margin-top: 32px; }
+  .legend-item { display: flex; align-items: center; gap: 10px; font-size: 14px; color: #888888; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+  .legend-dot-blue { background: linear-gradient(180deg,#ffb3c1,#cc6b8e); }
+  .legend-dot-purple { background: linear-gradient(180deg,#87ceeb,#5ba8cc); }
+  .page-num { position: absolute; bottom: 56px; right: 120px; font-size: 13px; color: rgba(100,100,100,0.5); }
+</style>
+</head>
+<body>
+  <div class="title">{{TITLE}}</div>
+  <div class="subtitle">{{SUBTITLE}}</div>
+  <div class="chart-area">
+{{CHART_BARS_HTML}}
+  </div>
+  <div class="legend">
+{{CHART_LEGEND_HTML}}
+  </div>
+  <div class="stats-row">
+{{CHART_STATS_HTML}}
+  </div>
+  <span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
+</body>
+</html>

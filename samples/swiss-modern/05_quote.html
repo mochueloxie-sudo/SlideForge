@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>{{QUOTE_SOURCE}}</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1920px; height: 1080px;
+    background: #ffffff;
+    font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', sans-serif;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+  .top-bar { width: 100%; height: 6px; background: #ff3b30; flex-shrink: 0; }
+  .main { flex: 1; display: flex; align-items: center; padding: 0 160px; }
+  .left-accent { width: 6px; height: 320px; background: #ff3b30; flex-shrink: 0; margin-right: 72px; }
+  .content { max-width: 1300px; }
+  .quote-body { font-size: 44px; font-weight: 400; line-height: 1.45; color: #1a1a1a; margin-bottom: 48px; }
+  .bottom-row { display: flex; align-items: center; gap: 28px; }
+  .rule { width: 40px; height: 4px; background: #ff3b30; }
+  .quote-source { font-size: 16px; font-weight: 500; letter-spacing: 0.15em; color: #666; text-transform: uppercase; }
+  .bottom-bar { width: 100%; height: 3px; background: linear-gradient(90deg, #ff3b30, #007aff); flex-shrink: 0; }
+  .page-num { position: absolute; bottom: 20px; right: 80px; font-size: 12px; color: #aaa; }
+</style>
+</head>
+<body>
+<div class="top-bar"></div>
+<div class="main">
+  <div class="left-accent"></div>
+  <div class="content">
+    <div class="quote-body">{{QUOTE_BODY}}</div>
+    <div class="bottom-row">
+      <div class="rule"></div>
+      <div class="quote-source">{{QUOTE_SOURCE}}</div>
+    </div>
+  </div>
+</div>
+<div class="bottom-bar"></div>
+<span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
+</body>
+</html>

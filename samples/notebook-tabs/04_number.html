@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>{{TITLE}}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;1,6..96,400&family=DM+Sans:wght@300;400;500;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1920px; height: 1080px;
+    background: #2d2d2d;
+    font-family: 'DM Sans', 'PingFang SC', sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .paper {
+    position: relative; width: 1720px; height: 900px;
+    background: #f8f6f1;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 48px rgba(0,0,0,0.45);
+  }
+  .tabs { position: absolute; left: -18px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
+  .tab { width: 18px; height: 140px; border-radius: 6px 0 0 6px; margin: 8px 0; }
+  .tab-1 { background: #98d4bb; width: 24px; }
+  .tab-2 { background: #c7b8ea; } .tab-3 { background: #f4b8c5; }
+  .tab-4 { background: #a8d8ea; } .tab-5 { background: #ffe6a7; }
+  .center { text-align: center; position: relative; z-index: 2; }
+  .rule-top { width: 120px; height: 1px; background: #d8d2c8; margin: 0 auto 40px; }
+  .number {
+    font-family: 'Bodoni Moda', Georgia, serif;
+    font-size: 200px; font-weight: 700; line-height: 1;
+    letter-spacing: -0.03em; color: #98d4bb; margin-bottom: 8px;
+  }
+  .unit { font-size: 52px; font-weight: 300; color: #b0aa9e; margin-left: 4px; vertical-align: super; }
+  .rule-mid { width: 80px; height: 2px; background: #98d4bb; margin: 32px auto; }
+  .label { font-size: 24px; font-weight: 400; color: #6b6b6b; max-width: 600px; line-height: 1.5; }
+  .rule-bottom { width: 120px; height: 1px; background: #d8d2c8; margin: 40px auto 0; }
+  .page-num { position: absolute; bottom: 36px; right: 60px; font-size: 12px; color: #b0aa9e; letter-spacing: 0.1em; }
+</style>
+</head>
+<body>
+<div class="paper">
+  <div class="tabs">
+    <div class="tab tab-1"></div><div class="tab tab-2"></div>
+    <div class="tab tab-3"></div><div class="tab tab-4"></div><div class="tab tab-5"></div>
+  </div>
+  <div class="center">
+    <div class="rule-top"></div>
+    <div class="number">{{BIG_NUMBER}}<span class="unit">{{NUMBER_UNIT}}</span></div>
+    <div class="rule-mid"></div>
+    <div class="label">{{TITLE}}</div>
+    <div class="rule-bottom"></div>
+  </div>
+  <div class="page-num">{{PAGE_NUM}} / {{TOTAL}}</div>
+</div>
+</body>
+</html>

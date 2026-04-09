@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>{{TITLE}}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1920px; height: 1080px; background: #fafafa; font-family: 'Poppins', 'PingFang SC', sans-serif; color: #2d2d2d; padding: 64px 120px 80px; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+  .shape-1 { position: absolute; width: 480px; height: 480px; background: #ffd6e0; border-radius: 50%; top: -140px; right: -60px; opacity: 0.62; }
+  .shape-2 { position: absolute; width: 320px; height: 320px; background: #d4f7f2; border-radius: 50%; bottom: -70px; left: 400px; opacity: 0.55; }
+  .eyebrow { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 0.18em; color: #cc7a9a; text-transform: uppercase; background: rgba(255,214,224,0.55); border-radius: 100px; padding: 5px 18px; margin-bottom: 16px; flex-shrink: 0; position: relative; z-index: 2; }
+  .title { font-size: 52px; font-weight: 800; line-height: 1.05; letter-spacing: -0.03em; color: #2d2d2d; margin-bottom: 24px; flex-shrink: 0; position: relative; z-index: 2; }
+  .table-wrap { flex: 1; min-height: 0; background: #ffffff; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 6px 24px rgba(0,0,0,0.05); position: relative; z-index: 2; }
+  table { width: 100%; border-collapse: collapse; flex: 1; display: flex; flex-direction: column; }
+  thead { flex-shrink: 0; }
+  thead tr { background: #ffd6e0; display: flex; }
+  thead th { flex: 1; padding: 0 28px; height: {{TABLE_HEADER_HEIGHT}}px; display: flex; align-items: center; font-size: {{TABLE_TH_FONT}}px; font-weight: 700; color: #cc7a9a; letter-spacing: 0.08em; border-bottom: 2px solid rgba(255,179,193,0.4); text-transform: uppercase; font-size: 12px; }
+  tbody { flex: 1; display: flex; flex-direction: column; }
+  tbody tr { flex: 1; display: flex; }
+  tbody tr:nth-child(odd)  { background: #ffffff; }
+  tbody tr:nth-child(even) { background: #fdf8fc; }
+  tbody td { flex: 1; padding: 0 28px; font-size: {{TABLE_FONT_SIZE}}px; color: #444; border-bottom: 1px solid #f5f0f5; display: flex; align-items: center; }
+  tbody tr:last-child td { border-bottom: none; }
+  .page-num { position: absolute; bottom: 48px; right: 80px; font-size: 13px; color: #ccc; font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="shape-1"></div>
+<div class="shape-2"></div>
+<div class="eyebrow">{{EYEBROW}}</div>
+<h1 class="title">{{TITLE}}</h1>
+<div class="table-wrap">
+  <table>
+    <thead><tr>{{TABLE_HEADERS}}</tr></thead>
+    <tbody>{{TABLE_ROWS}}</tbody>
+  </table>
+</div>
+<span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>Electric Studio — Sample</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { width: 1920px; height: 1080px; overflow: hidden; }
+
+  body {
+    width: 1920px; height: 1080px;
+    background: radial-gradient(circle at 20% 15%, rgba(100,130,255,0.16) 0%, rgba(14,14,28,0) 28%), linear-gradient(180deg, #0e0e1c 0%, #141428 55%, #0b0b18 100%);
+    font-family: 'Space Grotesk', 'PingFang SC', sans-serif;
+    color: #f5f7fb;
+    padding: 80px 120px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .section-num {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    color: #7cc7ff;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .title {
+    font-size: 58px;
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    color: #f5f7fb;
+    margin-bottom: 48px;
+    max-width: 900px;
+  }
+  .body-text {
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.7;
+    color: #c8d0e8;
+    max-width: 860px;
+    margin-bottom: 28px;
+  }
+  .secondary {
+    font-size: 22px;
+    line-height: 1.7;
+    color: #8890a8;
+    max-width: 860px;
+  }
+  .hairline {
+    position: absolute;
+    bottom: 80px; left: 120px; right: 120px;
+    height: 1px;
+    background: rgba(100,130,255,0.35);
+  }
+  .page-num {
+    position: absolute;
+    bottom: 56px; right: 120px;
+    font-size: 13px;
+    color: rgba(154,167,189,0.6);
+  }
+</style>
+</head>
+<body>
+  <div class="section-num">Section 01</div>
+  <h1 class="title">研发效能提升是<br>长期核心杠杆</h1>
+  <p class="body-text">在餐饮行业，制度墙是落地的最大障碍。1.0 代创始团队与 1.5 代新管理团队之间的信任建立需要时间。</p>
+  <p class="secondary">技术只是杠杆，真正的变革来自组织习惯的改变。每天往 AI Native 方向推一点，壁垒就薄一点。</p>
+  <div class="hairline"></div>
+  <span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
+</body>
+</html>

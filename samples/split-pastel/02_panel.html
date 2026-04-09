@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>{{TITLE}}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1920px; height: 1080px;
+    background: linear-gradient(90deg, #ffd6ec 50%, #d6f4ff 50%);
+    font-family: 'Nunito', 'PingFang SC', sans-serif;
+    color: #1a1a1a;
+    padding: 80px 100px;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+  .blob-tr { position: absolute; width: 300px; height: 300px; background: #ffb3c1; border-radius: 50%; top: -80px; right: 600px; opacity: 0.25; }
+  .eyebrow {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.18em;
+    color: #cc6b8e; text-transform: uppercase; margin-bottom: 12px; flex-shrink: 0;
+  }
+  .accent-line { width: 48px; height: 4px; background: linear-gradient(90deg,#ffb3c1,#87ceeb); border-radius: 2px; margin-bottom: 24px; flex-shrink: 0; }
+  .title {
+    font-size: 64px; font-weight: 800; line-height: 1.05;
+    letter-spacing: -0.03em; color: #1a1a1a; margin-bottom: 32px; flex-shrink: 0;
+  }
+  .panel {
+    background: #ffffff;
+    border-radius: 20px;
+    border-top: 4px solid #ffb3c1;
+    padding: 40px 52px;
+    flex: 1; display: flex; flex-direction: column;
+    box-shadow: 0 8px 32px rgba(255,179,193,0.18), 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .panel-eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+    color: #cc6b8e; text-transform: uppercase; margin-bottom: 10px;
+  }
+  .panel-eyebrow:empty { display: none; }
+  .panel-title {
+    font-size: 26px; font-weight: 700; color: #1a1a1a; margin-bottom: 20px;
+  }
+  .panel-title:empty { display: none; margin-bottom: 0; }
+  .kp-list { list-style: none; display: flex; flex-direction: column; flex: 1; }
+  .kp-item {
+    display: flex; align-items: center; gap: 18px;
+    font-size: {{KP_FONT_SIZE}}px; line-height: 1.5; color: #333;
+    flex: 1; border-bottom: 1px solid #f0e8ed;
+  }
+  .kp-item:last-child { border-bottom: none; }
+  .kp-arrow {
+    flex-shrink: 0; width: {{KP_DOT_SIZE}}px; height: {{KP_DOT_SIZE}}px;
+    background: #ffb3c1; border-radius: 50%;
+  }
+  .page-num { position: absolute; bottom: 48px; right: 80px; font-size: 13px; color: #bbb; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="blob-tr"></div>
+<div class="eyebrow">{{EYEBROW}}</div>
+<div class="accent-line"></div>
+<h1 class="title">{{TITLE}}</h1>
+<div class="panel">
+  <div class="panel-eyebrow">{{PANEL_EYEBROW}}</div>
+  <div class="panel-title">{{PANEL_TITLE}}</div>
+  <ul class="kp-list">
+      {{KEY_POINTS_HTML}}
+  </ul>
+</div>
+<span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
+</body>
+</html>

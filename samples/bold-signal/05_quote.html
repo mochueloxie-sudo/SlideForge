@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>{{QUOTE_SOURCE}}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { width: 1920px; height: 1080px; overflow: hidden; }
+
+  body {
+    width: 1920px; height: 1080px;
+    background: radial-gradient(circle at 20% 15%, rgba(255,120,60,0.14) 0%, rgba(0,0,0,0) 28%),
+                linear-gradient(180deg, #1a1a1a 0%, #222222 55%, #1a1a1a 100%);
+    font-family: 'Space Grotesk', 'PingFang SC', sans-serif;
+    color: #ffffff;
+    display: flex; align-items: center; padding: 0 160px;
+    position: relative;
+  }
+  .quote-mark {
+    font-size: 200px; line-height: 0.8; color: rgba(255,87,34,0.30);
+    font-family: Georgia, serif; position: absolute; top: 120px; left: 120px;
+  }
+  .quote-body {
+    font-size: 40px; font-weight: 500; line-height: 1.5;
+    color: #aaaaaa; max-width: 1100px;
+    position: relative; z-index: 2;
+  }
+  .quote-source {
+    margin-top: 36px; font-size: 18px; color: #888888;
+    letter-spacing: 0.05em;
+  }
+  .quote-source span { color: #FF8A65; }
+  .hairline {
+    position: absolute; bottom: 80px; left: 120px; right: 120px;
+    height: 1px; background: rgba(255,87,34,0.35);
+  }
+  .page-num { position: absolute; bottom: 56px; right: 120px; font-size: 13px; color: rgba(154,167,189,0.6); }
+
+  /* ── layout hints ─────────────────────────────────────────────────────── */
+  /* left-bar: 左对齐 + 左侧竖条 */
+  body.layout-left-bar {
+    padding: 80px 120px 80px 180px; align-items: flex-start;
+    flex-direction: column; justify-content: center;
+  }
+  body.layout-left-bar > div { position: relative; padding-left: 52px; }
+  body.layout-left-bar > div::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 4px; border-radius: 2px; background: currentColor; opacity: 0.4;
+  }
+  body.layout-left-bar .quote-mark { display: none; }
+  body.layout-left-bar .quote-body { font-size: 38px; max-width: 1200px; }
+  /* full: 大字铺满，震撼感 */
+  body.layout-full { padding: 80px 120px; }
+  body.layout-full .quote-mark { font-size: 280px; }
+  body.layout-full .quote-body { font-size: 56px; max-width: none; line-height: 1.4; }
+  body.layout-full .quote-source { font-size: 22px; margin-top: 48px; }
+  </style>
+</head>
+<body>
+<div class="quote-mark">"</div>
+<div>
+  <div class="quote-body">{{QUOTE_BODY}}</div>
+  <div class="quote-source">{{QUOTE_SOURCE}}</div>
+</div>
+<div class="hairline"></div>
+<span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
+</body>
+</html>

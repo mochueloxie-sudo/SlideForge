@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>{{TITLE}}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;1,6..96,400;1,6..96,700&family=DM+Sans:wght@300;400;500;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1920px; height: 1080px;
+    background: #2d2d2d;
+    font-family: 'DM Sans', 'PingFang SC', sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .paper {
+    position: relative;
+    width: 1720px; height: 900px;
+    background: #f8f6f1;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 48px rgba(0,0,0,0.45);
+  }
+  .tabs {
+    position: absolute; left: -18px; top: 0; bottom: 0;
+    display: flex; flex-direction: column; justify-content: center; gap: 0;
+  }
+  .tab {
+    width: 18px; height: 140px; border-radius: 6px 0 0 6px;
+    margin: 8px 0;
+  }
+  .tab-1 { background: #98d4bb; width: 24px; }
+  .tab-2 { background: #c7b8ea; }
+  .tab-3 { background: #f4b8c5; }
+  .tab-4 { background: #a8d8ea; }
+  .tab-5 { background: #ffe6a7; }
+  .content {
+    text-align: center;
+    max-width: 1100px;
+    padding: 0 100px;
+  }
+  .eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 500; letter-spacing: 0.25em;
+    color: #6b6b6b; text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .rule {
+    width: 60px; height: 2px;
+    background: #98d4bb;
+    margin: 0 auto 40px;
+  }
+  .title {
+    font-family: 'Bodoni Moda', Georgia, serif;
+    font-size: 96px; font-weight: 700; line-height: 1.05;
+    letter-spacing: -0.02em; color: #1a1a1a;
+    margin-bottom: 36px;
+  }
+  .subtitle {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 22px; font-weight: 300; line-height: 1.6;
+    color: #888; max-width: 680px; margin: 0 auto;
+  }
+  .page-num {
+    position: absolute; bottom: 36px; right: 60px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; color: #b0aa9e; letter-spacing: 0.1em;
+  }
+  .corner-deco {
+    position: absolute;
+    width: 40px; height: 40px;
+    border-color: #d0c8bc;
+  }
+  .corner-deco.tl { top: 24px; left: 40px; border-top: 1px solid; border-left: 1px solid; }
+  .corner-deco.tr { top: 24px; right: 40px; border-top: 1px solid; border-right: 1px solid; }
+  .corner-deco.bl { bottom: 24px; left: 40px; border-bottom: 1px solid; border-left: 1px solid; }
+  .corner-deco.br { bottom: 24px; right: 40px; border-bottom: 1px solid; border-right: 1px solid; }
+</style>
+</head>
+<body>
+<div class="paper">
+  <div class="tabs">
+    <div class="tab tab-1"></div>
+    <div class="tab tab-2"></div>
+    <div class="tab tab-3"></div>
+    <div class="tab tab-4"></div>
+    <div class="tab tab-5"></div>
+  </div>
+  <div class="corner-deco tl"></div>
+  <div class="corner-deco tr"></div>
+  <div class="corner-deco bl"></div>
+  <div class="corner-deco br"></div>
+  <div class="content">
+    <div class="eyebrow">{{EYEBROW}}</div>
+    <div class="rule"></div>
+    <h1 class="title">{{TITLE}}</h1>
+    <p class="subtitle">{{SUBTITLE}}</p>
+  </div>
+  <div class="page-num">{{PAGE_NUM}} / {{TOTAL}}</div>
+</div>
+</body>
+</html>

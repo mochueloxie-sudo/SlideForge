@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>Dark Botanical — Content</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant:wght@400;600&family=IBM+Plex+Sans:wght@300;400&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { width: 1920px; height: 1080px; overflow: hidden; }
+
+  body {
+    width: 1920px; height: 1080px;
+    background: #0f0f0f;
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: #e8e4df;
+    padding: 80px 120px;
+    position: relative;
+  }
+  .eyebrow { font-size: 13px; font-weight: 300; letter-spacing: 0.2em; color: #d4a574; text-transform: uppercase; margin-bottom: 20px; }
+  .title { font-family: 'Cormorant', serif; font-size: 58px; font-weight: 400; font-style: italic; line-height: 1.1; color: #e8e4df; margin-bottom: 48px; max-width: 800px; }
+  .panel {
+    background: rgba(25,25,22,0.82);
+    border: 1px solid rgba(212,165,116,0.25);
+    border-top: 1px solid rgba(232,180,168,0.12);
+    border-bottom: 1px solid rgba(0,0,0,0.35);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.45), 0 4px 12px rgba(212,165,116,0.10), inset 0 1px 0 rgba(232,180,168,0.10);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 48px 56px; max-width: 760px;
+  }
+  .panel-body { font-size: 18px; line-height: 1.7; color: rgba(232,228,223,0.7); font-weight: 300; }
+  .page-num { position: absolute; bottom: 56px; right: 120px; font-size: 13px; color: rgba(154,149,144,0.5); }
+  {{PANEL_CSS}}
+</style>
+</head>
+<body>
+  <div class="eyebrow">{{EYEBROW}}</div>
+  <h1 class="title">Dark Botanical<br>Panel 精修版</h1>
+  <div class="panel">
+    <div class="panel-body">{{PANEL_BODY}}</div>
+  </div>
+  <div class="page-num">{{PAGE_NUM}} / {{TOTAL}}</div>
+</body>
+</html>

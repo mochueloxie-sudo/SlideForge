@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>{{TITLE}}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1920px; height: 1080px; background: linear-gradient(90deg, #ffd6ec 50%, #d6f4ff 50%); font-family: 'Nunito', 'PingFang SC', sans-serif; color: #1a1a1a; padding: 80px 120px; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+  .blob { position: absolute; width: 350px; height: 350px; background: #ffb3c1; border-radius: 50%; top: -100px; right: 700px; opacity: 0.22; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.18em; color: #cc6b8e; text-transform: uppercase; margin-bottom: 12px; flex-shrink: 0; position: relative; z-index: 2; }
+  .title { font-size: 56px; font-weight: 800; line-height: 1.05; letter-spacing: -0.03em; color: #1a1a1a; margin-bottom: 20px; flex-shrink: 0; position: relative; z-index: 2; }
+  .code-wrap { flex: 1; min-height: 0; background: #ffffff; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 8px 28px rgba(255,179,193,0.15); position: relative; z-index: 2; }
+  .code-header { display: flex; align-items: center; gap: 8px; padding: 14px 20px; border-bottom: 1px solid #f0e8ed; background: #fff5f8; }
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; } .dot-y { background: #febc2e; } .dot-g { background: #28c840; }
+  .code-lang { margin-left: auto; font-size: 11px; color: #cc6b8e; font-family: 'Courier New', monospace; letter-spacing: 0.10em; font-weight: 700; }
+  .code-body { flex: 1; padding: 24px 36px; overflow: hidden; font-family: 'Courier New', monospace; font-size: 18px; line-height: 1.75; color: #2c2c2c; white-space: pre; }
+  .page-num { position: absolute; bottom: 48px; right: 80px; font-size: 13px; color: #bbb; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="blob"></div>
+<div class="eyebrow">{{EYEBROW}}</div>
+<div class="title">{{TITLE}}</div>
+<div class="code-wrap">
+  <div class="code-header">
+    <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+    <span class="code-lang">{{CODE_LABEL}}</span>
+  </div>
+  <div class="code-body">{{CODE_SNIPPET}}</div>
+</div>
+<span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
+</body>
+</html>

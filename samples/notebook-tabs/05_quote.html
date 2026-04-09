@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>{{QUOTE_SOURCE}}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;1,6..96,400;1,6..96,700&family=DM+Sans:wght@300;400;500;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1920px; height: 1080px;
+    background: #2d2d2d;
+    font-family: 'DM Sans', 'PingFang SC', sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .paper {
+    position: relative; width: 1720px; height: 900px;
+    background: #f8f6f1;
+    display: flex; align-items: center; padding: 80px 140px 80px 160px;
+    box-shadow: 0 8px 48px rgba(0,0,0,0.45);
+  }
+  .tabs { position: absolute; left: -18px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
+  .tab { width: 18px; height: 140px; border-radius: 6px 0 0 6px; margin: 8px 0; }
+  .tab-1 { background: #98d4bb; width: 24px; } .tab-2 { background: #c7b8ea; }
+  .tab-3 { background: #f4b8c5; } .tab-4 { background: #a8d8ea; } .tab-5 { background: #ffe6a7; }
+  .quote-mark {
+    font-family: 'Bodoni Moda', Georgia, serif;
+    font-size: 220px; line-height: 0.7; color: rgba(152,212,187,0.35);
+    position: absolute; top: 60px; left: 120px;
+    font-style: italic;
+  }
+  .content { position: relative; z-index: 2; max-width: 1300px; }
+  .rule { width: 48px; height: 2px; background: #98d4bb; margin-bottom: 36px; }
+  .quote-body {
+    font-family: 'Bodoni Moda', Georgia, serif;
+    font-size: 44px; font-weight: 400; line-height: 1.5;
+    color: #2c2c2c; margin-bottom: 48px; font-style: italic;
+  }
+  .quote-source { font-size: 16px; font-weight: 500; letter-spacing: 0.12em; color: #98d4bb; text-transform: uppercase; }
+  .hairline { position: absolute; bottom: 56px; left: 160px; right: 80px; height: 1px; background: #d8d2c8; }
+  .page-num { position: absolute; bottom: 32px; right: 60px; font-size: 12px; color: #b0aa9e; letter-spacing: 0.1em; }
+</style>
+</head>
+<body>
+<div class="paper">
+  <div class="tabs">
+    <div class="tab tab-1"></div><div class="tab tab-2"></div>
+    <div class="tab tab-3"></div><div class="tab tab-4"></div><div class="tab tab-5"></div>
+  </div>
+  <div class="quote-mark">"</div>
+  <div class="content">
+    <div class="rule"></div>
+    <div class="quote-body">{{QUOTE_BODY}}</div>
+    <div class="quote-source">{{QUOTE_SOURCE}}</div>
+  </div>
+  <div class="hairline"></div>
+  <span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
+</div>
+</body>
+</html>

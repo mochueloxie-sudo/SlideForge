@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>{{TITLE}}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1920px; height: 1080px;
+    background: #fafafa;
+    font-family: 'Poppins', 'PingFang SC', sans-serif;
+    color: #2d2d2d;
+    padding: 72px 100px;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+  .shape-1 { position: absolute; width: 500px; height: 500px; background: #ffd6e0; border-radius: 50%; top: -140px; right: -60px; opacity: 0.65; }
+  .shape-2 { position: absolute; width: 300px; height: 300px; background: #d4f7f2; border-radius: 50%; bottom: -60px; left: 600px; opacity: 0.55; }
+  .eyebrow {
+    display: inline-block;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.18em;
+    color: #cc7a9a; text-transform: uppercase;
+    background: rgba(255,214,224,0.55); border-radius: 100px; padding: 5px 18px;
+    margin-bottom: 20px; flex-shrink: 0; position: relative; z-index: 2;
+  }
+  .title {
+    font-size: 60px; font-weight: 800; line-height: 1.05;
+    letter-spacing: -0.03em; color: #2d2d2d; margin-bottom: 28px; flex-shrink: 0;
+    position: relative; z-index: 2;
+  }
+  .panel {
+    background: #ffffff;
+    border-radius: 20px;
+    border-top: 4px solid #ffd6e0;
+    padding: 36px 48px;
+    flex: 1; display: flex; flex-direction: column;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+    position: relative; z-index: 2;
+  }
+  .panel-eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.16em;
+    color: #cc7a9a; text-transform: uppercase; margin-bottom: 8px;
+  }
+  .panel-eyebrow:empty { display: none; }
+  .panel-title { font-size: 24px; font-weight: 700; color: #2d2d2d; margin-bottom: 18px; }
+  .panel-title:empty { display: none; margin-bottom: 0; }
+  .kp-list { list-style: none; display: flex; flex-direction: column; flex: 1; }
+  .kp-item {
+    display: flex; align-items: center; gap: 18px;
+    font-size: {{KP_FONT_SIZE}}px; line-height: 1.5; color: #444;
+    flex: 1; border-bottom: 1px solid #f5f0f5;
+  }
+  .kp-item:last-child { border-bottom: none; }
+  .kp-arrow {
+    flex-shrink: 0; width: {{KP_DOT_SIZE}}px; height: {{KP_DOT_SIZE}}px;
+    background: #ffd6e0; border-radius: 50%;
+  }
+  .page-num { position: absolute; bottom: 44px; right: 80px; font-size: 13px; color: #ccc; font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="shape-1"></div>
+<div class="shape-2"></div>
+<div class="eyebrow">{{EYEBROW}}</div>
+<h1 class="title">{{TITLE}}</h1>
+<div class="panel">
+  <div class="panel-eyebrow">{{PANEL_EYEBROW}}</div>
+  <div class="panel-title">{{PANEL_TITLE}}</div>
+  <ul class="kp-list">
+      {{KEY_POINTS_HTML}}
+  </ul>
+</div>
+<span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
+</body>
+</html>

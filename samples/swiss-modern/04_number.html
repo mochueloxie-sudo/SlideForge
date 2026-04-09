@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>{{TITLE}}</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1920px; height: 1080px;
+    background: #ffffff;
+    font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', sans-serif;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+  .top-bar { width: 100%; height: 6px; background: #ff3b30; flex-shrink: 0; }
+  .main { flex: 1; display: flex; align-items: center; justify-content: flex-start; padding: 0 160px 0 120px; }
+  .left-bar { position: absolute; left: 80px; top: 6px; bottom: 0; width: 4px; background: #ff3b30; }
+  .content { display: flex; align-items: center; gap: 80px; }
+  .number-block { text-align: left; }
+  .rule-above { width: 80px; height: 6px; background: #ff3b30; margin-bottom: 24px; }
+  .number {
+    font-size: 200px; font-weight: 900; line-height: 1;
+    color: #ff3b30; letter-spacing: -0.05em;
+  }
+  .unit { font-size: 64px; font-weight: 300; color: #007aff; margin-left: 4px; }
+  .rule-below { width: 200px; height: 2px; background: #e5e5e5; margin-top: 24px; }
+  .label-block { max-width: 500px; border-left: 2px solid #e5e5e5; padding-left: 60px; }
+  .label { font-size: 32px; font-weight: 400; line-height: 1.45; color: #1a1a1a; }
+  .bottom-bar { width: 100%; height: 3px; background: linear-gradient(90deg, #ff3b30 0%, #007aff 100%); flex-shrink: 0; }
+  .page-num { position: absolute; bottom: 20px; right: 80px; font-size: 12px; color: #aaa; }
+</style>
+</head>
+<body>
+<div class="top-bar"></div>
+<div class="left-bar"></div>
+<div class="main">
+  <div class="content">
+    <div class="number-block">
+      <div class="rule-above"></div>
+      <div class="number">{{BIG_NUMBER}}<span class="unit">{{NUMBER_UNIT}}</span></div>
+      <div class="rule-below"></div>
+    </div>
+    <div class="label-block">
+      <div class="label">{{TITLE}}</div>
+    </div>
+  </div>
+</div>
+<div class="bottom-bar"></div>
+<span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
+</body>
+</html>

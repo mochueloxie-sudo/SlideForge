@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>{{TITLE}}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&family=Cormorant+Garamond:wght@400;600&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { width: 1920px; height: 1080px; overflow: hidden; }
+  body {
+    width: 1920px; height: 1080px;
+    background: #faf9f7;
+    font-family: 'Source Serif 4', Georgia, serif;
+    color: #1a1a1a;
+    padding: 72px 120px 100px;
+    position: relative;
+    display: flex; flex-direction: column;
+  }
+  .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: 0.15em; color: #c41e3a; text-transform: uppercase; margin-bottom: 16px; flex-shrink: 0; }
+  .title { font-size: 52px; font-weight: 700; line-height: 1.08; letter-spacing: -0.02em; color: #1a1a1a; margin-bottom: 44px; flex-shrink: 0; }
+  .grid {
+    flex: 1; min-height: 0;
+    display: grid;
+    align-content: center;
+    grid-template-columns: repeat({{ICON_GRID_COLS}}, 1fr);
+    max-width: {{ICON_GRID_MAX_WIDTH}}px;
+    width: 100%;
+    margin: 0 auto;
+    align-self: center;
+    gap: 20px;
+  }
+  .icon-card {
+    min-height: {{ICON_CARD_MIN_HEIGHT}}px;
+    padding: 32px 20px;
+    background: #ffffff;
+    border: 1px solid rgba(196,30,58,0.15);
+    border-radius: 20px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .icon-emoji { font-size: {{ICON_EMOJI_SIZE}}px; line-height: 1; }
+  .icon-label { font-size: {{ICON_LABEL_SIZE}}px; font-weight: 500; color: #6b6460; text-align: center; line-height: 1.4; padding: 0 12px; }
+  .hairline { position: absolute; bottom: 80px; left: 120px; right: 120px; height: 1px; background: rgba(196,30,58,0.2); }
+  .page-num { position: absolute; bottom: 56px; right: 120px; font-size: 13px; color: rgba(100,100,100,0.5); }
+  .icon-desc {
+    font-size: 17px; line-height: 1.55;
+    color: rgba(136,128,128,0.80);
+    text-align: center;
+    padding: 0 8px;
+    margin-top: 2px;
+  }
+</style>
+</head>
+<body>
+  <div class="eyebrow">{{EYEBROW}}</div>
+  <h1 class="title">{{TITLE}}</h1>
+  <div class="grid">{{ICONS_HTML}}</div>
+  <div class="hairline"></div>
+  <span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
+</body>
+</html>

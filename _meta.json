@@ -1,0 +1,122 @@
+{
+  "name": "video-producer",
+  "version": "3.0.0",
+  "description": "把飞书文档、本地文件（.md/.txt）或网页一键转换为高品质演示内容。支持视频/PDF/交互式HTML三种交付格式，13种设计主题自动匹配，8个独立Step自由组合。",
+  "type": "agent",
+  "metadata": {
+    "clawdbot": {
+      "emoji": "🎬",
+      "os": ["linux", "darwin", "win32"]
+    }
+  },
+  "input": {
+    "type": "object",
+    "properties": {
+      "command": {
+        "type": "string",
+        "enum": ["step0", "step1", "step2", "step3", "step4", "step5", "step6", "step7", "all"],
+        "description": "执行哪个步骤（可独立调用）"
+      },
+      "source": {
+        "type": "string",
+        "description": "飞书文档 URL、本地文件路径（.md/.txt）或网页 URL（Step 0 使用）"
+      },
+      "scenes": {
+        "type": "string",
+        "description": "scenes.json 文件路径（Step 1-6 输入）"
+      },
+      "design_params": {
+        "type": "string",
+        "description": "design_params.json 文件路径（Step 3 输入）"
+      },
+      "design_mode": {
+        "type": "string",
+        "description": "设计主题。留空则根据内容自动选择。",
+        "enum": [
+          "electric-studio",
+          "bold-signal",
+          "creative-voltage",
+          "dark-botanical",
+          "neon-cyber",
+          "terminal-green",
+          "deep-tech-keynote",
+          "notebook-tabs",
+          "paper-ink",
+          "pastel-geometry",
+          "split-pastel",
+          "swiss-modern",
+          "vintage-editorial"
+        ]
+      },
+      "format": {
+        "type": ["string", "array"],
+        "description": "交付格式。可单选或多选。默认 video。",
+        "enum": ["video", "pdf", "html"],
+        "default": "video"
+      },
+      "channel": {
+        "type": "string",
+        "description": "交付渠道。默认 local（打包到 output_dir）。",
+        "enum": ["local", "feishu"],
+        "default": "local"
+      },
+      "output_dir": {
+        "type": "string",
+        "default": "./output",
+        "description": "输出目录（所有 Step 共用）"
+      },
+      "html_dir": {
+        "type": "string",
+        "description": "HTML 目录（Step 4 截图输入）"
+      },
+      "screenshots_dir": {
+        "type": "string",
+        "description": "截图目录（Step 6 视频/PDF 输入）"
+      },
+      "audio_dir": {
+        "type": "string",
+        "description": "音频目录（Step 6 视频合成输入）"
+      },
+      "output": {
+        "type": "string",
+        "description": "视频输出路径（Step 6 format=video）"
+      },
+      "video_path": {
+        "type": "string",
+        "description": "本地视频文件路径（Step 7 channel=feishu 上传用）"
+      },
+      "doc_title": {
+        "type": "string",
+        "description": "飞书文档标题（Step 7 channel=feishu）"
+      },
+      "folder_token": {
+        "type": "string",
+        "description": "飞书目标文件夹 token（Step 7 channel=feishu）"
+      },
+      "source_url": {
+        "type": "string",
+        "description": "原文链接（附在交付文件末尾，可选）"
+      },
+      "voice": {
+        "type": "string",
+        "description": "Edge TTS 语音名称（Step 5，默认 zh-CN-XiaoxiaoNeural）"
+      },
+      "language": {
+        "type": "string",
+        "description": "内容语言（Step 0/5，默认 zh-CN）"
+      }
+    },
+    "required": ["command"]
+  },
+  "output": {
+    "type": "object",
+    "properties": {
+      "success": {"type": "boolean"},
+      "step": {"type": "string"},
+      "outputs": {"type": "array", "items": {"type": "string"}},
+      "message": {"type": "string"},
+      "metadata": {"type": "object"}
+    }
+  },
+  "executor": "executor.js"
+}

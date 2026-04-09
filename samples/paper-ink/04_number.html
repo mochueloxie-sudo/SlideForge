@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>{{TITLE}}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1920px; height: 1080px;
+    background: #faf9f7;
+    font-family: 'Source Serif 4', Georgia, serif;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+  .crimson-bar { width: 100%; height: 5px; background: #c41e3a; flex-shrink: 0; }
+  .main { flex: 1; display: flex; align-items: center; justify-content: center; }
+  .center { text-align: center; }
+  .rule-above { width: 160px; height: 1px; background: #d8d2c8; margin: 0 auto 48px; }
+  .number {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 210px; font-weight: 300; line-height: 1;
+    color: #c41e3a; letter-spacing: -0.02em; font-style: italic;
+  }
+  .unit { font-size: 64px; font-weight: 300; color: #8a837c; margin-left: 4px; }
+  .ornament { color: #c41e3a; font-size: 18px; letter-spacing: 0.4em; margin: 36px 0; opacity: 0.6; }
+  .label { font-family: 'Source Serif 4', serif; font-size: 26px; font-weight: 300; font-style: italic; color: #6b6460; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+  .rule-below { width: 160px; height: 1px; background: #d8d2c8; margin: 40px auto 0; }
+  .bottom-bar { width: 100%; height: 3px; background: #d8d2c8; flex-shrink: 0; }
+  .page-num { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); font-size: 12px; color: #b0aa9e; letter-spacing: 0.12em; }
+</style>
+</head>
+<body>
+<div class="crimson-bar"></div>
+<div class="main">
+  <div class="center">
+    <div class="rule-above"></div>
+    <div class="number">{{BIG_NUMBER}}<span class="unit">{{NUMBER_UNIT}}</span></div>
+    <div class="ornament">✦ ✦ ✦</div>
+    <div class="label">{{TITLE}}</div>
+    <div class="rule-below"></div>
+  </div>
+</div>
+<div class="bottom-bar"></div>
+<div class="page-num">{{PAGE_NUM}} / {{TOTAL}}</div>
+</body>
+</html>

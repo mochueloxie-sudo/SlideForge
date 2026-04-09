@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>{{TITLE}}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1920px; height: 1080px; background: #f5f3ee; font-family: Georgia, serif; padding: 56px 140px 72px; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+  .frame { position: absolute; inset: 16px; border: 1px solid #d4d0c8; pointer-events: none; }
+  .eyebrow { font-size: 11px; letter-spacing: 0.26em; color: #8b7355; text-transform: uppercase; margin-bottom: 10px; flex-shrink: 0; }
+  .title { font-family: 'Playfair Display', Georgia, serif; font-size: 52px; font-weight: 700; line-height: 1.1; color: #2c2c2c; margin-bottom: 28px; flex-shrink: 0; }
+  .table-wrap { flex: 1; min-height: 0; border: 1px solid #d4d0c8; overflow: hidden; display: flex; flex-direction: column; }
+  table { width: 100%; border-collapse: collapse; flex: 1; display: flex; flex-direction: column; }
+  thead { flex-shrink: 0; }
+  thead tr { background: #ece9e2; display: flex; }
+  thead th { flex: 1; padding: 0 28px; height: {{TABLE_HEADER_HEIGHT}}px; display: flex; align-items: center; font-size: {{TABLE_TH_FONT}}px; font-weight: 600; color: #8b7355; letter-spacing: 0.10em; border-bottom: 1px solid #d4d0c8; text-transform: uppercase; font-size: 12px; font-variant: small-caps; }
+  tbody { flex: 1; display: flex; flex-direction: column; }
+  tbody tr { flex: 1; display: flex; }
+  tbody tr:nth-child(odd)  { background: #faf8f4; }
+  tbody tr:nth-child(even) { background: #f5f3ee; }
+  tbody td { flex: 1; padding: 0 28px; font-size: {{TABLE_FONT_SIZE}}px; color: #4a4540; border-bottom: 1px solid #e8e4dc; display: flex; align-items: center; }
+  tbody tr:last-child td { border-bottom: none; }
+  .hairline { position: absolute; bottom: 60px; left: 140px; right: 140px; height: 1px; background: #d4d0c8; }
+  .page-num { position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); font-size: 12px; color: #b0aa9e; letter-spacing: 0.15em; }
+</style>
+</head>
+<body>
+<div class="frame"></div>
+<div class="eyebrow">{{EYEBROW}}</div>
+<h1 class="title">{{TITLE}}</h1>
+<div class="table-wrap">
+  <table>
+    <thead><tr>{{TABLE_HEADERS}}</tr></thead>
+    <tbody>{{TABLE_ROWS}}</tbody>
+  </table>
+</div>
+<div class="hairline"></div>
+<div class="page-num">— {{PAGE_NUM}} / {{TOTAL}} —</div>
+</body>
+</html>
