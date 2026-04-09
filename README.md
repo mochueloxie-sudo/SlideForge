@@ -1,305 +1,304 @@
-# Video Producer
+# Video Producer（视频生产者）
 
-[![中文](https://img.shields.io/badge/README-%E4%B8%AD%E6%96%87-red)](README_zh.md)
+> 将任何文档在 10 分钟内转换为精致的 1920×1080 演示文稿 — 支持视频、PDF 或交互式 HTML。
 
-> Turn any document into a polished 1920×1080 presentation — video, PDF, or interactive HTML — in under 10 minutes.
-
+[![English](https://img.shields.io/badge/README-English-blue)](README_en.md)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D18-43853d)](https://nodejs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-3.0.0-brightgreen)](_meta.json)
 
-Feed in a Feishu doc, Markdown file, or any URL. The pipeline analyses your content with MiniMax LLM, picks one of **13 design themes**, renders pixel-perfect HTML slides, and packages the result in your chosen format — all fully automatic.
+传入飞书文档、Markdown 文件或任意 URL，Pipeline 会使用 MiniMax LLM 分析内容，自动选择 **13 种设计主题**，渲染像素级精确的 HTML 幻灯片，并按你选择的格式打包输出 — 全程自动化。
 
-**[View demo output →](examples/demo-output/)** Open `presentation.html` in your browser to see a live example.
-
----
-
-## Features
-
-- **3 input sources** — Feishu docs, local `.md`/`.txt` files, web pages
-- **3 output formats** — MP4 video (with TTS narration), PDF, interactive HTML slideshow
-- **13 design themes** — 7 dark + 6 light, auto-selected by content keywords
-- **20+ content variants** — panels, stats grids, timelines, card grids, icon matrices, charts, tables, quotes, code blocks, and hybrid layouts
-- **Layout hints** — same variant, different visual arrangements (`grid-3`, `cards`, `hero-1`, `horizontal`, …)
-- **Adaptive typography** — font sizes, grid columns, and density classes adjust to content length automatically
-- **8 independent steps** — run the full pipeline or any step in isolation; all intermediate artifacts are persisted to disk
-- **Outline + script** — every export includes `outline.md` and `script.md`
+**[查看示例输出 →](examples/demo-output/)** 在浏览器中打开 `presentation.html` 查看实际效果。
 
 ---
 
-## Quick Start
+## 功能特性
+
+- **3 种输入源** — 飞书文档、本地 `.md`/`.txt` 文件、网页
+- **3 种输出格式** — MP4 视频（含 TTS 配音）、PDF、交互式 HTML 幻灯片
+- **13 种设计主题** — 7 个深色 + 6 个浅色，根据内容关键词自动匹配
+- **20+ 内容变体** — 面板、数据网格、时间线、卡片网格、图标矩阵、图表、表格、引言、代码块及混合布局
+- **布局提示** — 同一变体不同视觉排列（`grid-3`、`cards`、`hero-1`、`horizontal`、…）
+- **自适应排版** — 字号、栅格列数、内容密度自动适应文字长度
+- **8 个独立步骤** — 运行完整流程或单独重跑任意步骤；所有中间产物持久化到磁盘
+- **大纲 + 逐字稿** — 每次导出都附带 `outline.md` 和 `script.md`
+
+---
+
+## 快速开始
 
 ```bash
-# 1. Install
-git clone https://github.com/heytea/video-producer.git
+# 1. 安装
+git clone https://github.com/mochueloxie-sudo/Video-producer.git
 cd video-producer
 npm install
 
-# 2. Configure
+# 2. 配置
 cp .env.example .env
-# Edit .env → add MINIMAX_API_KEY (required)
+# 编辑 .env → 添加 MINIMAX_API_KEY（必填）
 
-# 3. Run (one command)
+# 3. 运行（一行命令）
 echo '{"command":"all","source":"./examples/test_article.md","format":"html","output_dir":"./output"}' | node executor.js
 
-# 4. Open the result
+# 4. 打开结果
 open ./output/presentation.html
 ```
 
-### Other Formats
+### 其他格式
 
 ```bash
 # PDF
 echo '{"command":"all","source":"./article.md","format":"pdf","output_dir":"./out"}' | node executor.js
 
-# Video (requires ffmpeg + edge-tts)
+# 视频（需安装 ffmpeg + edge-tts）
 echo '{"command":"all","source":"./article.md","format":"video","output_dir":"./out"}' | node executor.js
 
-# Multiple formats at once
+# 同时生成多种格式
 echo '{"command":"all","source":"./article.md","format":["pdf","html"],"output_dir":"./out"}' | node executor.js
 ```
 
 ---
 
-## Pipeline
+## 流程图
 
 ```
-Source (Feishu / .md / URL)
+输入源（飞书 / .md / URL）
   │
   ▼
-Step 0 ── Content Analysis ──────── MiniMax LLM → scenes.json
+Step 0 ── 内容分析 ─────────── MiniMax LLM → scenes.json
   │
   ▼
-Step 1 ── Script Generation ─────── MiniMax LLM → scenes[].script
+Step 1 ── 逐字稿生成 ───────── MiniMax LLM → scenes[].script
   │
   ▼
-Step 2 ── Design Parameters ─────── Rule engine → design_params.json
-  │                                  (theme auto-selection, variant inference, layout hints)
+Step 2 ── 设计参数 ─────────── 规则引擎 → design_params.json
+  │                               (主题自动选择、变体推断、布局提示)
   ▼
-Step 3 ── HTML Rendering ───────── Template tokens → page_XXX.html
+Step 3 ── HTML 渲染 ────────── 模板 token 替换 → page_XXX.html
   │
   ▼
-Step 4 ── Screenshot ───────────── Puppeteer → page_XXX.png (1920×1080)
+Step 4 ── 截图 ───────────── Puppeteer → page_XXX.png (1920×1080)
   │
   ▼
-Step 5 ── TTS ──────────────────── edge-tts → page_XXX.mp3 (skipped if no video)
+Step 5 ── TTS 配音 ────────── edge-tts → page_XXX.mp3（不生成视频时跳过）
   │
   ▼
-Step 6 ── Delivery Format ──────── video / pdf / html + outline.md + script.md
+Step 6 ── 交付格式 ─────────── video / pdf / html + outline.md + script.md
   │
   ▼
-Step 7 ── Delivery Channel ─────── local (default) / feishu
+Step 7 ── 交付渠道 ─────────── local（默认）/ feishu
 ```
 
-Every step reads and writes JSON to disk. You can re-run any step in isolation, inspect intermediates, or hand-edit `scenes.json` before continuing.
+每个步骤都读写磁盘 JSON 文件，支持单独重跑任意步骤、检查中间产物，或手动编辑 `scenes.json` 后继续。
 
 ---
 
-## Requirements
+## 环境要求
 
-| Dependency | Purpose | Install |
-|------------|---------|---------|
-| **Node.js ≥ 18** | Runtime | [nodejs.org](https://nodejs.org/) |
-| **Google Chrome** | Screenshots + PDF (Step 4/6) | Usually pre-installed |
-| **MiniMax API Key** | Content analysis + scripts (Step 0/1) | [minimax.chat](https://api.minimax.chat/) |
-| `edge-tts` | TTS narration (Step 5, video only) | `pip install edge-tts` |
-| `ffmpeg` | Video encoding (Step 6, video only) | `brew install ffmpeg` |
-| `lark-cli` | Feishu publishing (Step 7, optional) | `npm i -g @larksuite/cli` |
+| 依赖 | 用途 | 安装方式 |
+|------|------|---------|
+| **Node.js ≥ 18** | 运行环境 | [nodejs.org](https://nodejs.org/) |
+| **Google Chrome** | 截图 + PDF（Step 4/6） | 通常已预装 |
+| **MiniMax API Key** | 内容分析 + 逐字稿（Step 0/1） | [minimax.chat](https://api.minimax.chat/) |
+| `edge-tts` | TTS 配音（Step 5，仅视频格式） | `pip install edge-tts` |
+| `ffmpeg` | 视频编码（Step 6，仅视频格式） | `brew install ffmpeg` |
+| `lark-cli` | 飞书发布（Step 7，可选） | `npm i -g @larksuite/cli` |
 
-### Environment Variables
+### 环境变量
 
-Copy `.env.example` to `.env` and fill in:
+复制 `.env.example` 到 `.env` 并填写：
 
 ```ini
-# Required
+# 必填
 MINIMAX_API_KEY=sk-...
 MINIMAX_MODEL=MiniMax-M2.7-highspeed
 MINIMAX_BASE_URL=https://api.minimax.chat/v1
 
-# Optional — Feishu integration
+# 可选 — 飞书集成
 FEISHU_APP_ID=cli_...
 FEISHU_APP_SECRET=...
 ```
 
 ---
 
-## Themes
+## 13 种设计主题
 
-Leave `design_mode` empty for auto-selection, or specify one:
+`design_mode` 为空时自动选择，也可手动指定：
 
-### Dark
+### 深色主题
 
-| Theme | Accent | Best for |
-|-------|--------|----------|
-| `electric-studio` | Blue-purple + sky blue | General (default fallback) |
-| `bold-signal` | Orange-red | Business, branding |
-| `creative-voltage` | Electric blue | Creative, design |
-| `dark-botanical` | Warm gold | Humanities, education |
-| `neon-cyber` | Neon cyan + purple | Sci-fi, AI, gaming |
-| `terminal-green` | GitHub green + blue | Tech docs, APIs |
-| `deep-tech-keynote` | Sky blue + blue-purple | Keynote talks |
+| 主题 | 强调色 | 适用场景 |
+|------|--------|---------|
+| `electric-studio` | 蓝紫 + 天蓝 | 通用（默认兜底） |
+| `bold-signal` | 橙红 | 商业、品牌、营销 |
+| `creative-voltage` | 电蓝 | 创意、设计、艺术 |
+| `dark-botanical` | 暖金 | 人文、教育、社科 |
+| `neon-cyber` | 霓虹青 + 紫 | 科幻、AI、游戏 |
+| `terminal-green` | GitHub 绿 + 蓝 | 技术文档、API |
+| `deep-tech-keynote` | 天蓝 + 蓝紫 | 技术演讲 |
 
-### Light
+### 浅色主题
 
-| Theme | Accent | Best for |
-|-------|--------|----------|
-| `swiss-modern` | Pure black | Minimalist |
-| `paper-ink` | Red + black | Editorial, publishing |
-| `vintage-editorial` | Brown-gold | Retro, literary |
-| `notebook-tabs` | Mint green | Notes, journaling |
-| `pastel-geometry` | Pastel + geometry | Playful, casual |
-| `split-pastel` | Soft pink + blue | Gentle, feminine |
-
----
-
-## Content Variants
-
-The LLM automatically selects the best variant for each slide:
-
-| Variant | Template | Trigger |
-|---------|----------|---------|
-| `text` | `01_text_only` | Body paragraphs |
-| `panel` | `02_panel` | `key_points[]` list |
-| `stats_grid` | `03_stats_grid` | `stats[]` metrics |
-| `number` | `04_number` | `big_number` hero stat |
-| `quote` | `05_quote` | `quote_body` citation |
-| `timeline` | `07_timeline` | `steps[]` flow |
-| `two_col` | `08_two_col` | Left + right columns |
-| `icon_grid` | `10_icon_grid` | `icons[]` emoji grid |
-| `code` | `11_code_block` | `code_snippet` |
-| `table` | `12_table` | `table_headers[]` data |
-| `card_grid` | `13_card_grid` | `cards[]` |
-| `nav_bar` | `14_nav_bar` | Section navigation |
-| `chart` | `15_chart_demo` | `chart_series` bar chart |
-| `panel_stat` | `16_panel_stat` | Hybrid: list + stat |
-| `number_bullets` | `17_number_bullets` | Hybrid: number + bullets |
-| `quote_context` | `18_quote_context` | Hybrid: quote + context |
-| `text_icons` | `19_text_icons` | Hybrid: text + icons |
-
-Each variant supports **layout hints** (e.g. `grid-3`, `cards`, `hero-1`, `horizontal`, `2x2`) to vary the visual arrangement without changing the template.
+| 主题 | 强调色 | 适用场景 |
+|------|--------|---------|
+| `swiss-modern` | 纯黑 | 极简、瑞士风 |
+| `paper-ink` | 红 + 黑 | 编辑、出版 |
+| `vintage-editorial` | 棕金 | 复古、文艺 |
+| `notebook-tabs` | 薄荷绿 | 笔记、手账 |
+| `pastel-geometry` | 粉 + 几何色块 | 轻快、活泼 |
+| `split-pastel` | 柔粉 + 蓝 | 温柔、女性化 |
 
 ---
 
-## Output Structure
+## 内容变体
+
+LLM 自动为每张幻灯片选择最佳变体：
+
+| 变体 | 模板 | 触发条件 |
+|------|------|---------|
+| `text` | `01_text_only` | 段落正文 |
+| `panel` | `02_panel` | 关键点列表 |
+| `stats_grid` | `03_stats_grid` | 数据指标 |
+| `number` | `04_number` | 大数字指标 |
+| `quote` | `05_quote` | 引言 |
+| `timeline` | `07_timeline` | 步骤流程 |
+| `two_col` | `08_two_col` | 双栏对比 |
+| `icon_grid` | `10_icon_grid` | emoji 图标网格 |
+| `code` | `11_code_block` | 代码块 |
+| `table` | `12_table` | 表格数据 |
+| `card_grid` | `13_card_grid` | 卡片网格 |
+| `nav_bar` | `14_nav_bar` | 章节导航 |
+| `chart` | `15_chart_demo` | CSS 柱状图 |
+| `panel_stat` | `16_panel_stat` | 混合：列表 + 指标 |
+| `number_bullets` | `17_number_bullets` | 混合：数字 + 编号条目 |
+| `quote_context` | `18_quote_context` | 混合：引言 + 背景 |
+| `text_icons` | `19_text_icons` | 混合：正文 + 图标 |
+
+每个变体支持**布局提示**（如 `grid-3`、`cards`、`hero-1`、`horizontal`、`2x2`），在不更换模板的情况下改变视觉排列。
+
+---
+
+## 输出结构
 
 ```
 output/
-├── scenes.json            # Structured scene data + scripts
-├── design_params.json     # Theme, variants, layout hints
-├── page_001.html          # Rendered HTML slides
+├── scenes.json            # 结构化场景数据 + 逐字稿
+├── design_params.json     # 主题、变体、布局提示
+├── page_001.html          # 渲染后的 HTML 幻灯片
 ├── page_002.html
 ├── ...
 ├── screenshots/
-│   ├── page_001.png       # 1920×1080 screenshots
+│   ├── page_001.png       # 1920×1080 截图
 │   └── ...
-├── presentation.html      # Interactive slideshow (format=html)
-├── presentation.pdf       # PDF document (format=pdf)
-├── presentation.mp4       # Video with narration (format=video)
-├── outline.md             # Content outline
-├── script.md              # Full narration script
-└── MANIFEST.md            # Delivery manifest (channel=local)
+├── presentation.html      # 交互式幻灯片（format=html）
+├── presentation.pdf      # PDF 文档（format=pdf）
+├── presentation.mp4       # 带配音视频（format=video）
+├── outline.md             # 内容大纲
+├── script.md              # 完整逐字稿
+└── MANIFEST.md            # 交付清单（channel=local）
 ```
 
 ---
 
-## Step-by-Step Usage
+## 分步使用
 
-Run individual steps when you need fine-grained control:
+需要细粒度控制时，单独运行各步骤：
 
 ```bash
 P=./project
 
-# Analyse content
+# 内容分析
 echo '{"command":"step0","source":"./article.md","output_dir":"'"$P"'"}' | node executor.js
 
-# Generate narration scripts
+# 生成逐字稿
 echo '{"command":"step1","scenes":"'"$P"'/scenes.json","output_dir":"'"$P"'"}' | node executor.js
 
-# Design parameters (auto theme, or specify)
+# 设计参数（自动主题或手动指定）
 echo '{"command":"step2","scenes":"'"$P"'/scenes.json","output_dir":"'"$P"'","design_mode":"neon-cyber"}' | node executor.js
 
-# Render HTML slides
+# HTML 渲染
 echo '{"command":"step3","scenes":"'"$P"'/scenes.json","design_params":"'"$P"'/design_params.json","output_dir":"'"$P"'"}' | node executor.js
 
-# Take screenshots
+# 截图
 echo '{"command":"step4","html_dir":"'"$P"'","output_dir":"'"$P"'/screenshots"}' | node executor.js
 
-# Generate delivery formats
+# 生成交付格式
 echo '{"command":"step6","format":["pdf","html"],"scenes":"'"$P"'/scenes.json","screenshots_dir":"'"$P"'/screenshots","output_dir":"'"$P"'"}' | node executor.js
 
-# Package for delivery
+# 打包交付
 echo '{"command":"step7","channel":"local","output_dir":"'"$P"'"}' | node executor.js
 ```
 
 ---
 
-## Agent Integration
+## Agent 集成
 
-Video Producer exposes a standard JSON-in / JSON-out interface via `stdin` → `executor.js` → `stdout`, making it compatible with any AI agent framework:
+Video Producer 通过 `stdin` → `executor.js` → `stdout` 暴露标准 JSON 输入/输出接口，兼容任意 AI Agent 框架：
 
-- **Claude Code** — use as a skill via `SKILL.md`
-- **OpenClaw** — use `_meta.json` for auto-discovery
-- **Custom agents** — pipe JSON commands to `node executor.js`
+- **Claude Code** — 通过 `SKILL.md` 作为 skill 使用
+- **OpenClaw** — 通过 `_meta.json` 自动发现
+- **自定义 Agent** — 向 `node executor.js` 管道传输 JSON 命令
 
-See [`_meta.json`](_meta.json) for the full input/output schema and [`SKILL.md`](SKILL.md) for the agent skill specification.
+详见 [`_meta.json`](_meta.json) 的完整输入/输出 schema，以及 [`SKILL.md`](SKILL.md) 的 Agent skill 规范。
 
 ---
 
-## Project Structure
+## 项目结构
 
 ```
 video-producer/
-├── executor.js                     # Entry point — routes commands to steps
-├── _meta.json                      # Agent integration schema (v3.0.0)
-├── SKILL.md                        # Agent skill specification
+├── executor.js                     # 入口 — 将命令路由到各步骤
+├── _meta.json                      # Agent 集成 schema（v3.0.0）
+├── SKILL.md                        # Agent skill 规范
 ├── steps/
-│   ├── step0_analyze.js            # Content analysis (MiniMax LLM)
-│   ├── step1_script.js             # Script generation (MiniMax LLM)
-│   ├── step2_design.js             # Theme selection + variant inference
-│   ├── step3_html.js               # HTML rendering (template engine)
-│   ├── step4_screenshot.js         # Puppeteer screenshots
-│   ├── step5_tts.js                # TTS (edge-tts → say fallback)
-│   ├── step6_format.js             # Delivery formats (video/pdf/html)
-│   ├── step6_video.js              # FFmpeg video encoding (internal)
-│   ├── step7_channel.js            # Delivery channels (local/feishu)
-│   ├── step7_publish.js            # Feishu publishing (internal)
+│   ├── step0_analyze.js            # 内容分析（MiniMax LLM）
+│   ├── step1_script.js             # 逐字稿生成（MiniMax LLM）
+│   ├── step2_design.js             # 主题选择 + 变体推断
+│   ├── step3_html.js               # HTML 渲染（模板引擎）
+│   ├── step4_screenshot.js         # Puppeteer 截图
+│   ├── step5_tts.js                # TTS（edge-tts → say 降级）
+│   ├── step6_format.js             # 交付格式（video/pdf/html）
+│   ├── step6_video.js              # FFmpeg 视频编码（内部）
+│   ├── step7_channel.js            # 交付渠道（local/feishu）
+│   ├── step7_publish.js            # 飞书发布（内部）
 │   └── utils/
-│       ├── content_extractor.js    # Multi-source content extraction
-│       ├── llm_client.js           # MiniMax HTTP client
-│       ├── tool-locator.js         # System tool auto-discovery
-│       └── step-utils.js           # Shared utilities
+│       ├── content_extractor.js    # 多源内容提取
+│       ├── llm_client.js           # MiniMax HTTP 客户端
+│       ├── tool-locator.js         # 系统工具自动发现
+│       └── step-utils.js           # 共享工具
 ├── utils/
-│   ├── html_generator.js           # Core: template loading + token replacement
-│   └── screenshot.js               # Puppeteer wrapper
-├── samples/                        # Design theme templates
-│   ├── electric-studio/            # 13 theme directories, each with full variant set
+│   ├── html_generator.js           # 核心：模板加载 + token 替换
+│   └── screenshot.js               # Puppeteer 封装
+├── samples/                        # 设计主题模板
+│   ├── electric-studio/            # 13 个主题目录，每个含完整变体集
 │   ├── bold-signal/
 │   ├── ...
-│   └── shared/                     # Theme-agnostic variants (stats, timeline, etc.)
+│   └── shared/                     # 主题无关变体（stats、timeline 等）
 ├── examples/
-│   ├── test_article.md             # Sample article for testing
-│   ├── full_variant_test.md        # Full variant coverage test
-│   └── scenes_example.json         # Manual scenes.json reference
-├── .env.example                    # Environment variable template
+│   ├── test_article.md             # 测试用示例文章
+│   ├── full_variant_test.md        # 全变体覆盖测试
+│   └── scenes_example.json         # 手动 scenes.json 参考
+├── .env.example                    # 环境变量模板
 └── package.json
 ```
 
 ---
 
-## Contributing
+## 参与贡献
 
-1. Fork the repo
-2. Create a feature branch (`git checkout -b feat/my-feature`)
-3. Follow the design principles:
-   - **Templates over code** — all visual decisions live in `samples/*.html`, not in generator logic
-   - **Fixed pixels** — templates use `px` units (1920×1080 target), never `rem`/`vw`
-   - **Generator is a pipe** — load template → replace tokens → write file
-   - **Token naming** — `{{UPPER_CASE}}`, repeat markers have no index
-4. Test with `npm run test:e2e`
-5. Open a PR
+1. Fork 本仓库
+2. 创建功能分支（`git checkout -b feat/my-feature`）
+3. 遵循设计原则：
+   - **模板优于代码** — 所有视觉决策放在 `samples/*.html`，不写在生成器逻辑里
+   - **固定像素** — 模板使用 `px` 单位（目标 1920×1080），不用 `rem`/`vw`
+   - **生成器是管道** — 加载模板 → 替换 token → 写出文件
+   - **Token 命名** — `{{UPPER_CASE}}`，重复标记不带索引
+4. 用 `npm run test:e2e` 测试
+5. 提交 PR
 
 ---
 
-## License
+## 许可证
 
 [MIT](LICENSE)
