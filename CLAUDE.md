@@ -165,9 +165,8 @@ open ./test_e2e/presentation.html
 
 ### 已知限制
 
-1. Step 7 feishu 渠道：代码完整但未在真实环境验证视频嵌入
-2. FFmpeg 需用户手动安装（`brew install ffmpeg`）
-3. `steps/utils/llm_client.js` 顶部残留 `require('@anthropic-ai/sdk')`（未使用，待清理）
+1. FFmpeg 需用户手动安装（`brew install ffmpeg`）
+2. `steps/utils/llm_client.js` 顶部残留 `require('@anthropic-ai/sdk')`（未使用，待清理）
 
 ---
 
