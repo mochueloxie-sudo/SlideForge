@@ -170,6 +170,22 @@ open ./test_e2e/presentation.html
 
 ---
 
+## 待优化点
+
+### graphic-design executor 引用问题（P1）
+- **问题**：`steps/step2_design.js` 引用了 `~/.openclaw/workspace/skills/graphic-design/executor.js`，但该 skill 不存在于 workspace/skills/ 目录中
+- **现状**：调用时 30 秒超时后 fallback 到本地 preset，功能可用但有延迟
+- **待确认**：这个引用为什么会保留？是否可以移除或改为纯可选逻辑（不做强制调用）？
+- **参考路径**：`step2_design.js` 第 3 行注释 `// 默认真实调用 graphic-design executor；失败时回退到本地 preset`
+
+### Step 0 LLM 语义推荐设计主题（P1）
+- **现状**：Step 0 只做内容结构化，不推荐主题；主题选择由 Step 2 的 `inferContentType()` 规则引擎完成
+- **目标**：在 Step 0 的 LLM prompt 中增加主题推荐逻辑，让 AI 直接根据内容语义输出 `design_mode` 建议，存入 scenes.json
+- **优势**：Step 0 已调用 LLM，增加主题推荐无需额外 API 调用；语义理解比规则匹配更准确
+- **实现思路**：在 Step 0 prompt 末尾追加一行要求 LLM 输出 `recommended_design_mode`（从 13 个主题中选择最匹配的）
+
+---
+
 ## Roadmap
 
 ### P0 — HTML 动画支持
