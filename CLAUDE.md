@@ -167,9 +167,9 @@ open ./test_e2e/presentation.html
 
 ---
 
-## 设计原则参考（本地副本）
+## 设计原则参考（`refs/`）
 
-可选视觉与动效原则见 **`refs/frontend-slides/`**（vendored MIT，与 [zarazhangrui/frontend-slides](https://github.com/zarazhangrui/frontend-slides) 对齐；非 npm 依赖、不参与构建）。索引说明见 `refs/README.md`。
+视觉与动效参考材料见 **[refs/README.md](refs/README.md)**（当前仓库内含 `STYLE_PRESETS.md`、`viewport-base.css`、`animation-patterns.md`）。完整 [frontend-slides](https://github.com/zarazhangrui/frontend-slides) 树为**可选本地 clone**，默认不 vendored。动画范式另可参考 [frontend.slides](https://github.com/nicolo-ribaudo/frontend-slides)（与 FFmpeg 滤镜策略勿混用，见下文 Roadmap）。
 
 ---
 
@@ -185,25 +185,24 @@ open ./test_e2e/presentation.html
 ### 已知限制
 
 1. FFmpeg 需用户手动安装（`brew install ffmpeg`）
-2. `steps/utils/llm_client.js` 顶部残留 `require('@anthropic-ai/sdk')`（未使用，待清理）
 
 ---
 
 ## 主题选择链路（与当前代码一致）
 
-优先级在 **`steps/step2_design.js`**（未传 `design_mode` 时）：
+实现见 `steps/step2_design.js`。**未**在当次 JSON 传入 `design_mode` 时，优先级为：
 
-1. **`project.json` 的 `recommended_design_mode`**（Step0 LLM 在对象响应里写入；须为 13 个合法主题 id 之一）→ `mode_source: step0-llm`
-2. **`project.json` 的 `design_mode`**（且不等于默认 `electric-studio`）→ `mode_source: project.json`
-3. **`inferContentType()` + `CONTENT_TYPE_MAP`** 内容规则兜底 → `mode_source: auto`
+1. `project.json` 的 `recommended_design_mode`（Step0 LLM 对象响应写入；须为 13 个合法主题 id 之一）→ `mode_source: step0-llm`
+2. `project.json` 的 `design_mode`（且不等于默认 `electric-studio`）→ `mode_source: project.json`
+3. `inferContentType()` + `CONTENT_TYPE_MAP` 内容规则兜底 → `mode_source: auto`
 
-本次调用 JSON 里显式传入的 **`design_mode`** 始终最高优先级（`mode_source: user`）。
+当次 JSON 里显式传入的 `design_mode` 始终最高优先级（`mode_source: user`）。
 
 Step0：`scenes.json` 仍为**纯 scenes 数组**；`project.json` 可含 `recommended_design_mode`。若模型只返回数组（无推荐字段），Step2 走规则自动选主题。
 
-**`dark-botanical`**：已映射内容类型 **`人文社科`**（中/英键），`inferContentType()` 含人文/社科/策展/心理学等关键词时命中；与 **`文化艺术` → vintage-editorial** 并列分流。
+**dark-botanical**：已映射内容类型 **人文社科**（中/英键），`inferContentType()` 含人文/社科/策展/心理学等关键词时命中；与 **文化艺术** → **vintage-editorial** 并列分流。
 
-**Step2 preset 来源**：仅 **`frontend-presets.json`**（`getFallbackPreset`）与专业模式的 **`getDeepTechKeynotePreset`**；**不再**调用 OpenClaw 的 `graphic-design` executor（历史上曾硬编码 `~/.openclaw/.../executor.js` 并导致 30s 超时）。若将来再接外部设计 agent，建议用**显式环境变量**（例如仅当 `GRAPHIC_DESIGN_EXECUTOR` 指向可读脚本时才 `spawn`），默认关闭。
+**Step2 preset 来源**：仅 `steps/presets/frontend-presets.json`（`getFallbackPreset`）与专业模式的 `getDeepTechKeynotePreset`；**不再**调用 OpenClaw 的 `graphic-design` executor（历史上曾硬编码 `~/.openclaw/.../executor.js` 并导致 30s 超时）。若将来再接外部设计 agent，建议用**显式环境变量**（例如仅当 `GRAPHIC_DESIGN_EXECUTOR` 指向可读脚本时才 `spawn`），默认关闭。
 
 ---
 

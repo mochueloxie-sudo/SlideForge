@@ -287,6 +287,7 @@ slide-forge/
 ├── utils/
 │   ├── html_generator.js           # 核心：模板加载 + token 替换
 │   └── screenshot.js               # Puppeteer 封装
+├── refs/                           # 设计参考（STYLE_PRESETS 等，见 refs/README.md）
 ├── samples/                        # 设计主题模板
 │   ├── electric-studio/            # 13 个主题目录，每个含完整变体集
 │   ├── bold-signal/

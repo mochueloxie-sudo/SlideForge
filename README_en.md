@@ -288,6 +288,7 @@ slide-forge/
 ├── utils/
 │   ├── html_generator.js           # Core: template loading + token replacement
 │   └── screenshot.js               # Puppeteer wrapper
+├── refs/                           # Design reference docs (see refs/README.md)
 ├── samples/                        # Design theme templates
 │   ├── electric-studio/            # 13 theme directories, each with full variant set
 │   ├── bold-signal/

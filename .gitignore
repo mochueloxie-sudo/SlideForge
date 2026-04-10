@@ -31,6 +31,9 @@ test_icon_fix.html
 .DS_Store
 **/.DS_Store
 
+# Optional vendored design reference (see refs/README.md)
+refs/frontend-slides/
+
 # Editors
 .vscode/
 .idea/

@@ -14,11 +14,15 @@
 
 - （在此填写本迭代正在做的条目）
 
+### 工程与文档（近期）
+
+- `package-lock.json` 与 `package.json` 对齐，移除已不在依赖中的 `@anthropic-ai/sdk` 树；`llm_client.js` 仅为 MiniMax HTTPS 封装。
+- 新增 `refs/README.md`，`CLAUDE.md` 设计参考与主题选择章节与仓库现状一致并修正 Markdown。
+
 ### 候选（从 Roadmap 挑选）
 
 - **P0 阶段 1**：块级 `data-vp-animate` / stagger；`page_animation_preset` 多档预设（样张 + `html_generator`）。
 - **交付 HTML**：`presentation.html` 键盘说明写入 README / 首次打开轻提示（可选）。
-- **工程债**：清理 `llm_client.js` 未使用依赖（见 `CLAUDE.md` 已知限制）。
 
 ---
 
