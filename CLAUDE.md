@@ -185,6 +185,7 @@ open ./test_e2e/presentation.html
 ### 已知限制
 
 1. FFmpeg 需用户手动安装（`brew install ffmpeg`）
+2. **依赖审计（待定）**：`npm audit` 可能报传递依赖 **`basic-ftp`** [High — GHSA-chqc-8p9q-pq6q](https://github.com/advisories/GHSA-chqc-8p9q-pq6q)（FTP 相关 CRLF / 命令注入类）。本仓库典型用法是本地或 CI 跑流水线、**不**以「对不可信 FTP 服务端发起客户端连接」为核心能力，**实际风险极低**。若需清零告警或满足合规，再执行 `npm audit fix` 并跑 `npm run test:e2e` 验证 Puppeteer 链路。发版时可将结论摘要抄入 `CHANGELOG.md` 对应版本节。
 
 ---
 

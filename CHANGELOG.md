@@ -26,7 +26,7 @@
 
 ### 待定
 
-- **`npm audit`**：传递依赖 `basic-ftp` 报 high（FTP CRLF / 命令注入类，[GHSA-chqc-8p9q-pq6q](https://github.com/advisories/GHSA-chqc-8p9q-pq6q)）。对本仓库典型用法（本地/CI 跑流水线、非对外 FTP 服务）风险极低；后续可 `npm audit fix` 并跑 `npm run test:e2e` 再发版。
+- **`npm audit`（`basic-ftp`）**：结论、风险判断与后续动作以 **`CLAUDE.md` → 注意事项 → 已知限制 → 第 2 条** 为准；此处仅作发版备忘占位，避免与 CLAUDE 重复长文。
 
 ---
 
