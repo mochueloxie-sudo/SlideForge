@@ -1,12 +1,12 @@
 # SlideForge
 
-[![中文](https://img.shields.io/badge/README-%E4%B8%AD%E6%96%87-red)](README.md)
+[中文](README.md)
 
 > Turn any document into a polished 1920×1080 presentation — video, PDF, or interactive HTML — in under 10 minutes.
 
-[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D18-43853d)](https://nodejs.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.0.0-brightgreen)](_meta.json)
+[Node.js](https://nodejs.org/)
+[License: MIT](LICENSE)
+[Version](_meta.json)
 
 Feed in a Feishu doc, Markdown file, or any URL. The pipeline analyses your content with MiniMax LLM, picks one of **13 design themes**, renders pixel-perfect HTML slides, and packages the result in your chosen format — all fully automatic.
 
@@ -97,14 +97,16 @@ Every step reads and writes JSON to disk. You can re-run any step in isolation, 
 
 ## Requirements
 
-| Dependency | Purpose | Install |
-|------------|---------|---------|
-| **Node.js ≥ 18** | Runtime | [nodejs.org](https://nodejs.org/) |
-| **Google Chrome** | Screenshots + PDF (Step 4/6) | Usually pre-installed |
+
+| Dependency          | Purpose                               | Install                                   |
+| ------------------- | ------------------------------------- | ----------------------------------------- |
+| **Node.js ≥ 18**    | Runtime                               | [nodejs.org](https://nodejs.org/)         |
+| **Google Chrome**   | Screenshots + PDF (Step 4/6)          | Usually pre-installed                     |
 | **MiniMax API Key** | Content analysis + scripts (Step 0/1) | [minimax.chat](https://api.minimax.chat/) |
-| `edge-tts` | TTS narration (Step 5, video only) | `pip install edge-tts` |
-| `ffmpeg` | Video encoding (Step 6, video only) | `brew install ffmpeg` |
-| `lark-cli` | Feishu publishing (Step 7, optional) | `npm i -g @larksuite/cli` |
+| `edge-tts`          | TTS narration (Step 5, video only)    | `pip install edge-tts`                    |
+| `ffmpeg`            | Video encoding (Step 6, video only)   | `brew install ffmpeg`                     |
+| `lark-cli`          | Feishu publishing (Step 7, optional)  | `npm i -g @larksuite/cli`                 |
+
 
 ### Environment Variables
 
@@ -129,26 +131,30 @@ Leave `design_mode` empty for auto-selection, or specify one:
 
 ### Dark
 
-| Theme | Accent | Best for |
-|-------|--------|----------|
-| `electric-studio` | Blue-purple + sky blue | General (default fallback) |
-| `bold-signal` | Orange-red | Business, branding |
-| `creative-voltage` | Electric blue | Creative, design |
-| `dark-botanical` | Warm gold | Humanities, education |
-| `neon-cyber` | Neon cyan + purple | Sci-fi, AI, gaming |
-| `terminal-green` | GitHub green + blue | Tech docs, APIs |
-| `deep-tech-keynote` | Sky blue + blue-purple | Keynote talks |
+
+| Theme               | Accent                 | Best for                   |
+| ------------------- | ---------------------- | -------------------------- |
+| `electric-studio`   | Blue-purple + sky blue | General (default fallback) |
+| `bold-signal`       | Orange-red             | Business, branding         |
+| `creative-voltage`  | Electric blue          | Creative, design           |
+| `dark-botanical`    | Warm gold              | Humanities, education      |
+| `neon-cyber`        | Neon cyan + purple     | Sci-fi, AI, gaming         |
+| `terminal-green`    | GitHub green + blue    | Tech docs, APIs            |
+| `deep-tech-keynote` | Sky blue + blue-purple | Keynote talks              |
+
 
 ### Light
 
-| Theme | Accent | Best for |
-|-------|--------|----------|
-| `swiss-modern` | Pure black | Minimalist |
-| `paper-ink` | Red + black | Editorial, publishing |
-| `vintage-editorial` | Brown-gold | Retro, literary |
-| `notebook-tabs` | Mint green | Notes, journaling |
-| `pastel-geometry` | Pastel + geometry | Playful, casual |
-| `split-pastel` | Soft pink + blue | Gentle, feminine |
+
+| Theme               | Accent            | Best for              |
+| ------------------- | ----------------- | --------------------- |
+| `swiss-modern`      | Pure black        | Minimalist            |
+| `paper-ink`         | Red + black       | Editorial, publishing |
+| `vintage-editorial` | Brown-gold        | Retro, literary       |
+| `notebook-tabs`     | Mint green        | Notes, journaling     |
+| `pastel-geometry`   | Pastel + geometry | Playful, casual       |
+| `split-pastel`      | Soft pink + blue  | Gentle, feminine      |
+
 
 ---
 
@@ -156,25 +162,27 @@ Leave `design_mode` empty for auto-selection, or specify one:
 
 The LLM automatically selects the best variant for each slide:
 
-| Variant | Template | Trigger |
-|---------|----------|---------|
-| `text` | `01_text_only` | Body paragraphs |
-| `panel` | `02_panel` | `key_points[]` list |
-| `stats_grid` | `03_stats_grid` | `stats[]` metrics |
-| `number` | `04_number` | `big_number` hero stat |
-| `quote` | `05_quote` | `quote_body` citation |
-| `timeline` | `07_timeline` | `steps[]` flow |
-| `two_col` | `08_two_col` | Left + right columns |
-| `icon_grid` | `10_icon_grid` | `icons[]` emoji grid |
-| `code` | `11_code_block` | `code_snippet` |
-| `table` | `12_table` | `table_headers[]` data |
-| `card_grid` | `13_card_grid` | `cards[]` |
-| `nav_bar` | `14_nav_bar` | Section navigation |
-| `chart` | `15_chart_demo` | `chart_series` bar chart |
-| `panel_stat` | `16_panel_stat` | Hybrid: list + stat |
+
+| Variant          | Template            | Trigger                  |
+| ---------------- | ------------------- | ------------------------ |
+| `text`           | `01_text_only`      | Body paragraphs          |
+| `panel`          | `02_panel`          | `key_points[]` list      |
+| `stats_grid`     | `03_stats_grid`     | `stats[]` metrics        |
+| `number`         | `04_number`         | `big_number` hero stat   |
+| `quote`          | `05_quote`          | `quote_body` citation    |
+| `timeline`       | `07_timeline`       | `steps[]` flow           |
+| `two_col`        | `08_two_col`        | Left + right columns     |
+| `icon_grid`      | `10_icon_grid`      | `icons[]` emoji grid     |
+| `code`           | `11_code_block`     | `code_snippet`           |
+| `table`          | `12_table`          | `table_headers[]` data   |
+| `card_grid`      | `13_card_grid`      | `cards[]`                |
+| `nav_bar`        | `14_nav_bar`        | Section navigation       |
+| `chart`          | `15_chart_demo`     | `chart_series` bar chart |
+| `panel_stat`     | `16_panel_stat`     | Hybrid: list + stat      |
 | `number_bullets` | `17_number_bullets` | Hybrid: number + bullets |
-| `quote_context` | `18_quote_context` | Hybrid: quote + context |
-| `text_icons` | `19_text_icons` | Hybrid: text + icons |
+| `quote_context`  | `18_quote_context`  | Hybrid: quote + context  |
+| `text_icons`     | `19_text_icons`     | Hybrid: text + icons     |
+
 
 Each variant supports **layout hints** (e.g. `grid-3`, `cards`, `hero-1`, `horizontal`, `2x2`) to vary the visual arrangement without changing the template.
 
@@ -241,7 +249,7 @@ SlideForge exposes a standard JSON-in / JSON-out interface via `stdin` → `exec
 - **OpenClaw** — use `_meta.json` for auto-discovery
 - **Custom agents** — pipe JSON commands to `node executor.js`
 
-See [`_meta.json`](_meta.json) for the full input/output schema and [`SKILL.md`](SKILL.md) for the agent skill specification.
+See `[_meta.json](_meta.json)` for the full input/output schema and `[SKILL.md](SKILL.md)` for the agent skill specification.
 
 ---
 
@@ -291,10 +299,10 @@ slide-forge/
 1. Fork the repo
 2. Create a feature branch (`git checkout -b feat/my-feature`)
 3. Follow the design principles:
-   - **Templates over code** — all visual decisions live in `samples/*.html`, not in generator logic
-   - **Fixed pixels** — templates use `px` units (1920×1080 target), never `rem`/`vw`
-   - **Generator is a pipe** — load template → replace tokens → write file
-   - **Token naming** — `{{UPPER_CASE}}`, repeat markers have no index
+  - **Templates over code** — all visual decisions live in `samples/*.html`, not in generator logic
+  - **Fixed pixels** — templates use `px` units (1920×1080 target), never `rem`/`vw`
+  - **Generator is a pipe** — load template → replace tokens → write file
+  - **Token naming** — `{{UPPER_CASE}}`, repeat markers have no index
 4. Test with `npm run test:e2e`
 5. Open a PR
 

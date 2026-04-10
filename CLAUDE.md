@@ -6,6 +6,7 @@
 三种交付格式（视频 / PDF / 交互式 HTML），13 种主题自动匹配，所有产出附大纲和逐字稿。
 
 **核心原则**：工具链固化 + 创意自由解放
+
 - 底层工具固化：Puppeteer 截图、FFmpeg 合成、Edge TTS
 - 设计层解放：HTML 渲染完全由样张 token 驱动
 
@@ -13,25 +14,28 @@
 
 ## 架构
 
-| 层 | 文件 | 职责 |
-|----|------|------|
-| 入口 | `executor.js` | 路由命令到各 Step，`run_all` 串联全流程 |
-| 核心渲染 | `utils/html_generator.js` | 加载样张 → 替换 token → 注入 CSS → 写出 HTML |
-| 截图 | `utils/screenshot.js` | Puppeteer 批量截图 1920×1080 |
-| 样张 | `samples/{theme}/` | 13 主题 × 15+ 变体，纯 HTML + CSS |
-| Step 0 | `steps/step0_analyze.js` | MiniMax LLM 分析内容 → scenes.json |
-| Step 1 | `steps/step1_script.js` | MiniMax LLM 生成逐字稿 |
-| Step 2 | `steps/step2_design.js` | 规则引擎：主题选择 + 变体推断 + layout_hint |
-| Step 3 | `steps/step3_html.js` | 调用 html_generator |
-| Step 4 | `steps/step4_screenshot.js` | 调用 screenshot.js |
-| Step 5 | `steps/step5_tts.js` | edge-tts（降级 macOS say） |
-| Step 6 | `steps/step6_format.js` | 交付格式：video / pdf / html + outline + script |
-| Step 7 | `steps/step7_channel.js` | 交付渠道：local / feishu |
-| 内部 | `steps/step6_video.js` | FFmpeg H.264+AAC 25fps（被 step6_format 调用） |
-| 内部 | `steps/step7_publish.js` | lark-cli 飞书发布（被 step7_channel 调用） |
-| 工具 | `steps/utils/content_extractor.js` | 多源内容提取（飞书 / 本地 / 网页） |
-| 工具 | `steps/utils/llm_client.js` | MiniMax HTTP 封装 |
-| 工具 | `steps/utils/tool-locator.js` | ffmpeg / ffprobe / imagemagick 自动发现 |
+
+| 层      | 文件                                 | 职责                                                                                                              |
+| ------ | ---------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| 入口     | `executor.js`                      | 路由命令到各 Step，`run_all` 串联全流程                                                                                     |
+| 核心渲染   | `utils/html_generator.js`          | 加载样张 → 替换 token → 注入 CSS → 写出 HTML                                                                              |
+| 页内动画   | `utils/page_animations.js`         | P0：`design_params.page_animations` 时注入整页入场 CSS + 启动脚本（与 FFmpeg 的 `steps/animations/animation-strategies.js` 分离） |
+| 截图     | `utils/screenshot.js`              | Puppeteer 批量截图 1920×1080                                                                                        |
+| 样张     | `samples/{theme}/`                 | 13 主题 × 15+ 变体，纯 HTML + CSS                                                                                     |
+| Step 0 | `steps/step0_analyze.js`           | MiniMax LLM 分析内容 → scenes.json                                                                                  |
+| Step 1 | `steps/step1_script.js`            | MiniMax LLM 生成逐字稿                                                                                               |
+| Step 2 | `steps/step2_design.js`            | 规则引擎：主题选择 + 变体推断 + layout_hint                                                                                  |
+| Step 3 | `steps/step3_html.js`              | 调用 html_generator                                                                                               |
+| Step 4 | `steps/step4_screenshot.js`        | 调用 screenshot.js                                                                                                |
+| Step 5 | `steps/step5_tts.js`               | edge-tts（降级 macOS say）                                                                                          |
+| Step 6 | `steps/step6_format.js`            | 交付格式：video / pdf / html + outline + script                                                                      |
+| Step 7 | `steps/step7_channel.js`           | 交付渠道：local / feishu                                                                                             |
+| 内部     | `steps/step6_video.js`             | FFmpeg H.264+AAC 25fps（被 step6_format 调用）                                                                       |
+| 内部     | `steps/step7_publish.js`           | lark-cli 飞书发布（被 step7_channel 调用）                                                                               |
+| 工具     | `steps/utils/content_extractor.js` | 多源内容提取（飞书 / 本地 / 网页）                                                                                            |
+| 工具     | `steps/utils/llm_client.js`        | MiniMax HTTP 封装                                                                                                 |
+| 工具     | `steps/utils/tool-locator.js`      | ffmpeg / ffprobe / imagemagick 自动发现                                                                             |
+
 
 ---
 
@@ -46,12 +50,14 @@
 ### 变体文件
 
 每个主题目录包含：
+
 - `cover.html`
 - `01_text_only.html` / `02_panel.html` / `04_number.html` / `05_quote.html`
 - `10_icon_grid.html` / `11_code_block.html` / `12_table.html`
 - `13_card_grid.html` / `14_nav_bar.html` / `15_chart_demo.html`
 
 `shared/` 通用变体（主题无关）：
+
 - `03_stats_grid.html` / `07_timeline.html` / `08_two_col.html`
 - `16_panel_stat.html` / `17_number_bullets.html` / `18_quote_context.html` / `19_text_icons.html`
 
@@ -64,22 +70,25 @@
 
 `layout_hint` 注入到 `<body class="layout-xxx">`，模板内任何元素通过 `body.layout-xxx .selector {}` 响应：
 
-| 变体 | 可用 hint |
-|------|----------|
-| `panel` | `stack`（默认）/ `grid-3` / `sidebar-left` / `cards` / `numbered` |
-| `stats_grid` | `row`（默认）/ `hero-1` / `2x2` |
-| `timeline` | `vertical`（默认）/ `horizontal` / `alternating` |
-| `two_col` | `equal`（默认）/ `wide-left` / `wide-right` |
-| `quote` | `center`（默认）/ `left-bar` / `full` |
-| `number` | `center`（默认）/ `split` |
-| `card_grid` | 默认 / `2x2` |
-| `icon_grid` | 自动（按数量推断列数） |
+
+| 变体           | 可用 hint                                                       |
+| ------------ | ------------------------------------------------------------- |
+| `panel`      | `stack`（默认）/ `grid-3` / `sidebar-left` / `cards` / `numbered` |
+| `stats_grid` | `row`（默认）/ `hero-1` / `2x2`                                   |
+| `timeline`   | `vertical`（默认）/ `horizontal` / `alternating`                  |
+| `two_col`    | `equal`（默认）/ `wide-left` / `wide-right`                       |
+| `quote`      | `center`（默认）/ `left-bar` / `full`                             |
+| `number`     | `center`（默认）/ `split`                                         |
+| `card_grid`  | 默认 / `2x2`                                                    |
+| `icon_grid`  | 自动（按数量推断列数）                                                   |
+
 
 ---
 
 ## html_generator.js 核心逻辑
 
-入口：`generateHtml(scenes, designMode, htmlDir, pageDirections)`
+入口：`generateHtml(scenes, designMode, htmlDir, designParams)`  
+第四参为 Step2 产出的完整 `design_params`（含 `page_directions`、`page_animations` 等）；兼容旧调用传入 **仅** `page_directions` 数组。
 
 ```
 1. scene.type → generateCover / generateContent / generateSummary
@@ -87,10 +96,12 @@
 3. 扫描 {{TOKEN}} markers → 替换
 4. repeat marker → 按数组长度重复对应 HTML 片段
 5. 注入全局 CSS：readability + density + glass + title + centering
-6. 写出 page_XXX.html
+6. 若 `page_animations === true`：再注入页内入场动画（见 `page_animations.js`）
+7. 写出 page_XXX.html
 ```
 
 关键函数：
+
 - `loadTemplate(theme, variant)` — 先找主题目录，fallback 到 shared/
 - `buildTokens(scene, total)` — 构建 token map
 - `replaceTokens(html, tokens)` — `{{NAME}}` → 值
@@ -102,11 +113,13 @@
 ### CSS 注入顺序
 
 每个页面的 `</head>` 前注入：
+
 1. `readCSS` — 可读性基线
 2. `densityCSS` — 密度自适应
 3. `glassCSS` — 毛玻璃效果
 4. `titleCSS` — 标题增强
 5. 居中 CSS — flexbox 垂直居中
+6. （可选）`#vp-page-animations` — 整页 `fade-up` 入场 + `body` 启动类（`page_animations` 开启时）
 
 ---
 
@@ -154,6 +167,12 @@ open ./test_e2e/presentation.html
 
 ---
 
+## 设计原则参考（本地副本）
+
+可选视觉与动效原则见 `**refs/frontend-slides/**`（vendored MIT，与 [zarazhangrui/frontend-slides](https://github.com/zarazhangrui/frontend-slides) 对齐；非 npm 依赖、不参与构建）。索引说明见 `refs/README.md`。
+
+---
+
 ## 注意事项
 
 - **样张 > 代码**：样式决策以样张 HTML 为准，不在 generator 里硬编码 CSS
@@ -170,20 +189,33 @@ open ./test_e2e/presentation.html
 
 ---
 
+## 主题选择链路（已实现）
+
+1. **用户指定**：仅当本次调用 JSON 里带了 `design_mode`（`all` / `step2` 等由 agent 或人工传入）— Step2 **只认参数**，不读 `project.json` 里的 `design_mode`。
+2. **未指定**：`project.json` 的 `**recommended_design_mode`**（Step0 LLM）→ 校验为合法主题 id 后采用（`mode_source: step0-llm`）。
+3. **仍无或未识别**：`inferContentType()` + `CONTENT_TYPE_MAP` 规则兜底（`mode_source: auto`）。
+
+`project.json` 里仍可保留 `design_mode`（例如 Step0 入参写入，给人看或给别的工具用），但 **Step2 选主题不依赖它**。Step0 要求模型返回 `{ "recommended_design_mode", "scenes" }`；若只返回数组则仅解析 `scenes`。`scenes.json` 仍为纯数组。
+
+---
+
 ## 待优化点
 
 ### dark-botanical 主题未被 CONTENT_TYPE_MAP 覆盖（P2）
+
 - **问题**：13 个主题中 `dark-botanical` 没有出现在 `CONTENT_TYPE_MAP` 里，`inferContentType()` 也没有相关关键词，永远不会被 auto-select 命中
 - **现状**：`dark-botanical` 只能通过用户手动 `--design_mode dark-botanical` 指定
 - **待确认**：为 `dark-botanical` 补充对应的内容类型和关键词映射（如"人文/教育/社科" → `dark-botanical`）
 
 ### graphic-design executor 引用问题（P1）
+
 - **问题**：`steps/step2_design.js` 引用了 `~/.openclaw/workspace/skills/graphic-design/executor.js`，但该 skill 不存在于 workspace/skills/ 目录中
 - **现状**：调用时 30 秒超时后 fallback 到本地 preset，功能可用但有延迟
 - **待确认**：这个引用为什么会保留？是否可以移除或改为纯可选逻辑（不做强制调用）？
 - **参考路径**：`step2_design.js` 第 3 行注释 `// 默认真实调用 graphic-design executor；失败时回退到本地 preset`
 
 ### Step 0 LLM 语义推荐设计主题（P1）
+
 - **现状**：Step 0 只做内容结构化，不推荐主题；主题选择由 Step 2 的 `inferContentType()` 规则引擎完成
 - **目标**：在 Step 0 的 LLM prompt 中增加主题推荐逻辑，让 AI 直接根据内容语义输出 `design_mode` 建议，存入 scenes.json
 - **优势**：Step 0 已调用 LLM，增加主题推荐无需额外 API 调用；语义理解比规则匹配更准确
@@ -195,16 +227,30 @@ open ./test_e2e/presentation.html
 
 ### P0 — HTML 动画支持
 
-当前截图是静态 1920×1080 PNG，交互式 HTML 演示也是图片轮播。下一步让 HTML 页面本身具备动画能力：
+当前截图是静态 1920×1080 PNG，交互式 HTML 演示也是图片轮播。下一步让 HTML 页面本身具备动画能力；`format=html` 时直接播放动画，`format=video` 长期可用 Puppeteer 录制动效帧。
 
-- **目标**：每张幻灯片支持入场动画（fade-in、slide-up、stagger reveal 等），`format=html` 时直接播放动画，`format=video` 时用 Puppeteer 录制动画帧
-- **参考**：[frontend.slides](https://github.com/nicolo-ribaudo/frontend-slides) 的 CSS Animation + Intersection Observer 方案
-- **实现思路**：
-  1. `samples/` 样张中为每个元素添加 `data-animate="fade-up"` 属性和对应 CSS `@keyframes`
-  2. 新增 `steps/animations/` 动画策略配置（已有 `animation-strategies.js` 骨架）
-  3. Step 3 渲染时根据 `design_params.animation` 注入动画 CSS + JS trigger
-  4. Step 4 截图模式不变（等动画完成后截静态帧）；Step 6 `format=video` 模式用 `page.screencast()` 或逐帧 `page.screenshot()` 录制动画
-  5. Step 6 `format=html` 演示模式直接保留原始 HTML（而非截图），切页时触发动画
+**参考**：[frontend.slides](https://github.com/nicolo-ribaudo/frontend-slides) 的 CSS Animation +（后续）Intersection Observer。
+
+**分阶段（执行顺序）**
+
+
+| 阶段    | 内容                                                                                                                                                    | 状态               |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| **0** | `design_params.page_animations`（Step2 默认 `true`，可改为 `false`）+ `utils/page_animations.js` 注入整页 `fade-up` + `screenshot.js` 等待 `vp-anim-ready` 后再多留一帧时长 | **进行中（MVP 已落地）** |
+| **1** | 样张或生成器为块级元素加 `data-vp-animate` / stagger；`page_animation_preset` 多档预设                                                                                 | 待做               |
+| **2** | `format=video`：Puppeteer 录制动效帧；`presentation.html` 轮播与原生 HTML 动效策略统一                                                                                  | 待做               |
+
+
+**与现有文件分工**
+
+- `**utils/page_animations.js`**：单页 HTML 的 CSS + 极短启动脚本（P0）。
+- `**steps/animations/animation-strategies.js`**：FFmpeg 滤镜策略；语义与页内 CSS 动画分离，勿混用。
+
+**后续实现思路（阶段 1+）**
+
+1. 在重点变体样张或 `html_generator` 内联块上增加 `data-vp-animate` + stagger delay
+2. Step3 按 `page_animation_preset` 选择 CSS 包
+3. Step4 / Step6：无动画分支保持短延迟；有动画分支已等待关键帧后再截图（视频路径后续扩展 `screencast` 或逐帧）
 
 ### P1 — 样张丰富度 + 用户自定义主题
 
@@ -214,12 +260,12 @@ open ./test_e2e/presentation.html
   - 新增行业垂直主题（医疗、教育、金融等）
   - 新增变体类型（对比图、流程图、组织架构、漏斗图等）
   - 定期从优秀 PPT 模板中提取新样张
-
 - **用户自定义主题（通用方案）**：
   1. **上传 PPT / 图片 → 自动提取样张**：用户上传自己喜欢的 PPT 或设计截图，系统自动分析版式结构（标题位置、配色、字体、布局模式），生成对应的 HTML 样张 + token 映射
   2. **实现路径**：
-     - 新增 `steps/step_import.js`：接收 `.pptx` / `.pdf` / `.png` 输入
-     - PPT 路径：用 `pptx-parser` 解析母版 → 提取色板、字体、版式 → 生成 `samples/custom-{name}/` 目录
-     - 图片路径：用 LLM Vision 分析截图布局 → 推断 HTML 结构 + CSS → 生成样张
-     - 输出标准的 `cover.html` + 变体文件，自动注册到 `DESIGN_TEMPLATES`
+    - 新增 `steps/step_import.js`：接收 `.pptx` / `.pdf` / `.png` 输入
+    - PPT 路径：用 `pptx-parser` 解析母版 → 提取色板、字体、版式 → 生成 `samples/custom-{name}/` 目录
+    - 图片路径：用 LLM Vision 分析截图布局 → 推断 HTML 结构 + CSS → 生成样张
+    - 输出标准的 `cover.html` + 变体文件，自动注册到 `DESIGN_TEMPLATES`
   3. **简化方案（先行）**：提供 `samples/_template/` 脚手架目录，用户只需填色值和字体即可快速创建新主题
+

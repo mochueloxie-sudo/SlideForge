@@ -1,7 +1,7 @@
 #!/bin/bash
 # 工具诊断脚本：检查 slide-forge 依赖的外部工具
 
-echo "🔧 Video-Producer 工具诊断"
+echo "🔧 SlideForge 工具诊断"
 echo "================================"
 echo ""
 
