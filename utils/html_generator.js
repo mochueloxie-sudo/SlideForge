@@ -821,6 +821,8 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages, designPara
   }
   const variantMap = {
     'text':        '01_text_only',
+    // LLM / Step0 may emit content_variant "summary" for closing slides; same slots as panel (key_points, etc.)
+    'summary':     '02_panel',
     'panel':       '02_panel',
     'stats_grid':  '03_stats_grid',
     'number':      '04_number',
@@ -1175,7 +1177,14 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages, designPara
     tokens.SECTION_LABEL = escapeHtml(scene.section_label ||
       `Section ${String(pageNum).padStart(2,'0')} · ${String(totalPages).padStart(2,'0')}`);
     tokens.BOTTOM_TEXT   = escapeHtml(scene.bottom_text   || '');
-    // SUBTITLE / TITLE 复用基础 tokens 即可（buildTokens 已处理）
+    // 14_nav_bar 正文在 {{SUBTITLE}}（不是 {{BODY}}）；body 为 null 时常仅剩 Step1 的 script
+    if (variant === 'nav_bar') {
+      const subSrc = scene.subtitle || scene.secondary
+        || (Array.isArray(scene.body) ? scene.body[0] : (scene.body != null ? String(scene.body) : ''));
+      if ((!subSrc || !String(subSrc).trim()) && scene.script) {
+        tokens.SUBTITLE = escapeHtml(String(scene.script).trim());
+      }
+    }
   }
 
   // chart variant: CSS 柱状图 + 图例 + 底部统计

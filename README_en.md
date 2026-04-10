@@ -89,6 +89,21 @@ For **Cursor, Codex, OpenClaw / Clawdbot**, and similar: after cloning or instal
 
 **`npm pack` / `npm publish` tarballs include `SKILL.md` and `_meta.json`** alongside `steps/`, `samples/`, and other runtime files—no separate skill copy step.
 
+### Ask the user before running (recommended)
+
+Before invoking `executor.js` on the user’s behalf, the agent should **confirm a few choices** and map them to JSON fields such as `format`, `channel`, and `source`. **Do not** silently default to `format: "video"`—it is the slowest path and requires FFmpeg and TTS.
+
+Suggested order (merge into one confirmation if the user already stated everything):
+
+1. **Source** — Feishu doc URL, local `.md`/`.txt` path, or web page URL? (`source`)
+2. **Output formats** — PDF only, HTML only, video only, or **multiple**? (`format` as a string or array, e.g. `["pdf","html"]`)  
+   - If **video** is included, **FFmpeg** and **edge-tts** (or macOS `say` fallback) are required; Step 5 runs TTS.
+3. **Delivery channel** — **Local** artifacts under `output_dir`, or **publish to Feishu**? (`channel`: `local` default / `feishu`)  
+   - For **feishu**, Feishu app credentials in `.env` are required, plus values such as **`doc_title`** and **`folder_token`**; if anything is missing, do not set `channel: feishu` until the user supplies them.
+4. **(Optional)** — Pin **`design_mode`**? Custom **`output_dir`**? Disable in-slide motion with **`page_animations: false`**?
+
+For the full checklist and `request.json` usage (no shell pipe), see **`SKILL.md`** (“Agent 触发后的交互” and “OpenClaw / 受限 exec”).
+
 ### How `design_mode` is resolved
 
 Matches the **Design themes** section above. When `design_mode` is **not** in the current request JSON, resolution order is:
@@ -225,6 +240,11 @@ output/
 ├── script.md              # Full narration script
 └── MANIFEST.md            # Delivery manifest (channel=local)
 ```
+
+### `format=html`: two browser entrypoints (important for agents)
+
+- **`presentation.html`** loads **`page_*.html`** in the **same directory** via **iframe**—that is where **in-slide DOM, hover, and CSS entrance animations** work. Ship the **whole output folder** (at least `presentation.html` + every `page_*.html`), or a zip of it. **Do not** hand users a single “bundled” HTML and call it the interactive deck.
+- **`presentation_static.html`** (or any **single-file** carousel that only embeds PNG screenshots) is a **bitmap flipbook** aligned with PDF frames—fine for one-file sharing, but **no** interactive behavior inside each slide’s template. Don’t label it the same as the iframe primary entry.
 
 ---
 

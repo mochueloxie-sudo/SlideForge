@@ -6,22 +6,22 @@
 
 const ANIMATION_STRATEGIES = {
   // Dramatic / Cinematic: 慢速、大尺度、视差感
+  // 注意：勿使用 fade=in 做片头淡入。step6 按「每页一段 MP4」再 concat；每段开头的 fade=in
+  // 会从黑场拉起，concat 后表现为封面黑屏 + 翻页黑幕。动效仅保留不引入全透明起手的滤镜。
   dramatic: {
     duration: 1.2, // 秒
-    fade_in_frames: 30, // 1.2s @ 25fps
+    fade_in_frames: 0,
     effects: [
-      'fade=in:0:30',
       'zoompan=z=\'min(zoom+0.0015,1.05)\':d=75'
     ],
-    description: 'Slow scale-in with dramatic fade'
+    description: 'Slow scale-in (no black fade — concat-safe)'
   },
 
   // Techy / Futuristic: 霓虹、glitch、网格
   techy: {
     duration: 0.8,
-    fade_in_frames: 20,
+    fade_in_frames: 0,
     effects: [
-      'fade=in:0:20',
       'hue=h=0.05*sin(2*PI*t):s=0.1', // 微妙的色相偏移
       'colorchannelmixer=aa=0.08' // 发光感
     ],
@@ -31,9 +31,8 @@ const ANIMATION_STRATEGIES = {
   // Playful / Friendly: 弹性、活泼
   playful: {
     duration: 0.6,
-    fade_in_frames: 15,
+    fade_in_frames: 0,
     effects: [
-      'fade=in:0:15',
       'scale=iw*1.02:ih*1.02:flags=neighbor', // 轻微 overshoot
       'split=2[in1][in2];[in1]crop=iw:ih/2:0:0[top];[in2]crop=iw:ih/2:0:ih/2[bottom];[top][bottom]vstack' // 动态感
     ],
@@ -43,31 +42,28 @@ const ANIMATION_STRATEGIES = {
   // Professional / Corporate: 干净、快速、克制
   professional: {
     duration: 0.4,
-    fade_in_frames: 10,
+    fade_in_frames: 0,
     effects: [
-      'fade=in:0:10',
-      'format=rgba,colorchannelmixer=aa=0.02' // 极淡的淡入
+      'setsar=1'
     ],
-    description: 'Clean, fast, subtle'
+    description: 'Clean, concat-safe (no fade)'
   },
 
   // Calm / Minimal: 极慢、柔和
   calm: {
     duration: 1.5,
-    fade_in_frames: 38,
+    fade_in_frames: 0,
     effects: [
-      'fade=in:0:38',
-      'boxblur=2:1' // 初始轻微模糊，淡入时变清晰（需双 pass）
+      'boxblur=2:1'
     ],
-    description: 'Gentle, slow fade'
+    description: 'Soft blur (no black fade — concat-safe)'
   },
 
   // Editorial / Magazine: 优雅、序列
   editorial: {
     duration: 0.9,
-    fade_in_frames: 23,
+    fade_in_frames: 0,
     effects: [
-      'fade=in:0:23',
       'crop=iw:ih-2:0:1' // 轻微裁剪产生动态
     ],
     description: 'Elegant reveal'
@@ -118,12 +114,12 @@ function selectAnimationStrategy(design, sceneType) {
  */
 function buildFFmpegFilter(strategy, audioDuration) {
   const effects = strategy.effects.map(e => {
-    // 如果 effect 包含 duration 变量，替换
     return e.replace(/\$duration/g, audioDuration.toString());
-  });
+  }).filter(Boolean);
 
-  // 拼接多个 filter，用逗号分隔
-  return effects.join(',');
+  const chain = effects.join(',');
+  // 空链时仍需合法 -vf（部分 ffmpeg 对缺省 vf 与 loop 组合挑剔）
+  return chain || 'setsar=1';
 }
 
 module.exports = {

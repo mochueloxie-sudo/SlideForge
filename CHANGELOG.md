@@ -33,6 +33,25 @@
 
 ---
 
+## [3.1.1] — 2026-04-12
+
+### 视频合成
+
+- **`steps/animations/animation-strategies.js`**：去掉各策略中的 **`fade=in`**。每页单独编码后再 **`concat`** 时，片头 `fade=in` 会从黑场拉起，表现为 **封面黑屏** 与 **翻页黑幕**。保留 zoompan / hue / crop / boxblur 等不引入全透明起手的滤镜；`professional` 改为 **`setsar=1`**。
+- **`steps/step6_video.js`**：`-vf` 插入在所有输入之后、`-c:v` 之前，避免 FFmpeg 参数顺序错误。
+
+### HTML 渲染
+
+- **`utils/html_generator.js`**：`content_variant` **`summary`** 映射到 **`02_panel`**，避免误落 `01_text_only` 导致 `key_points` 不渲染。
+- **`nav_bar`**：`subtitle` / `secondary` / `body` 皆空时，用 **`script`** 写入 **`SUBTITLE`**（模板正文区为 `{{SUBTITLE}}` 而非 `{{BODY}}`）。
+
+### Agent 与文档
+
+- **`executor.js`**：支持 **`node executor.js ./request.json`**，便于 OpenClaw 等禁止 shell 管道的环境。
+- **`SKILL.md`** / **`README.md`** / **`README_en.md`**：触发技能前建议向用户确认 `format` / `channel`；说明 **`presentation.html`（iframe + `page_*.html`）** 与 **`presentation_static.html`（PNG 单文件轮播）** 的差异，避免误称「交互式」。
+
+---
+
 ## [3.1.0] — 2026-04-11
 
 ### 内容变体（四款 · 全主题可用）

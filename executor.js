@@ -24,50 +24,73 @@ const { spawn } = require('child_process');
   }
 })();
 
+async function dispatch(params) {
+  const { command } = params;
+
+  console.log(`🎬 slide-forge: executing command="${command}"`);
+
+  let result;
+  switch (command) {
+    case 'step0':
+      result = await step0_analyze(params);
+      break;
+    case 'step1':
+      result = await step1_script(params);
+      break;
+    case 'step2':
+      result = await step2_design(params);
+      break;
+    case 'step3':
+      result = await step3_html(params);
+      break;
+    case 'step4':
+      result = await step4_screenshot(params);
+      break;
+    case 'step5':
+      result = await step5_tts(params);
+      break;
+    case 'step6':
+      result = await step6_format(params);
+      break;
+    case 'step7':
+      result = await step7_channel(params);
+      break;
+    case 'all':
+      result = await run_all(params);
+      break;
+    default:
+      throw new Error(`Unknown command: ${command}`);
+  }
+
+  console.log(JSON.stringify(result, null, 2));
+}
+
 async function main() {
+  // OpenClaw / 部分沙箱的 exec preflight 会拦截 `echo '{...}' | node executor.js` 管道；
+  // 子进程之间 stdin 仍是 spawn 内部传递，与此无关。文件传参可绕过外层管道限制：
+  //   node executor.js ./request.json
+  const fileArg = process.argv[2];
+  if (fileArg && /\.json$/i.test(fileArg)) {
+    const abs = path.isAbsolute(fileArg) ? fileArg : path.resolve(process.cwd(), fileArg);
+    if (fs.existsSync(abs)) {
+      try {
+        const params = JSON.parse(fs.readFileSync(abs, 'utf8'));
+        await dispatch(params);
+      } catch (err) {
+        console.error('❌ Error:', err.message);
+        console.error(err.stack);
+        process.exit(1);
+      }
+      return;
+    }
+  }
+
   let input = '';
-  process.stdin.on('data', chunk => input += chunk);
+  process.stdin.on('data', chunk => (input += chunk));
   process.stdin.on('end', async () => {
     try {
       const params = JSON.parse(input);
-      const { command } = params;
-
-      console.log(`🎬 slide-forge: executing command="${command}"`);
-
-      let result;
-      switch (command) {
-        case 'step0':
-          result = await step0_analyze(params);
-          break;
-        case 'step1':
-          result = await step1_script(params);
-          break;
-        case 'step2':
-          result = await step2_design(params);
-          break;
-        case 'step3':
-          result = await step3_html(params);
-          break;
-        case 'step4':
-          result = await step4_screenshot(params);
-          break;
-        case 'step5':
-          result = await step5_tts(params);
-          break;
-        case 'step6':
-          result = await step6_format(params);
-          break;
-        case 'step7':
-          result = await step7_channel(params);
-          break;
-        case 'all':
-          result = await run_all(params);
-          break;
-        default:
-          throw new Error(`Unknown command: ${command}`);
-      }
-
-      console.log(JSON.stringify(result, null, 2));
+      await dispatch(params);
     } catch (err) {
       console.error('❌ Error:', err.message);
       console.error(err.stack);

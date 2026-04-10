@@ -92,7 +92,22 @@
 | `**executor.js**` | 唯一入口：`echo '<json>' | node executor.js`；与 `SKILL.md` 中的示例一致。                                                                          |
 
 
-`**npm pack` / `npm publish` 发布的 tarball 已包含 `SKILL.md` 与 `_meta.json**`，与 `steps/`、`samples/` 等运行所需文件一并分发，无需再手工拷贝技能文件。
+`npm pack` / `npm publish` 发布的 tarball 已包含 **SKILL.md** 与 **_meta.json**，与 `steps/`、`samples/` 等运行所需文件一并分发，无需再手工拷贝技能文件。
+
+### Agent 触发后先问用户（推荐）
+
+在代用户调用 `executor.js` **之前**，Agent 宜做简短确认，再把答案写入 JSON 的 `format`、`channel`、`source` 等。**不要**在未确认时默认 `format: "video"`（耗时长，且依赖 FFmpeg、TTS）。
+
+建议顺序（用户一句话说清时可合并成一条确认）：
+
+1. **内容来源** — 飞书链接、本地 `.md`/`.txt` 路径，或网页 URL？（`source`）
+2. **交付格式** — 仅 PDF、仅 HTML、仅视频，还是多种都要？（`format`：字符串或数组，如 `["pdf","html"]`）  
+   - 含 **video** 时需本机 **FFmpeg**、**edge-tts**（或降级 macOS `say`），会跑 Step 5。
+3. **交付渠道** — 只要本地 `output_dir` 产物，还是 **发到飞书**？（`channel`：`local` 默认 / `feishu`）  
+   - **feishu** 需 `.env` 中飞书应用凭证，并通常需要 **`doc_title`**、**`folder_token`**；缺则勿调用 `feishu` 或先请用户补全。
+4. **（可选）** — 是否指定 **`design_mode`**、**`output_dir`**、是否关闭 **`page_animations`**？
+
+细节与 `request.json` 文件传参见 **`SKILL.md`** 中「Agent 触发后的交互」与「OpenClaw / 受限 exec」小节。
 
 ### 主题如何被选中（`design_mode`）
 
@@ -228,6 +243,11 @@ output/
 ├── script.md              # 完整逐字稿
 └── MANIFEST.md            # 交付清单（channel=local）
 ```
+
+### `format=html`：两种浏览器入口（Agent 交付时注意）
+
+- **`presentation.html`**：**iframe** 引用同目录 **`page_*.html`**，才有页内 **hover / 入场动画** 等 DOM 交互。请向用户交付 **同一文件夹内的主入口 + 全部 `page_*.html`**（或可打 zip），**不要**只给一个汇总文件就宣称「可交互」。
+- **`presentation_static.html`**（或仅内嵌多页 PNG 的**单文件**轮播）：本质是 **截图翻页**，与 PDF 画面一致，便于单文件分享；**没有**各页模板内部的交互，勿与上面的 iframe 主入口混称。
 
 ---
 

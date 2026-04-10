@@ -6,7 +6,7 @@ description: >
   支持视频/PDF/交互式HTML三种交付格式，13种设计主题、22种内容变体（含对照/流程/架构栈/漏斗等），
   可选页内入场与 stagger 动效，8个独立Step自由组合。
 type: agent
-version: "3.1.0"
+version: "3.1.1"
 metadata:
   clawdbot:
     emoji: "🎬"
@@ -121,6 +121,23 @@ output:
 
 ## executor: executor.js
 
+## Agent 触发后的交互（推荐）
+
+在调用本技能**之前**，Agent 宜与用户做简短确认，再把答案映射到 JSON 的 `format`、`channel` 等字段。**不要**在未确认时默认 `format: "video"`（耗时长、依赖 FFmpeg / TTS）。
+
+建议按顺序问询（用户已一次性说清时可合并为一条确认）：
+
+1. **内容来源** — 飞书文档链接、本地 `.md`/`.txt` 路径，或网页 URL？（对应 `source`）
+2. **交付格式** — 只要 **PDF**、只要 **HTML**、只要 **视频**，还是**多种都要**？（对应 `format`：`"pdf"` / `"html"` / `"video"` 或数组，如 `["pdf","html"]`）
+   - 若含 **video**：说明需要本机 **FFmpeg**、**edge-tts**（或降级 `say`），Step 5 会跑 TTS。
+3. **交付渠道** — 仅 **本地**（`output_dir` 产物），还是要 **发到飞书**？（对应 `channel`：`local` 默认 / `feishu`）
+   - 若选 **feishu**：需用户或环境已具备 **飞书应用凭证**（`.env` 中 `FEISHU_APP_ID` / `FEISHU_APP_SECRET`），并收集 **`doc_title`**、目标 **`folder_token`** 等；缺任一项则不要调用 `channel=feishu`，或先提示用户补全。
+4. **（可选）** — 是否指定 **设计主题** `design_mode`？输出目录 `output_dir`？是否关闭 **页内动效** `page_animations: false`？
+
+将用户选择写成单次 `command: "all"` 的 JSON（或分步 Step），再执行 `node executor.js` / 管道 / `request.json` 文件传参。
+
+---
+
 ## 快速开始
 
 ### 一键生成（最常用）
@@ -140,6 +157,16 @@ echo '{"command":"all","source":"./article.md","format":"pdf","output_dir":"./ou
 ```bash
 echo '{"command":"all","source":"./article.md","format":"html","output_dir":"./output"}' | node executor.js
 ```
+
+### OpenClaw / 受限 exec（无管道）
+
+部分环境会拦截 `echo '…' \| node executor.js`。可把请求 JSON 写入文件后：
+
+```bash
+node executor.js ./request.json
+```
+
+（`request.json` 与 stdin 传入的对象格式相同。）
 
 ---
 
@@ -167,6 +194,10 @@ echo '{"command":"all","source":"./article.md","format":"html","output_dir":"./o
 | `pdf`   | `presentation.pdf`             | 无额外依赖                         |
 | `html`  | `presentation.html`（主入口：iframe 单页，hover + 入场动画）+ `presentation_static.html`（PNG 轮播）+ 同目录 `page_*.html` | 无额外依赖 |
 
+**`format=html` 两种入口（Agent 交付前必读）**
+
+- **`presentation.html`**：用 **iframe** 加载**同目录**下 **`page_001.html`…**。页内 **DOM、hover、CSS 入场动画** 仅在这一路径存在。交给用户时必须保留 **整个 `output_dir`（至少 `presentation.html` + 全部 `page_*.html`）**，**不要**只上传/分享一个「汇总 HTML」就当作交互版。
+- **`presentation_static.html`**（以及结构相同的「单文件内嵌多页 PNG base64」轮播）：只是 **截图翻页**（+ 壳上键盘/逐字稿等），**没有**各页模板内部的交互。适合单文件分享、画面与 PDF 一致；**不要**把它命名或说明成与 `presentation.html` 等价的「交互式幻灯片」。
 
 **无论选择哪种格式，都自动附带：**
 

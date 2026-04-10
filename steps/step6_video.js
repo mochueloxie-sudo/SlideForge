@@ -153,7 +153,6 @@ async function synthesizePage(ffmpeg, img, audio, output, options) {
       '-y',
       '-loop', '1', '-i', img,
       '-i', audio,
-      '-vf', options.filter,
       '-c:v', 'libx264',
       '-preset', 'medium',
       '-crf', '18',
@@ -165,6 +164,11 @@ async function synthesizePage(ffmpeg, img, audio, output, options) {
       '-movflags', '+faststart',
       output
     ];
+    if (options.filter) {
+      // -vf 须紧跟在全部输入之后、编码参数之前
+      const encIdx = args.indexOf('-c:v');
+      if (encIdx > 0) args.splice(encIdx, 0, '-vf', options.filter);
+    }
 
     const proc = spawn(ffmpeg, args, { stdio: 'pipe' });
     let stderr = '';
