@@ -94,9 +94,9 @@
 1. scene.type → generateCover / generateContent / generateSummary
 2. generateContent：按 content_variant 加载样张
 3. 扫描 {{TOKEN}} markers → 替换
-4. repeat marker → 按数组长度重复对应 HTML 片段
+4. repeat marker → 按数组长度重复对应 HTML 片段（`{{KEY_POINT}}` / `{{BODY}}` 行在 stagger 预设下对首标签注入 `data-vp-animate`）
 5. 注入全局 CSS：readability + density + glass + title + centering
-6. 若 `page_animations === true`：再注入页内入场动画（见 `page_animations.js`）
+6. 若 `page_animations !== false` 且预设非 `none`：再注入页内动画（见 `page_animations.js`）
 7. 写出 page_XXX.html
 ```
 
@@ -185,7 +185,7 @@ open ./test_e2e/presentation.html
 ### 已知限制
 
 1. FFmpeg 需用户手动安装（`brew install ffmpeg`）
-2. **依赖审计（待定）**：`npm audit` 可能报传递依赖 **`basic-ftp`** [High — GHSA-chqc-8p9q-pq6q](https://github.com/advisories/GHSA-chqc-8p9q-pq6q)（FTP 相关 CRLF / 命令注入类）。本仓库典型用法是本地或 CI 跑流水线、**不**以「对不可信 FTP 服务端发起客户端连接」为核心能力，**实际风险极低**。若需清零告警或满足合规，再执行 `npm audit fix` 并跑 `npm run test:e2e` 验证 Puppeteer 链路。发版时可将结论摘要抄入 `CHANGELOG.md` 对应版本节。
+2. **依赖审计（待定）**：`npm audit` 可能报传递依赖 `**basic-ftp`** [High — GHSA-chqc-8p9q-pq6q](https://github.com/advisories/GHSA-chqc-8p9q-pq6q)（FTP 相关 CRLF / 命令注入类）。本仓库典型用法是本地或 CI 跑流水线、**不**以「对不可信 FTP 服务端发起客户端连接」为核心能力，**实际风险极低**。若需清零告警或满足合规，再执行 `npm audit fix` 并跑 `npm run test:e2e` 验证 Puppeteer 链路。发版时可将结论摘要抄入 `CHANGELOG.md` 对应版本节。
 
 ---
 
@@ -220,8 +220,8 @@ Step0：`scenes.json` 仍为**纯 scenes 数组**；`project.json` 可含 `recom
 
 | 阶段    | 内容                                                                                                                                                    | 状态               |
 | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| **0** | `design_params.page_animations`（Step2 默认 `true`，可改为 `false`）+ `utils/page_animations.js` 注入整页 `fade-up` + `screenshot.js` 等待 `vp-anim-ready` 后再多留一帧时长 | **进行中（MVP 已落地）** |
-| **1** | 样张或生成器为块级元素加 `data-vp-animate` / stagger；`page_animation_preset` 多档预设                                                                                 | 待做               |
+| **0** | `design_params.page_animations`（Step2 默认 `true`）+ `utils/page_animations.js` 注入 CSS + boot 脚本；`screenshot.js` 在开启动画时等待 `data-vp-anim-ready` | **已落地**         |
+| **1** | `html_generator` 为列表/卡片/时间线等块加 `data-vp-animate` + 行内 stagger；`page_animation_preset`: `none` / `fade` / `stagger`；Step3 传入完整 `design_params` | **已落地**         |
 | **2** | `format=video`：Puppeteer 录制动效帧；`presentation.html` 轮播与原生 HTML 动效策略统一                                                                                  | 待做               |
 
 

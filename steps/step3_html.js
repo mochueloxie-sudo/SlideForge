@@ -49,7 +49,7 @@ process.stdin.on('end', () => {
     scenesData = scenesData.map(s => ({ ...s, design_mode: resolvedDesignMode || s.design_mode }));
 
     const outDir = path.resolve(output_dir);
-    const files = generateHtml(scenesData, resolvedDesignMode, outDir, designParamsData?.page_directions);
+    const files = generateHtml(scenesData, resolvedDesignMode, outDir, designParamsData);
 
     console.log(JSON.stringify({
       success: true,

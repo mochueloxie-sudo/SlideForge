@@ -172,7 +172,12 @@ async function run_all(params) {
   // Step 4
   console.log("🔄 Step 4: 截图...");
   const screenshotsDir = path.join(params.output_dir, 'screenshots');
-  const r4 = await step4_screenshot({ ...params, html_dir: params.html_dir, output_dir: screenshotsDir });
+  const r4 = await step4_screenshot({
+    ...params,
+    html_dir: params.html_dir,
+    output_dir: screenshotsDir,
+    design_params: params.design_params,
+  });
   params.screenshots_dir = screenshotsDir;
   results.push(r4);
 

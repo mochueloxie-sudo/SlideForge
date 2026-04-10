@@ -5,6 +5,7 @@
  */
 const fs = require('fs');
 const path = require('path');
+const { mergeAnimationIntoHtml, normalizePreset } = require('./page_animations');
 
 // 每个模板的精确 CSS 值（从样张提取）
 const DESIGN_TEMPLATES = {
@@ -289,6 +290,28 @@ function loadTemplate(designMode, templateName) {
 function escapeHtml(str) {
   if (!str) return '';
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+/** Stagger preset only: mark block + inline delay (avoids brittle :nth-child across mixed DOM). */
+function vpBlockAnimAttrs(designParams, index, existingStyle) {
+  const extra = existingStyle ? String(existingStyle).trim() : '';
+  if (!designParams || designParams.page_animations === false) {
+    return extra ? ` style="${extra}"` : '';
+  }
+  if (normalizePreset(designParams.page_animation_preset) !== 'stagger') {
+    return extra ? ` style="${extra}"` : '';
+  }
+  const i = Math.min(Math.max(Number(index) || 0, 0), 14);
+  const delay = i * 0.06 + 0.04;
+  const style = extra ? `${extra};animation-delay:${delay}s` : `animation-delay:${delay}s`;
+  return ` data-vp-animate style="${style}"`;
+}
+
+/** After KEY_POINT / {{BODY}} line-repeat: inject stagger on the first opening tag of each line. */
+function injectVpAnimOnFirstOpeningTag(line, designParams, index) {
+  const raw = vpBlockAnimAttrs(designParams, index);
+  if (!raw.trim()) return line;
+  return line.replace(/^(\s*<)([a-zA-Z][\w-]*)/, (_, lead, tag) => `${lead}${tag}${raw}`);
 }
 
 function replaceTokens(html, tokens) {
@@ -665,7 +688,7 @@ function buildTokens(scene, tpl, pageNum, totalPages) {
   };
 }
 
-function generateCover(scene, tpl, designMode, pageNum, totalPages) {
+function generateCover(scene, tpl, designMode, pageNum, totalPages, designParams) {
   let html = loadTemplate(designMode || 'electric-studio', 'cover');
   if (!html) return null;
   const tokens = buildTokens(scene, tpl, pageNum, totalPages);
@@ -697,12 +720,12 @@ function generateCover(scene, tpl, designMode, pageNum, totalPages) {
     html = html.replace('</body>',
       `  <div class="vp-footnote">${escapeHtml(footnoteText)}</div>\n</body>`);
   }
-  return replaceTokens(html, tokens);
+  return mergeAnimationIntoHtml(replaceTokens(html, tokens), designParams);
 }
 
 
 
-function generateContent(scene, tpl, designMode, pageNum, totalPages) {
+function generateContent(scene, tpl, designMode, pageNum, totalPages, designParams) {
   // ── 1. Resolve variant → template file ─────────────────────────────────
   // Table fallback: if table_headers missing/empty, degrade to panel
   let variant = scene.content_variant || 'panel';
@@ -747,7 +770,7 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages) {
     tokens.KEY_POINTS_HTML = kps.map((kp, i) => {
       const desc = descs[i] || '';
       return [
-        '<li class="kp-item">',
+        `<li class="kp-item"${vpBlockAnimAttrs(designParams, i)}>`,
         '  <span class="kp-arrow"></span>',
         '  <div class="kp-content">',
         `    <div class="kp-title">${escapeHtml(kp)}</div>`,
@@ -772,7 +795,10 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages) {
       const kpIdx = lines.findIndex(l => l.includes('{{KEY_POINT}}'));
       if (kpIdx >= 0) {
         const kpLine = lines[kpIdx];
-        const repeated = keyPoints.map(kp => kpLine.replace('{{KEY_POINT}}', escapeHtml(kp)));
+        const repeated = keyPoints.map((kp, i) => {
+          const filled = kpLine.replace('{{KEY_POINT}}', escapeHtml(kp));
+          return injectVpAnimOnFirstOpeningTag(filled, designParams, i);
+        });
         lines.splice(kpIdx, 1, ...repeated);
         html = lines.join('\n');
       }
@@ -793,7 +819,10 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages) {
       const bodyIdx = lines.findIndex(l => l.includes('{{BODY}}'));
       if (bodyIdx >= 0) {
         const bodyLine = lines[bodyIdx];
-        const repeated = bodyLines.map(p => bodyLine.replace('{{BODY}}', escapeHtml(p)));
+        const repeated = bodyLines.map((p, i) => {
+          const filled = bodyLine.replace('{{BODY}}', escapeHtml(p));
+          return injectVpAnimOnFirstOpeningTag(filled, designParams, i);
+        });
         lines.splice(bodyIdx, 1, ...repeated);
         html = lines.join('\n');
       }
@@ -810,16 +839,16 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages) {
   // stats_grid: STATS_HTML — pre-rendered stat cards
   if (scene.stats && Array.isArray(scene.stats)) {
     const statCount = scene.stats.length;
-    tokens.STATS_HTML = scene.stats.map(s => {
+    tokens.STATS_HTML = scene.stats.map((s, idx) => {
       const val = String(s.number || '');
       const fullText = val + (s.unit || '');
       const len = fullText.length;
       let fontSize = '';
-      if (statCount >= 4 && len > 3) fontSize = ' style="font-size:' + Math.max(42, Math.round(88 - (len - 3) * 12)) + 'px"';
-      else if (statCount >= 3 && len > 4) fontSize = ' style="font-size:' + Math.max(48, Math.round(88 - (len - 4) * 10)) + 'px"';
+      if (statCount >= 4 && len > 3) fontSize = 'font-size:' + Math.max(42, Math.round(88 - (len - 3) * 12)) + 'px';
+      else if (statCount >= 3 && len > 4) fontSize = 'font-size:' + Math.max(48, Math.round(88 - (len - 4) * 10)) + 'px';
       return [
-        '<div class="stat-card">',
-        `  <div class="stat-number"${fontSize}>${escapeHtml(val)}` +
+        `<div class="stat-card"${vpBlockAnimAttrs(designParams, idx)}>`,
+        `  <div class="stat-number"${fontSize ? ` style="${fontSize}"` : ''}>${escapeHtml(val)}` +
           (s.unit ? `<span class="stat-unit">${escapeHtml(s.unit)}</span>` : '') +
           '</div>',
         `  <div class="stat-label">${escapeHtml(s.label || '')}</div>`,
@@ -834,7 +863,7 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages) {
   // timeline: STEPS_HTML — pre-rendered step rows
   if (scene.steps && Array.isArray(scene.steps)) {
     tokens.STEPS_HTML = scene.steps.map((s, i) => [
-      '<div class="step">',
+      `<div class="step"${vpBlockAnimAttrs(designParams, i)}>`,
       '  <div class="step-dot"></div>',
       `  <div class="step-num">${String(i + 1).padStart(2, '0')}</div>`,
       '  <div class="step-content">',
@@ -854,7 +883,7 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages) {
     .map(p => `<p class="body-text">${escapeHtml(p)}</p>`).join('\n      ');
   tokens.RIGHT_LABEL = escapeHtml(scene.right_label || '要点');
   tokens.RIGHT_POINTS = (scene.right_points || scene.key_points || [])
-    .map(p => `<li class="kp-item"><span class="kp-arrow">›</span><span>${escapeHtml(p)}</span></li>`)
+    .map((p, ri) => `<li class="kp-item"${vpBlockAnimAttrs(designParams, ri)}><span class="kp-arrow">›</span><span>${escapeHtml(p)}</span></li>`)
     .join('\n        ');
 
   // ── 5. Structured variant tokens ─────────────────────────────────────────
@@ -889,10 +918,10 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages) {
   // icon_grid variant: ICONS_HTML + adaptive size tokens
   if (scene.icons && Array.isArray(scene.icons)) {
     const hasDesc = scene.icons.some(ic => ic.desc || ic.body);
-    tokens.ICONS_HTML = scene.icons.map(ic => {
+    tokens.ICONS_HTML = scene.icons.map((ic, ii) => {
       const descText = ic.desc || ic.body || '';
       return [
-        '<div class="icon-card">',
+        `<div class="icon-card"${vpBlockAnimAttrs(designParams, ii)}>`,
         `  <span class="icon-emoji">${escapeHtml(ic.emoji || '📌')}</span>`,
         `  <div class="icon-label">${escapeHtml(ic.label || '')}</div>`,
         descText ? `  <div class="icon-desc">${escapeHtml(descText)}</div>` : '',
@@ -944,7 +973,7 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages) {
       const numStr = card.number || (wantAutoNum ? String(idx + 1).padStart(2, '0') : '');
       const hasNum = Boolean(numStr);
       return [
-        `<div class="card${hasNum ? ' card-numbered' : ''}">`,
+        `<div class="card${hasNum ? ' card-numbered' : ''}"${vpBlockAnimAttrs(designParams, idx)}>`,
         hasNum                 ? `  <div class="card-num">${escapeHtml(numStr)}</div>` : '',
         !hasNum && card.icon  ? `  <div class="card-icon">${escapeHtml(card.icon)}</div>` : '',
         card.label             ? `  <div class="card-label">${escapeHtml(card.label)}</div>` : '',
@@ -969,7 +998,7 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages) {
     const navItems = Array.isArray(scene.nav_items) ? scene.nav_items : [];
     const activeIdx = typeof scene.nav_active === 'number' ? scene.nav_active : 0;
     tokens.NAV_ITEMS_HTML = navItems.map((item, i) =>
-      `      <div class="nav-item${i === activeIdx ? ' active' : ''}">${escapeHtml(String(item))}</div>`
+      `      <div class="nav-item${i === activeIdx ? ' active' : ''}"${vpBlockAnimAttrs(designParams, i)}>${escapeHtml(String(item))}</div>`
     ).join('\n');
 
     tokens.AUTHOR_DATE   = escapeHtml(scene.author_date   || '');
@@ -996,7 +1025,7 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages) {
     const allVals = chartData.flatMap(d => Array.isArray(d.values) ? d.values : [Number(d.value) || 0]);
     const maxVal  = Math.max(...allVals, 1);
 
-    tokens.CHART_BARS_HTML = chartData.map(group => {
+    tokens.CHART_BARS_HTML = chartData.map((group, gi) => {
       const vals = Array.isArray(group.values) ? group.values : [Number(group.value) || 0];
       const barHtml = vals.map((v, si) => {
         const h   = Math.round((v / maxVal) * MAX_H);
@@ -1005,7 +1034,7 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages) {
         return `        <div class="bar ${cls}" style="height:${h}px"><span class="bar-val">${escapeHtml(String(label))}</span></div>`;
       }).join('\n');
       return [
-        '    <div class="bar-group">',
+        `    <div class="bar-group"${vpBlockAnimAttrs(designParams, gi)}>`,
         '      <div class="bar-wrap">',
         barHtml,
         '      </div>',
@@ -1015,11 +1044,11 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages) {
     }).join('\n');
 
     tokens.CHART_LEGEND_HTML = chartSeries.map((name, i) =>
-      `    <div class="legend-item"><div class="legend-dot ${DOT_CLASSES[i % DOT_CLASSES.length]}"></div>${escapeHtml(String(name))}</div>`
+      `    <div class="legend-item"${vpBlockAnimAttrs(designParams, i)}><div class="legend-dot ${DOT_CLASSES[i % DOT_CLASSES.length]}"></div>${escapeHtml(String(name))}</div>`
     ).join('\n');
 
-    tokens.CHART_STATS_HTML = chartStats.map(s =>
-      `    <div class="stat-item"><div class="stat-val">${escapeHtml(String(s.value || ''))}</div><div class="stat-label">${escapeHtml(String(s.label || ''))}</div></div>`
+    tokens.CHART_STATS_HTML = chartStats.map((s, si) =>
+      `    <div class="stat-item"${vpBlockAnimAttrs(designParams, si)}><div class="stat-val">${escapeHtml(String(s.value || ''))}</div><div class="stat-label">${escapeHtml(String(s.label || ''))}</div></div>`
     ).join('\n');
 
     // SUBTITLE 复用基础 tokens（buildTokens 已处理）
@@ -1065,7 +1094,7 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages) {
       const textInner = desc
         ? `<div class="bullet-text-wrap"><div class="bullet-text">${escapeHtml(kp)}</div><div class="bullet-desc">${escapeHtml(desc)}</div></div>`
         : `<span class="bullet-text">${escapeHtml(kp)}</span>`;
-      return `<div class="bullet-item"><span class="bullet-num">${String(i + 1).padStart(2, '0')}</span>${textInner}</div>`;
+      return `<div class="bullet-item"${vpBlockAnimAttrs(designParams, i)}><span class="bullet-num">${String(i + 1).padStart(2, '0')}</span>${textInner}</div>`;
     }).join('\n    ');
   }
 
@@ -1081,8 +1110,8 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages) {
   // ICONS_HTML already handled by icon_grid block above; here we limit to 4 for 2×2 layout
   if (variant === 'text_icons' && scene.icons && Array.isArray(scene.icons)) {
     const iconsForGrid = scene.icons.slice(0, 4);
-    tokens.ICONS_HTML = iconsForGrid.map(ic => [
-      '<div class="icon-card">',
+    tokens.ICONS_HTML = iconsForGrid.map((ic, ti) => [
+      `<div class="icon-card"${vpBlockAnimAttrs(designParams, ti)}>`,
       `  <span class="icon-emoji">${escapeHtml(ic.emoji || '📌')}</span>`,
       `  <div class="icon-label">${escapeHtml(ic.label || '')}</div>`,
       '</div>',
@@ -1110,8 +1139,8 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages) {
         `.kp-item { font-size: 22px; color: ${tpl.textColor}; display: flex; align-items: flex-start; gap: 12px; }`,
         `.kp-arrow { color: ${tpl.accent}; flex-shrink: 0; }`,
       ].join('\n  ');
-      const kpItems = (scene.key_points || []).map(kp =>
-        `<li class="kp-item"><span class="kp-arrow">›</span><span>${escapeHtml(kp)}</span></li>`
+      const kpItems = (scene.key_points || []).map((kp, pi) =>
+        `<li class="kp-item"${vpBlockAnimAttrs(designParams, pi)}><span class="kp-arrow">›</span><span>${escapeHtml(kp)}</span></li>`
       ).join('\n    ');
       tokens.PANEL_BODY = `<div class="panel"><ul class="kp-list">\n    ${kpItems}\n  </ul></div>`;
     } else {
@@ -1175,19 +1204,23 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages) {
   }
 
   // ── 9. Done ──────────────────────────────────────────────────────────────
-  return replaceTokens(html, tokens);
+  return mergeAnimationIntoHtml(replaceTokens(html, tokens), designParams);
 }
 
-function generateSummary(scene, tpl, designMode, pageNum, totalPages) {
-  return generateContent({ ...scene, type: 'content', use_panel: true }, tpl, designMode, pageNum, totalPages);
+function generateSummary(scene, tpl, designMode, pageNum, totalPages, designParams) {
+  return generateContent({ ...scene, type: 'content', use_panel: true }, tpl, designMode, pageNum, totalPages, designParams);
 }
 
-function generateHtml(scenes, designMode, outputDir, pageDirections) {
+function generateHtml(scenes, designMode, outputDir, designParamsOrDirections) {
   const tpl = DESIGN_TEMPLATES[designMode] || DESIGN_TEMPLATES['electric-studio'];
   fs.mkdirSync(outputDir, { recursive: true });
 
-  // Use passed pageDirections (from step2) or fall back to tpl
-  const pageDirs = pageDirections || tpl.page_directions || [];
+  const designParams = Array.isArray(designParamsOrDirections) || designParamsOrDirections == null
+    ? null
+    : designParamsOrDirections;
+  const pageDirs = Array.isArray(designParamsOrDirections)
+    ? designParamsOrDirections
+    : (designParamsOrDirections?.page_directions || tpl.page_directions || []);
   const results = [];
   for (let i = 0; i < scenes.length; i++) {
     const rawScene = scenes[i];
@@ -1227,11 +1260,11 @@ function generateHtml(scenes, designMode, outputDir, pageDirections) {
 
     let html;
     if (scene.type === 'cover') {
-      html = generateCover(scene, tpl, designMode, pageNum, totalPages);
+      html = generateCover(scene, tpl, designMode, pageNum, totalPages, designParams);
     } else if (scene.type === 'summary') {
-      html = generateSummary(scene, tpl, designMode, pageNum, totalPages);
+      html = generateSummary(scene, tpl, designMode, pageNum, totalPages, designParams);
     } else {
-      html = generateContent(scene, tpl, designMode, pageNum, totalPages);
+      html = generateContent(scene, tpl, designMode, pageNum, totalPages, designParams);
     }
 
     if (!html) {

@@ -3,6 +3,7 @@
 
 const { spawn } = require('child_process');
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const { getLocator } = require('./utils/tool-locator');
 
@@ -58,7 +59,19 @@ process.stdin.on('end', async () => {
       throw new Error(`Screenshot script not found: ${screenshotScript}`);
     }
 
-    await runCommand('node', [screenshotScript, htmlDir, outDir]);
+    let designParamsPath = '';
+    if (design_params) {
+      if (typeof design_params === 'string') {
+        designParamsPath = path.resolve(design_params);
+      } else {
+        designParamsPath = path.join(os.tmpdir(), `slide-forge-design-params-${process.pid}.json`);
+        fs.writeFileSync(designParamsPath, JSON.stringify(design_params));
+      }
+    }
+    const shotArgs = [screenshotScript, htmlDir, outDir];
+    if (designParamsPath) shotArgs.push(designParamsPath);
+
+    await runCommand('node', shotArgs);
 
     const files = fs.readdirSync(outDir).filter(f => f.endsWith('.png'));
 

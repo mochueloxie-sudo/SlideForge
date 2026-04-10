@@ -12,7 +12,8 @@
 
 ### 进行中
 
-- （在此填写本迭代正在做的条目）
+- **P0 阶段 1（页内动画）**：`design_params.page_animations` / `page_animation_preset`（`none` \| `fade` \| `stagger`）；`utils/page_animations.js` 注入样式与就绪标记；`html_generator` 在统计卡、时间线、要点、图表等块上输出 `data-vp-animate` 与 stagger 延迟；`{{KEY_POINT}}` / `{{BODY}}` 行重复与图例行同样注入；Step4 将 `design_params` 传给 `screenshot.js`，有动画时等待 `data-vp-anim-ready` 再截图。
+- **`npm run demo:html-local`**：用 `examples/scenes_example.json` 跑 step2→3→4→6（仅 `html` 交付），不依赖 Step0 LLM。
 
 ### 工程与文档（近期）
 
@@ -21,7 +22,7 @@
 
 ### 候选（从 Roadmap 挑选）
 
-- **P0 阶段 1**：块级 `data-vp-animate` / stagger；`page_animation_preset` 多档预设（样张 + `html_generator`）。
+- （从 Roadmap 挑选下一项）
 - **交付 HTML**：`presentation.html` 键盘说明写入 README / 首次打开轻提示（可选）。
 
 ### 待定

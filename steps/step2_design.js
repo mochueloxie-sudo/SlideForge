@@ -7,6 +7,7 @@ const path = require('path');
 const { ensureDir, writeResult } = require('./utils/step-utils');
 
 const STYLE_PRESETS = require('./presets/frontend-presets.json');
+const { normalizePreset } = require('../utils/page_animations');
 const DEFAULT_PRESET = 'electric-studio';
 const PROFESSIONAL_MODE = 'deep-tech-keynote';
 const VALID_DESIGN_MODES = new Set(Object.keys(STYLE_PRESETS.presets || {}));
@@ -128,6 +129,10 @@ process.stdin.on('end', async () => {
     // 页面导演参数：不是样式 token，而是每页的视觉导演决策
     designParams.page_directions = buildPageDirections(scenesData, designParams, design_mode);
     designParams.strategy_version = 'director-v1';
+    designParams.page_animations = params.page_animations !== false;
+    designParams.page_animation_preset = normalizePreset(
+      params.page_animation_preset ?? designParams.page_animation_preset
+    );
 
     const outputPath = path.resolve(output_dir);
     ensureDir(outputPath);

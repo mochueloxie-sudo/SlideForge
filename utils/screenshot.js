@@ -1,17 +1,18 @@
 #!/usr/bin/env node
 /**
  * screenshot.js — 用 Puppeteer 批量截图 HTML 页面
- * 用法: node screenshot.js <htmlDir> <outputDir>
+ * 用法: node screenshot.js <htmlDir> <outputDir> [designParams.json]
  * 输出: outputDir/page_XXX.png (1920×1080)
  */
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
+const { shouldWaitForVpAnimReady } = require('./page_animations');
 
 async function main() {
-  const [, , htmlDir, outputDir] = process.argv;
+  const [, , htmlDir, outputDir, designParamsPath] = process.argv;
   if (!htmlDir || !outputDir) {
-    console.error('Usage: node screenshot.js <htmlDir> <outputDir>');
+    console.error('Usage: node screenshot.js <htmlDir> <outputDir> [designParams.json]');
     process.exit(1);
   }
 
@@ -24,6 +25,16 @@ async function main() {
   if (files.length === 0) {
     console.error(`No HTML files found in ${htmlDir}`);
     process.exit(1);
+  }
+
+  let waitVpAnim = false;
+  if (designParamsPath && fs.existsSync(designParamsPath)) {
+    try {
+      const dp = JSON.parse(fs.readFileSync(designParamsPath, 'utf8'));
+      waitVpAnim = shouldWaitForVpAnimReady(dp);
+    } catch (e) {
+      console.error('⚠️  design_params 解析失败，按无动画延迟截图');
+    }
   }
 
   // Use system Chrome if Puppeteer's bundled Chrome is unavailable
@@ -47,9 +58,22 @@ async function main() {
     await page.setViewport({ width: 1920, height: 1080, deviceScaleFactor: 1 });
     await page.goto(`file://${htmlPath}`, { waitUntil: 'networkidle0', timeout: 30000 });
 
-    // 等待字体加载
     await page.evaluate(() => document.fonts.ready);
-    await new Promise(r => setTimeout(r, 500));
+
+    if (waitVpAnim) {
+      try {
+        await page.waitForFunction(
+          () => document.body && document.body.getAttribute('data-vp-anim-ready') === '1',
+          { timeout: 8000, polling: 40 }
+        );
+      } catch (e) {
+        console.error(`  ⚠️  ${pngName}: 未收到 vp-anim-ready，回退短延迟`);
+        await new Promise(r => setTimeout(r, 500));
+      }
+      await new Promise(r => setTimeout(r, 80));
+    } else {
+      await new Promise(r => setTimeout(r, 500));
+    }
 
     await page.screenshot({
       path: outPath,
