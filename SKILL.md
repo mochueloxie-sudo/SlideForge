@@ -1,8 +1,8 @@
 ---
-
-## name: slide-forge
+name: slide-forge
 description: |-
   把一篇飞书文档、本地 Markdown/文本或网页收成可上台讲的 1920×1080 演示：画面跟主题与样张走，嘴里有大纲与逐字稿；可导出 video、pdf、html（可多选），Step0–7 依次执行，在已有中间产物时可对之后的 Step 单独补跑。适用：用户要把材料尽快变成 deck，且接受在本机执行 node executor。注意：内容分析与写逐字稿走 .env 里配置的 LLM（MiniMax 或兼容端点），与当前对话里的大模型不是同一条 API。
+---
 
 # SlideForge
 
@@ -12,7 +12,7 @@ description: |-
 
 **入口**：仓库根执行 `node executor.js`，stdin 一行 JSON，或 `node executor.js /path/to/request.json`。样张、token、变体与实现细节见 [CLAUDE.md](CLAUDE.md)。[^maint]
 
----
+***
 
 ## 首次运行 — Onboarding
 
@@ -27,7 +27,7 @@ description: |-
 | --- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1   | 内容从哪来？       | `source`：飞书文档 URL、本地 `.md`/`.txt` 路径、或网页 URL                                                                                                                     |
 | 2   | 要哪些交付物？      | `format`：字符串或数组，取值 `pdf` / `html` / `video`。实现默认偏 `video`，**须由用户明确选择**，可多选                                                                                       |
-| 3   | 产物目录、是否上传飞书？ | `output_dir`（默认 `./output`）；`channel`：`local`（默认）或 `feishu`。选飞书时还要在 JSON 里准备 `**doc_title`**、`**folder_token**` 等（见 `.env.example` 与 Step7 要求）                   |
+| 3   | 产物目录、是否上传飞书？ | `output_dir`（默认 `./output`）；`channel`：`local`（默认）或 `feishu`。选飞书时还要在 JSON 里准备 `**doc_title`**、`**folder_token`** 等（见 `.env.example` 与 Step7 要求）                   |
 | 4   | 视觉主题怎么定？     | **主动**向用户说明 **13** 套可选 `design_mode`（话术块 id 速览 + 下文「`design_mode` 合法取值」表）。用户指定表中**任一 id** 则写入 JSON；说「自动」「你看着办」或不在意则**不传** `design_mode`，由 Step0 推荐 + Step2 规则定稿。 |
 | 5   | 页内动效（不向用户问）  | **勿在确认清单里提问**。`page_animations`、`page_animation_preset` 用实现默认；仅当用户**自己明确提出**要改时再写入 JSON。                                                                         |
 
@@ -56,7 +56,7 @@ description: |-
 
 > 我打算按下面配置执行：`source` 是「……」，`format` 是「……」，输出目录是「……」（若有 `channel`、`design_mode` 或「自动不传 design_mode」也一并说明）。**你确认可以我就去跑 `node executor.js`。**
 
----
+***
 
 ### 第二步：检查配置项（必做）
 
@@ -67,14 +67,14 @@ description: |-
 #### A. 仓库与 Node
 
 - 已在项目根执行 `**npm install`**
-- `**node -v**` 可用
+- `**node -v`** 可用
 
 #### B. 大模型与飞书读文档（仅当本次会跑 Step0 和/或 Step1）
 
 
 | 条件                    | 检查什么                                                                                                                                                                       |
 | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 任意从零 `source` 的 `all` | `.env` 里配置 `**MINIMAX_***`（建议，见 `**.env.example**`），**或** `**LLM_API_KEY` + `LLM_BASE_URL`（通常含 `/v1`）+ `LLM_MODEL`**（OpenAI Chat Completions 兼容）。二者都填时以 `**MINIMAX_***` 为准 |
+| 任意从零 `source` 的 `all` | `.env` 里配置 `**MINIMAX_*`**（建议，见 `**.env.example**`），**或** `**LLM_API_KEY` + `LLM_BASE_URL`（通常含 `/v1`）+ `LLM_MODEL`**（OpenAI Chat Completions 兼容）。二者都填时以 `**MINIMAX_*`** 为准 |
 | `source` 为飞书 URL      | `.env` 中飞书应用凭证齐全，能读文档（见 `**.env.example**`）                                                                                                                                |
 
 
@@ -83,7 +83,7 @@ description: |-
 
 | `format` 含               | 需要                                                                                                           |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------ |
-| `video`                  | **ffmpeg**、**ffprobe**；TTS：**edge-tts**（`pip install edge-tts`）或 `**python3 -m edge_tts`**，或 macOS `**say**` |
+| `video`                  | **ffmpeg**、**ffprobe**；TTS：**edge-tts**（`pip install edge-tts`）或 `**python3 -m edge_tts`**，或 macOS `**say`** |
 | `pdf` 和/或 `html`         | Puppeteer 能启动浏览器（随依赖安装）                                                                                      |
 | 任意 + `channel":"feishu"` | **lark-cli**、飞书相关环境变量、Step7 所需 JSON 字段                                                                       |
 
@@ -126,7 +126,7 @@ ffmpeg -version && ffprobe -version
 > 只要 **PDF 或 HTML** 的话，主要依赖 Node 和装好依赖后的浏览器（Puppeteer）。  
 > 若要 **上传到飞书**，还需要本机配好飞书应用凭证、安装 **lark-cli**，并在请求里带上飞书要求的字段。
 
----
+***
 
 ### 第三步：组装 JSON 并执行
 
@@ -140,11 +140,11 @@ echo '{"command":"all","source":"./examples/tencent_intro_light.md","format":["p
 
 **从文件执行**：`node executor.js ./request.json`
 
----
+***
 
 ### 第四步：结果说明与 HTML 特别注意
 
-- 输出目录内通常有 `**outline.md`**、`**script.md**`，以及按 `format` 生成的 mp4/pdf/html 等。
+- 输出目录内通常有 `**outline.md`**、`**script.md`**，以及按 `format` 生成的 mp4/pdf/html 等。
 - `**format` 含 `html` 时必读**：
   - `**presentation.html`** 是 iframe 壳，**不能**单文件分发；须与同目录全部 `**page_*.html`** 一起打包（建议整个 `output_dir`）。
   - **单文件分享**用 `**presentation_static.html`**（内嵌图）或 **PDF**。
@@ -155,7 +155,7 @@ echo '{"command":"all","source":"./examples/tencent_intro_light.md","format":["p
 > 生成结果在「……」目录里，有 `outline.md`、`script.md` 以及你选的格式对应文件。  
 > 如果包含 **HTML**：`presentation.html` 必须和同文件夹里所有 `page_*.html` **一起发**，单独发一个文件对方打不开；若只想发**一个文件**，请用 `presentation_static.html` 或导出的 **PDF**。本地想预览壳页，在项目根执行：`npm run preview:html -- <你的输出目录>`。
 
----
+***
 
 ## 执行 — 日常调用
 
@@ -222,7 +222,7 @@ echo '{"command":"step6","format":["video","pdf","html"],"scenes":"'"$P"'/scenes
 echo '{"command":"step7","channel":"local","output_dir":"'"$P"'"}' | node executor.js
 ```
 
----
+***
 
 ## 意图变更 — 最小重跑
 
@@ -235,7 +235,7 @@ echo '{"command":"step7","channel":"local","output_dir":"'"$P"'"}' | node execut
 | 换源文档            | `all` 或从 `step0` 重跑；`output_dir` 建议新目录                                                                  |
 
 
----
+***
 
 ## `design_mode` 合法取值（13 主题）
 
@@ -267,16 +267,16 @@ echo '{"command":"step7","channel":"local","output_dir":"'"$P"'"}' | node execut
 echo '{"command":"all","source":"./examples/tencent_intro_light.md","format":"html","output_dir":"./output","design_mode":"deep-tech-keynote"}' | node executor.js
 ```
 
----
+***
 
 ## 变体与实现细节
 
 Step0 为每页选择 `content_variant`（约 **22** 种，含 shared 变体）。完整列表、token 规范、layout_hint、动效与截图等待逻辑见 [CLAUDE.md](CLAUDE.md)。
 
----
+***
 
 ## `_meta.json`
 
-与技能包同发的 `**_meta.json`** 供宿主做输入输出模式发现；其中 `**description**` 须与本文 YAML `**description**` 对齐。**执行语义**以 `**executor.js`** 与本文为准。
+与技能包同发的 `**_meta.json`** 供宿主做输入输出模式发现；其中 `**description`** 须与本文 YAML `**description`** 对齐。**执行语义**以 `**executor.js`** 与本文为准。
 
 [^maint]: 维护约定：文首 `description` 解析结果须与 `_meta.json` 的 `description` **逐字一致**（可用 `description: |-` 下一行缩进写整句）。正文章节分隔请用单独一行的 `*`**，勿使用单独一行的 `---`，以免与 YAML 边界混淆。
