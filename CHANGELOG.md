@@ -52,7 +52,7 @@
 
 ### Agent、文档与元数据
 
-- **`SKILL.md`**：依赖清单、失败对照、执行话术等整理（无 YAML frontmatter；宿主说明见 **`_meta.json`** 附录）。
+- **`SKILL.md`**：YAML 摘要 + 依赖清单、失败对照、执行话术；修正表格/行内代码与加粗混排以免预览乱码；宿主说明见 **`_meta.json`** 附录。
 - **`CLAUDE.md`**：`refs/` 之后改为 **（一）开发者记录** / **（二）已明确的 Roadmap** 双轨；借鉴各 § 标注 Roadmap 映射；**§5** 与 **P1**、`steps/step_import.js` 对齐；**P1** 增补 Step0–2 与 Agent 产出 **`scenes.json`** 方向。
 - **`README.md` / `README_en.md`**：与上述 LLM 策略、交付说明、`CLAUDE` 中 P2 引用路径一致。
 - **`refs/STYLE_PRESETS.md`**：与当前主题参考一致的小幅修订。

@@ -12,35 +12,35 @@
 - 底层工具固化：Puppeteer 截图、FFmpeg 合成、Edge TTS
 - 设计层解放：HTML 渲染完全由样张 token 驱动
 
-* * *
+---
 
 ## 架构
 
 
-| 层      | 文件                                     | 职责                                                                                                                 |
-| ------ | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| 入口     | `executor.js`                          | 路由命令到各 Step，`run_all` 串联全流程                                                                                        |
-| 核心渲染   | `utils/html_generator.js`              | 加载样张 → 替换 token → 注入 CSS → 写出 HTML                                                                                 |
-| 页内动画   | `utils/page_animations.js`             | P0：`design_params.page_animations` 时注入整页入场 CSS + 启动脚本（与 FFmpeg 的 `steps/animations/animation-strategies.js` 分离）    |
-| 截图     | `utils/screenshot.js`                  | Puppeteer 批量截图 1920×1080                                                                                           |
-| 样张     | `samples/{theme}/` + `samples/shared/` | 13 主题；每主题一组样张 + `shared/` 通用变体（含 compare / process_flow / architecture_stack / funnel），纯 HTML + CSS                |
-| Step 0 | `steps/step0_analyze.js`               | MiniMax LLM 分析内容 → scenes.json                                                                                     |
-| Step 1 | `steps/step1_script.js`                | MiniMax LLM 生成逐字稿                                                                                                  |
-| Step 2 | `steps/step2_design.js`                | 规则引擎：主题选择 + 变体推断 + layout_hint                                                                                     |
-| Step 3 | `steps/step3_html.js`                  | 调用 html_generator                                                                                                  |
-| Step 4 | `steps/step4_screenshot.js`            | 调用 screenshot.js                                                                                                   |
-| Step 5 | `steps/step5_tts.js`                   | edge-tts（降级 macOS say）                                                                                             |
-| Step 6 | `steps/step6_format.js`                | 交付格式：video / pdf / html + outline + script                                                                         |
-| Step 7 | `steps/step7_channel.js`               | 交付渠道：local / feishu                                                                                                |
-| 内部     | `steps/step6_video.js`                 | FFmpeg H.264+AAC 25fps（被 step6_format 调用）                                                                          |
-| 内部     | `steps/step7_publish.js`               | lark-cli 飞书发布（被 step7_channel 调用）                                                                                  |
-| 工具     | `steps/utils/content_extractor.js`     | 多源内容提取（飞书 / 本地 / 网页）                                                                                               |
-| 工具     | `steps/utils/minimax_utils.js`         | Step0/1 共用：OpenAI Chat Completions 兼容 HTTP；**`MINIMAX_*` 优先**（建议 MiniMax）、无则 **`LLM_*`**；**L3** `JSON_SYSTEM_PROMPT`、**L1** 括号配平抽取 JSON、**L2** HTTP 429/5xx 与连接错误退避 + **解析失败**整段重请求 |
-| 工具     | `steps/utils/llm_client.js`            | MiniMax HTTP 封装（历史兼容；新逻辑以 `minimax_utils` 为准）                                                                      |
-| 工具     | `steps/utils/tool-locator.js`          | ffmpeg / ffprobe / imagemagick 自动发现                                                                                |
+| 层      | 文件                                     | 职责                                                                                                                                                                                  |
+| ------ | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 入口     | `executor.js`                          | 路由命令到各 Step，`run_all` 串联全流程                                                                                                                                                         |
+| 核心渲染   | `utils/html_generator.js`              | 加载样张 → 替换 token → 注入 CSS → 写出 HTML                                                                                                                                                  |
+| 页内动画   | `utils/page_animations.js`             | P0：`design_params.page_animations` 时注入整页入场 CSS + 启动脚本（与 FFmpeg 的 `steps/animations/animation-strategies.js` 分离）                                                                     |
+| 截图     | `utils/screenshot.js`                  | Puppeteer 批量截图 1920×1080                                                                                                                                                            |
+| 样张     | `samples/{theme}/` + `samples/shared/` | 13 主题；每主题一组样张 + `shared/` 通用变体（含 compare / process_flow / architecture_stack / funnel），纯 HTML + CSS                                                                                 |
+| Step 0 | `steps/step0_analyze.js`               | MiniMax LLM 分析内容 → scenes.json                                                                                                                                                      |
+| Step 1 | `steps/step1_script.js`                | MiniMax LLM 生成逐字稿                                                                                                                                                                   |
+| Step 2 | `steps/step2_design.js`                | 规则引擎：主题选择 + 变体推断 + layout_hint                                                                                                                                                      |
+| Step 3 | `steps/step3_html.js`                  | 调用 html_generator                                                                                                                                                                   |
+| Step 4 | `steps/step4_screenshot.js`            | 调用 screenshot.js                                                                                                                                                                    |
+| Step 5 | `steps/step5_tts.js`                   | edge-tts（降级 macOS say）                                                                                                                                                              |
+| Step 6 | `steps/step6_format.js`                | 交付格式：video / pdf / html + outline + script                                                                                                                                          |
+| Step 7 | `steps/step7_channel.js`               | 交付渠道：local / feishu                                                                                                                                                                 |
+| 内部     | `steps/step6_video.js`                 | FFmpeg H.264+AAC 25fps（被 step6_format 调用）                                                                                                                                           |
+| 内部     | `steps/step7_publish.js`               | lark-cli 飞书发布（被 step7_channel 调用）                                                                                                                                                   |
+| 工具     | `steps/utils/content_extractor.js`     | 多源内容提取（飞书 / 本地 / 网页）                                                                                                                                                                |
+| 工具     | `steps/utils/minimax_utils.js`         | Step0/1 共用：OpenAI Chat Completions 兼容 HTTP；`**MINIMAX_*` 优先**（建议 MiniMax）、无则 `**LLM_*`**；**L3** `JSON_SYSTEM_PROMPT`、**L1** 括号配平抽取 JSON、**L2** HTTP 429/5xx 与连接错误退避 + **解析失败**整段重请求 |
+| 工具     | `steps/utils/llm_client.js`            | MiniMax HTTP 封装（历史兼容；新逻辑以 `minimax_utils` 为准）                                                                                                                                       |
+| 工具     | `steps/utils/tool-locator.js`          | ffmpeg / ffprobe / imagemagick 自动发现                                                                                                                                                 |
 
 
-* * *
+---
 
 ## 样张系统
 
@@ -91,7 +91,7 @@
 | `funnel`             | 默认 / `compact`（层数多）                                           |
 
 
-* * *
+---
 
 ## html_generator.js 核心逻辑
 
@@ -130,7 +130,7 @@
 5. 居中 CSS — flexbox 垂直居中
 6. （可选）`#vp-page-animations` — 整页 `fade-up` 入场 + `body` 启动类（`page_animations` 开启时）
 
-* * *
+---
 
 ## step2_design.js 核心逻辑
 
@@ -140,7 +140,7 @@
 - `computeDensity(scene)` — 内容密度分类（sparse / normal / rich）
 - 节奏纠正 — 连续相同 layout_hint 自动交替
 
-* * *
+---
 
 ## 常见开发任务
 
@@ -178,13 +178,13 @@ echo '{"command":"all","source":"./examples/full_variant_test.md","format":["pdf
 open ./test_e2e/presentation.html
 ```
 
-* * *
+---
 
 ## 设计原则参考（`refs/`）
 
 视觉与动效参考材料见 **[refs/README.md](refs/README.md)**（当前仓库内含 `STYLE_PRESETS.md`、`viewport-base.css`、`animation-patterns.md`）。完整 [frontend-slides](https://github.com/zarazhangrui/frontend-slides) 树为**可选本地 clone**，默认不 vendored。动画范式另可参考 [frontend.slides](https://github.com/nicolo-ribaudo/frontend-slides)（与 FFmpeg 滤镜策略勿混用，见下文 **（二）已明确的 Roadmap**）。
 
-* * *
+---
 
 ## 备忘与 Roadmap（`refs/` 之后）
 
@@ -287,22 +287,24 @@ Step0：`scenes.json` 仍为**纯 scenes 数组**；`project.json` 可含 `recom
 
 **Roadmap**：**→ P1**（`step_import`、自定义主题样张；**规格正文以（二）P1 为准**）。
 
-**产品叙事**：用户上传 **`.pptx` / `.pdf` / `.png`** → 抽取文本、版式与素材 → 选定主题后接入与 Markdown / 飞书源相同的 **Step2→6**，产出 1920×1080 演示（HTML / PDF / video）。
+**产品叙事**：用户上传 `**.pptx` / `.pdf` / `.png`** → 抽取文本、版式与素材 → 选定主题后接入与 Markdown / 飞书源相同的 **Step2→6**，产出 1920×1080 演示（HTML / PDF / video）。
 
 **工程主线（与（二）P1 一致；拆解步骤见（二）「P1 → 用户自定义主题 → 实现路径」）**：
 
-| 项 | 约定 |
-| -- | -- |
-| **Step** | 新增 **`steps/step_import.js`**（规划；落地后由 `executor` 路由，与 Step0 并行或作为可选上游） |
-| **输入** | `.pptx`、`.pdf`、`.png` |
-| **PPT 路径** | `pptx-parser` 等解析母版 → 色板 / 字体 / 版式 → `samples/custom-{name}/` |
-| **图片路径** | 可选 LLM Vision 推断布局 → 同上生成自定义主题样张 |
-| **输出** | `cover.html` + 变体 HTML，注册 **`DESIGN_TEMPLATES`**，后续由 **`html_generator`** 与现有 Step 消费 |
-| **脚手架** | `samples/_template/` 先行手工主题（P1 同段） |
+
+| 项          | 约定                                                                                    |
+| ---------- | ------------------------------------------------------------------------------------- |
+| **Step**   | 新增 `**steps/step_import.js`**（规划；落地后由 `executor` 路由，与 Step0 并行或作为可选上游）                |
+| **输入**     | `.pptx`、`.pdf`、`.png`                                                                 |
+| **PPT 路径** | `pptx-parser` 等解析母版 → 色板 / 字体 / 版式 → `samples/custom-{name}/`                         |
+| **图片路径**   | 可选 LLM Vision 推断布局 → 同上生成自定义主题样张                                                      |
+| **输出**     | `cover.html` + 变体 HTML，注册 `**DESIGN_TEMPLATES`**，后续由 `**html_generator**` 与现有 Step 消费 |
+| **脚手架**    | `samples/_template/` 先行手工主题（P1 同段）                                                    |
+
 
 **外部参考**：可借鉴 frontend-slides 仓库内 `scripts/extract-pptx.py` 一类抽取思路，**不必**在 slide-forge 内复制其整树。
 
-* * *
+---
 
 ### （二）已明确的 Roadmap
 
@@ -337,7 +339,7 @@ Step0：`scenes.json` 仍为**纯 scenes 数组**；`project.json` 可含 `recom
 
 #### P1 — 样张丰富度 + 用户自定义主题
 
-当前 13 主题 + **22** 个 `content_variant`（含 `shared/` 四款叙事变体）覆盖大部分场景，但用户可能有自己的品牌风格。**PPT / PDF / 图片导入**与（一）「借鉴」**§5** 为同一条能力线：§5 用表格总览 **`steps/step_import.js`** 与输入输出；**拆解步骤与依赖以本节下列为准**。
+当前 13 主题 + **22** 个 `content_variant`（含 `shared/` 四款叙事变体）覆盖大部分场景，但用户可能有自己的品牌风格。**PPT / PDF / 图片导入**与（一）「借鉴」**§5** 为同一条能力线：§5 用表格总览 `**steps/step_import.js`** 与输入输出；**拆解步骤与依赖以本节下列为准**。
 
 - **持续拓展内置样张**：
   - 新增行业垂直主题（医疗、教育、金融等）
@@ -351,7 +353,7 @@ Step0：`scenes.json` 仍为**纯 scenes 数组**；`project.json` 可含 `recom
     - 图片路径：用 LLM Vision 分析截图布局 → 推断 HTML 结构 + CSS → 生成样张
     - 输出标准的 `cover.html` + 变体文件，自动注册到 `DESIGN_TEMPLATES`
   3. **简化方案（先行）**：提供 `samples/_template/` 脚手架目录，用户只需填色值和字体即可快速创建新主题
-- **Step0–2 与外部 LLM 解耦（Agent 优先）**：当前 Step0/1 经 `minimax_utils` 调远端；**优先路径**是让 **宿主 Agent 在对话中** 按约定 schema 产出（或修订）`scenes.json`，并可选写入 `project.json`（如 `recommended_design_mode`）。执行器以「已落盘的 `scenes.json` + 可选 `project.json`」为入口走 **Step2→3…** 或 **Step3+**，在无 `MINIMAX_*` / `LLM_*` 时仍能完成设计与渲染链路。后续把 Step0/1 做成可选分支或纯校验/合并层；（一）节首交叉索引指向本条。
+- **Step0–2 与外部 LLM 解耦（Agent 优先）**：当前 Step0/1 经 `minimax_utils` 调远端；**优先路径**是让 **宿主 Agent 在对话中** 按约定 schema 产出（或修订）`scenes.json`，并可选写入 `project.json`（如 `recommended_design_mode`）。执行器以「已落盘的 `scenes.json` + 可选 `project.json`」为入口走 **Step2→3…** 或 **Step3+**，在无 `MINIMAX_`* / `LLM_*` 时仍能完成设计与渲染链路。后续把 Step0/1 做成可选分支或纯校验/合并层；（一）节首交叉索引指向本条。
 
 #### P2 — LLM 稳定性优化
 

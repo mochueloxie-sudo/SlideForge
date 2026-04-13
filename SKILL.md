@@ -8,18 +8,18 @@
 
 **入口**：`node executor.js`，stdin 一行 JSON（与 `request.json` 内容相同）。
 
-**与 LLM / 子进程**：`command: "all"` 在独立 Node 进程里**固定**跑 Step0 → Step1，经 HTTP 调用**环境变量里配置好的 LLM**，与当前对话里的大模型**不是同一条调用链**。见 `**.env.example`** 与下文「厂商与变量名」。若已由对话侧生成合规 `**scenes.json**`（可参考 `**examples/scenes_example.json**`），可从 `**step2**` 起依次调用至 `**step7**`；当前实现**不会**让 `all` 跳过 Step0/1。
+**与 LLM / 子进程**：`command: "all"` 在独立 Node 进程里**固定**跑 Step0 → Step1，经 HTTP 调用**环境变量里配置好的 LLM**，与当前对话里的大模型**不是同一条调用链**。见 `**.env.example`** 与下文「厂商与变量名」。若已由对话侧生成合规 `**scenes.json`**（可参考 `**examples/scenes_example.json**`），可从 `**step2**` 起依次调用至 `**step7**`；当前实现**不会**让 `all` 跳过 Step0/1。
 
 ### Agent 读到 LLM 依赖时（建议）
 
 - **先问用户**：运行 `executor.js` 的机器上是否已配置 `**.env`**，且接受跑 **Step0/1**（从零 `source` 时必跑）。
-- **话术顺序**：**建议优先准备 MiniMax**（填 `**MINIMAX_*`**，与仓库默认、官方文档一致）。**若没有 MiniMax key**，再让用户填 `**LLM_*`**（任意 OpenAI Chat Completions 兼容端点的 URL / key / model）。
+- **话术顺序**：**建议优先准备 MiniMax**（填 `**MINIMAX_*`**，与仓库默认、官方文档一致）。若没有 MiniMax key，再让用户填 `**LLM_*`**（任意 OpenAI Chat Completions 兼容端点的 URL / key / model）。
 - **若 Step0/1 报错**：看 stderr；核对 `**MINIMAX_*` 或 `LLM_*`**、网络、模型名、Base URL（通常需含 `/v1`）。仍失败可走 `**scenes.json` + step2**。
 
 ### 厂商与变量名（重要）
 
-- **代码读取顺序**：`**MINIMAX_*` 优先**；未设置时再读 `**LLM_*`**（便于「建议 MiniMax、没有再用别家」）。二者同时填写时以 `**MINIMAX_***` 为准。实现见 `**steps/utils/minimax_utils.js**`。
-- **协议**：OpenAI **Chat Completions** 兼容（`POST {BASE}/chat/completions`）。无 MiniMax 时，把兼容网关的 **URL（含 `/v1`）/ key / model** 写入 `**LLM_*`**。
+- **代码读取顺序**：`**MINIMAX_*` 优先**；未设置时再读 `**LLM_*`**（便于「建议 MiniMax、没有再用别家」）。二者同时填写时以 `**MINIMAX_*`** 为准。实现见 `**steps/utils/minimax_utils.js**`。
+- **协议**：OpenAI **Chat Completions** 兼容（`POST {BASE}/chat/completions`）。无 MiniMax 时，把兼容网关的 **URL（含 `/v1`）/ key / model** 写入 `**LLM_`***。
 - **未逐一认证**所有非 MiniMax 网关；若响应格式不一致，需改代码或走 `scenes.json`。
 
 
@@ -63,8 +63,8 @@ node executor.js ./request.json
 
 1. **内容来源** — 飞书、本地 `.md`/`.txt`、网页 URL？（`source`）
 2. **交付格式** — PDF / HTML / 视频 / 多选？（`format`）；含 **video** 需本机 **FFmpeg**、**edge-tts**（或 macOS `**say`**）
-3. **交付渠道** — 本地或飞书？（`channel`）；**feishu** 需 `.env` 凭证及 `**doc_title`**、`**folder_token**` 等
-4. **（可选）** — `**design_mode`**、`**output_dir**`、`**page_animations: false**`？
+3. **交付渠道** — 本地或飞书？（`channel`）；**feishu** 需 `.env` 凭证及 `**doc_title`**、`**folder_token`** 等
+4. **（可选）** — `**design_mode`**、`**output_dir`**、`**page_animations: false**`？
 5. **从零生成** — 是否已按 `**.env.example`** 配好 Step0/1（**建议 `MINIMAX_*`**；没有则用 `**LLM_***`）及飞书读文档所需项？
 6. **依赖** — 对照下文「依赖准备清单」
 
@@ -85,7 +85,7 @@ node executor.js ./request.json
 | `command: "all"` 且带 `source` | `**.env`**：**建议 `MINIMAX_*`**；若无 MiniMax 再填 `**LLM_***`（见 `**.env.example**`）；`source` 为飞书时还要飞书应用凭证   |
 | `format` 含 `video`           | `**ffmpeg` + `ffprobe**`；TTS：`**pip install edge-tts**`（或 `python3 -m edge_tts`），或 macOS `**say**` 降级 |
 | 仅 `pdf` 和/或 `html`           | **Node** + `**npm install`**（含 Puppeteer）；Step4 需能启动浏览器                                               |
-| `channel: "feishu"`          | `**.env.example**` 飞书项、**lark-cli**、JSON 里 `**doc_title` / `folder_token`** 等                         |
+| `channel: "feishu"`          | `**.env.example`** 飞书项、**lark-cli**、JSON 里 `**doc_title` / `folder_token`** 等                         |
 
 
 ### 可选自检命令
@@ -119,10 +119,10 @@ macOS 可补充：`which say`。
 | `**presentation_static.html`** | **是**（内嵌 PNG）   | 无                                                |
 
 
-- 交 `**presentation.html`**：至少该文件 + 全部 `**page_*.html**`（建议整个 `output_dir`）。
+- 交 `**presentation.html`**：至少该文件 + 全部 `**page_*.html`**（建议整个 `output_dir`）。
 - 单文件分享：用 `**presentation_static.html**` 或 **PDF**，并说明为静帧轮播。
 
-目录里通常还有 `**outline.md`**、`**script.md**`。
+目录里通常还有 `**outline.md`**、`**script.md`**。
 
 ---
 
@@ -227,7 +227,7 @@ echo '{"command":"all","source":"./article.md","format":"html","output_dir":"./o
 
 ## 运行环境（不在 JSON 里）
 
-由 `**.env**` / 进程环境提供。Step0/1：`**MINIMAX_*` 优先**，否则 `**LLM_*`**；飞书、TTS 等见 `**.env.example**`。
+由 `**.env**` / 进程环境提供。Step0/1：`**MINIMAX_*` 优先**，否则 `**LLM_*`**；飞书、TTS 等见 `**.env.example`**。
 
 
 | 阶段               | 需要什么             | 说明                                                            |
@@ -271,4 +271,4 @@ echo '{"command":"step7","channel":"local","output_dir":"'"$P"'"}' | node execut
 
 ## 附录：_meta.json
 
-与 npm 包同发的 `**_meta.json`** 供宿主做类型发现；执行语义以 `**executor.js**` 与本文为准。
+与 npm 包同发的 `**_meta.json`** 供宿主做类型发现；执行语义以 `**executor.js`** 与本文为准。
