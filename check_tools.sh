@@ -1,12 +1,15 @@
 #!/bin/bash
-# 工具诊断脚本：检查 slide-forge 依赖的外部工具
+# 工具诊断脚本：检查 slide-forge 依赖的外部工具（在仓库根执行）
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR" || exit 1
 
 echo "🔧 SlideForge 工具诊断"
 echo "================================"
 echo ""
 
-# 加载 tool locator
-TOOL_LOCATOR="$HOME/.openclaw/workspace/skills/slide-forge/steps/utils/tool-locator.js"
+# 加载 tool locator（相对本仓库，勿写死 ~/.openclaw 路径）
+TOOL_LOCATOR="$SCRIPT_DIR/steps/utils/tool-locator.js"
 
 if [ ! -f "$TOOL_LOCATOR" ]; then
   echo "❌ 未找到 tool-locator.js"
@@ -51,7 +54,7 @@ const locator = getLocator();
 
 echo ""
 echo "💡 配置方法："
-echo "1. 编辑配置文件: $HOME/.slide-forge/tools.json"
+echo "1. 编辑配置文件（若已创建）: ~/.slide-forge/tools.json"
 echo "2. 或设置环境变量（如 export FFMPEG_PATH=/path/to/ffmpeg）"
-echo "3. 运行交互式配置: node -e \"require('./steps/utils/tool-locator').ToolLocator.configure()\""
+echo "3. 在仓库根运行交互式配置: cd \"$SCRIPT_DIR\" && node -e \"require('./steps/utils/tool-locator').ToolLocator.configure()\""
 echo ""

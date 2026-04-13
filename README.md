@@ -1,6 +1,6 @@
 # SlideForge
 
-> 将任何文档在 10 分钟内转换为精致的 1920×1080 演示文稿 — 支持视频、PDF 或交互式 HTML。
+> 将飞书 / Markdown / 网页收成可上台讲的 **1920×1080** 演示 — 可选 **video**、**pdf**、**html**（可多选），附大纲与逐字稿；Step0/1 走本机 `.env` 里的 LLM，与聊天窗口里的大模型不是同一条链。
 
 [English](README_en.md)
 [更新记录](CHANGELOG.md)
@@ -12,7 +12,7 @@
 
 **用途**：飞书 / Markdown / URL → **1920×1080** 演示（视频、PDF、交互式 HTML）。入口为 `node executor.js` + stdin 一行 JSON；**Cursor、Codex、OpenClaw** 等客户端可按各自「技能 / 工具」机制挂载本仓库，**执行细节以 [SKILL.md](SKILL.md) 为准**（平台元数据见 `_meta.json`）。
 
-从零生成时，Step0/1 会在子进程内调用 **环境变量中配置的 LLM**（变量名见 **`.env.example`**），自动选用 **13 种设计主题** 并渲染 HTML 幻灯片后按 `format` 打包。
+从零生成时，Step0/1 会在子进程内调用 **环境变量中配置的 LLM**（变量名见 **`.env.example`**）；**13** 套视觉主题可在 JSON 里用 **`design_mode`** 锁定，**省略**则由 Step0 推荐 + Step2 规则自动落版，再按 `format` 打包。
 
 **[查看示例输出 →](examples/demo-output/)** 在浏览器中打开 `presentation.html`（iframe 壳 + 同目录 `page_*.html`，支持 hover / 入场动画；**勿只拷贝单个 HTML**）；纯截图单文件轮播见 `presentation_static.html`。
 
@@ -21,7 +21,7 @@
 
 | 读者 | 文件 |
 | --- | --- |
-| **使用与执行** | [SKILL.md](SKILL.md) — `command`、入参、Pipeline、交付物、跑前确认、**依赖清单**、`presentation.html` / `presentation_static.html`、飞书与分步示例 |
+| **使用与执行** | [SKILL.md](SKILL.md) — **首次运行 Onboarding**（明确意图 → **按 format 收窄**的配置检查 → 执行 → 交付说明）、`command`、Pipeline、13 主题 id、`presentation.html` / `presentation_static.html`、飞书与分步示例 |
 | **开发与排障** | [CLAUDE.md](CLAUDE.md) — 样张与 token、`html_generator` / Step2、Roadmap、Step0/1 LLM 工具链（`minimax_utils` 等）、调试 |
 
 
@@ -40,7 +40,7 @@ README 本文保留产品级摘要；**22 变体字段全集、Layout Hint、实
 - **大纲 + 逐字稿** — 每次导出都附带 `outline.md` 和 `script.md`
 - **随包文档** — `SKILL.md`、`CLAUDE.md`、`_meta.json` 与 npm 包同源发布（见「文档分工」与「执行与接入」）
 
-* * *
+***
 
 ## 设计主题
 
@@ -77,7 +77,7 @@ README 本文保留产品级摘要；**22 变体字段全集、Layout Hint、实
 | `split-pastel`      | 柔粉 + 蓝   | 温柔、女性化 |
 
 
-* * *
+***
 
 ## 样式变体
 
@@ -90,7 +90,7 @@ README 本文保留产品级摘要；**22 变体字段全集、Layout Hint、实
 
 多数变体还支持 **多种构图密度**（例如多列网格、卡片式排布、左右栏宽窄比例、泳道布局等）；流水线里通过 `layout_hint` 选用，**不必换「样式」即可换版式**。常用变体 id 与入参见 `SKILL.md`；**完整字段与推断规则** 见 `CLAUDE.md`「样张系统」与「step2_design.js 核心逻辑」；下文 **「样式与布局如何被选中」** 为执行顺序摘要。
 
-* * *
+***
 
 ## 执行与接入
 
@@ -98,7 +98,7 @@ README 本文保留产品级摘要；**22 变体字段全集、Layout Hint、实
 
 | 文件 | 作用 |
 | --- | --- |
-| **SKILL.md** | **执行说明**：`command`、入参、Pipeline、交付物、跑前确认、依赖清单、13 主题 id、分步示例；**`presentation.html` 须与同目录全部 `page_*.html` 一并分发** |
+| **SKILL.md** | **执行说明**：Onboarding、按意图收窄的依赖核对、`command`、Pipeline、交付物、13 主题 id（含「自动」不传 `design_mode`）、分步示例；**`presentation.html` 须与同目录全部 `page_*.html` 一并分发** |
 | **CLAUDE.md** | 仓库内开发：样张与 token、`html_generator`、Roadmap、Step0/1 与 `steps/utils/minimax_utils.js` 等 |
 | **_meta.json** | 宿主侧：`type: agent`、`executor`、机器可读 `input`/`output`，供 OpenClaw、npm、CI 等 |
 | **executor.js** | 唯一入口：`stdin` 一行 JSON → `node executor.js`（示例见 SKILL.md） |
@@ -112,13 +112,13 @@ README 本文保留产品级摘要；**22 变体字段全集、Layout Hint、实
 1. **内容来源** — 飞书、本地 `.md`/`.txt`、网页 URL？（`source`）
 2. **交付格式** — PDF / HTML / 视频 / 多选？（`format`）；含 **video** 需 **FFmpeg**、**edge-tts**（或 macOS **`say`**）
 3. **交付渠道** — 本地 `output_dir` 或飞书？（`channel`）；**feishu** 需 `.env` 凭证及 **`doc_title`**、**`folder_token`** 等
-4. **（可选）** — **`design_mode`**、**`output_dir`**、**`page_animations: false`**？
+4. **视觉主题** — **主动**说明 13 个 `design_mode` id（见 SKILL 话术与主题表）；用户指定其一写入 JSON，或说「自动」则**不传** `design_mode`。**不要**在跑前清单里问用户是否关闭页内动效（用实现默认，除非用户主动要求改 JSON）。
 
-`request.json`、OpenClaw 无管道写法见 **[SKILL.md](SKILL.md)**（「跑前与用户确认」「最小执行」）。
+`request.json`、OpenClaw 无管道写法见 **[SKILL.md](SKILL.md)**（「首次运行 — Onboarding」「执行 — 日常调用」）。
 
 ### 跑前依赖（详见 SKILL）
 
-流水线**不会**做一键预检；缺 **LLM、FFmpeg/ffprobe、TTS、飞书** 等在对应 Step 失败（见 stderr）。第一次跑前请读 **[SKILL.md](SKILL.md)** 的 **「依赖不足时会发生什么」**、**「依赖准备清单」**（含自检命令）；跑前确认清单第 **6** 条为依赖项。
+流水线**不会**做一键预检；缺 **LLM、FFmpeg/ffprobe、TTS、飞书** 等在对应 Step 失败（见 stderr）。第一次跑前请读 **[SKILL.md](SKILL.md)**「首次运行 — Onboarding」**第二步（检查配置项）**及其中 **E. 缺配置时的典型报错落点**（含自检命令）；核对范围应随用户已选的 **`format` / `channel` / `source`** 收窄，勿要求装齐用不到的链。
 
 ### 主题如何被选中（`design_mode`）
 
@@ -132,7 +132,7 @@ README 本文保留产品级摘要；**22 变体字段全集、Layout Hint、实
 
 Step 0 将内容结构化为场景与建议版式；Step 2 结合规则做 **变体推断与节奏校正**（避免连续多页同一构图显得单调）。`layout_hint` 在**不换 HTML 模板**的前提下微调同一变体的排布。需要完全手工控制时，可编辑 `scenes.json` / `design_params.json` 后从对应 Step 重跑。
 
-* * *
+***
 
 ## 快速开始
 
@@ -147,9 +147,9 @@ cp .env.example .env
 # 编辑 .env → 按 .env.example 配置 Step0/1 所需 LLM 等
 
 # 3. 运行（一行命令）
-echo '{"command":"all","source":"./examples/test_article.md","format":"html","output_dir":"./output"}' | node executor.js
+echo '{"command":"all","source":"./examples/tencent_intro_light.md","format":"html","output_dir":"./output"}' | node executor.js
 # 可选：锁定视觉主题（见上文「设计主题」）
-# echo '{"command":"all","source":"./examples/test_article.md","format":"html","output_dir":"./output","design_mode":"deep-tech-keynote"}' | node executor.js
+# echo '{"command":"all","source":"./examples/tencent_intro_light.md","format":"html","output_dir":"./output","design_mode":"deep-tech-keynote"}' | node executor.js
 
 # 4. 打开结果
 open ./output/presentation.html   # 主入口；静态图轮播：presentation_static.html
@@ -168,7 +168,7 @@ echo '{"command":"all","source":"./article.md","format":"video","output_dir":"./
 echo '{"command":"all","source":"./article.md","format":["pdf","html"],"output_dir":"./out"}' | node executor.js
 ```
 
-* * *
+***
 
 ## 流程图
 
@@ -200,9 +200,9 @@ Step 6 ── 交付格式 ─────────── video / pdf / html 
 Step 7 ── 交付渠道 ─────────── local（默认）/ feishu
 ```
 
-每个步骤都读写磁盘 JSON 文件，支持单独重跑任意步骤、检查中间产物，或手动编辑 `scenes.json` 后继续。
+每个步骤都读写磁盘 JSON 文件；在**已有本机前置 Step 产物**的前提下，可对后续 Step 单独补跑或检查中间产物。Agent 面向用户的说明以 **[SKILL.md](SKILL.md)** 为准（含「按 `format` 裁剪分步命令」等约定）。
 
-* * *
+***
 
 ## 环境要求
 
@@ -239,7 +239,7 @@ FEISHU_APP_SECRET=...
 
 内容分析与逐字稿在子进程内调用 **已配置的 LLM**（**建议 `MINIMAX_*`**；若无 MiniMax 再填 **`LLM_*`**，见 **`.env.example`**）。实现上 Step0/1 使用 **`steps/utils/minimax_utils.js`**：OpenAI Chat Completions 兼容 HTTP、JSON 抽取与重试。说明与局限见 **[CLAUDE.md](CLAUDE.md)**「备忘与 Roadmap」→「（二）已明确的 Roadmap」→ **P2 — LLM 稳定性优化**。
 
-* * *
+***
 
 ## 输出结构
 
@@ -272,7 +272,7 @@ output/
 - 交付 **`presentation.html`** 时：至少该文件 + 全部 **`page_*.html`**（建议整目录或 zip）。生成文件在 `<!DOCTYPE>` 下有 HTML 注释再次提示依赖。
 - **单文件分享**：用 **`presentation_static.html`** 或 **PDF**；勿将静帧轮播说成与 iframe 主入口等价的「全交互幻灯片」。
 
-* * *
+***
 
 ## 分步使用
 
@@ -303,7 +303,7 @@ echo '{"command":"step6","format":["pdf","html"],"scenes":"'"$P"'/scenes.json","
 echo '{"command":"step7","channel":"local","output_dir":"'"$P"'"}' | node executor.js
 ```
 
-* * *
+***
 
 ## 自动化与工具接入
 
@@ -315,7 +315,7 @@ echo '{"command":"step7","channel":"local","output_dir":"'"$P"'"}' | node execut
 
 开发与排障：[CLAUDE.md](CLAUDE.md)。
 
-* * *
+***
 
 ## 项目结构
 
@@ -362,7 +362,7 @@ slide-forge/
 └── package.json
 ```
 
-* * *
+***
 
 ## 参与贡献
 
@@ -376,7 +376,7 @@ slide-forge/
 4. 用 `npm run test:e2e` 测试
 5. 提交 PR
 
-* * *
+***
 
 ## 许可证
 

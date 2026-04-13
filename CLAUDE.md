@@ -1,11 +1,10 @@
 # CLAUDE.md — slide-forge 内部开发指南
 
-面向 **本仓库贡献者与深度排障**：**Agent 执行说明**以根目录 **[SKILL.md](SKILL.md)** 为唯一主文档（渐进式披露：最小执行 → 交付 → Pipeline → 分步等）；本文负责样张、Step 实现与排障全景。
+面向 **本仓库贡献者与深度排障**：**Agent 执行说明**以根目录 **[SKILL.md](SKILL.md)** 为唯一主文档（结构：**首次运行 — Onboarding** → **执行 — 日常调用** → 意图变更 / 主题表 / 变体摘要等）；本文负责样张、Step 实现与排障全景。
 
 ## 项目概述
 
-把飞书文档、本地文件或网页一键转为 1920×1080 演示内容。
-三种交付格式（视频 / PDF / 交互式 HTML），13 种主题自动匹配，所有产出附大纲和逐字稿。
+把飞书文档、本地 Markdown/文本或网页收成 1920×1080 可讲演示；可导出 video / pdf / html（可多选），13 套主题与样张驱动版式，产出附大纲与逐字稿。Step0/1 使用本机 `.env` 中的 LLM（`MINIMAX_*` 优先，否则 `LLM_*`）。
 
 **核心原则**：工具链固化 + 创意自由解放
 
@@ -204,7 +203,7 @@ open ./test_e2e/presentation.html
 - **scene.body / scene.secondary 可能是 string 或 string[]**：访问前做 `Array.isArray` 判断
 - **副标题 fallback 链**：`scene.subtitle || scene.secondary || scene.body?.[0] || ''`
 - **系统 Chrome 降级**：screenshot.js 和 step6_format.js 在 Puppeteer 找不到 bundled Chrome 时 fallback 到 `/Applications/Google Chrome.app`
-- **外部依赖与预检**：实现上**无**统一「跑前一键检测」；缺 FFmpeg/ffprobe、TTS、LLM 凭证、飞书凭证等会在 **Step5 / Step6 / Step0/1 / Step7** 等处失败。给用户与 Agent 的**清单、自检命令、常见报错与 Step 对应关系**已固化在 **[SKILL.md](SKILL.md)** 的 **「依赖准备清单」**、**「依赖不足时会发生什么」**；README 亦从 Agent 接入节指向该两处。
+- **外部依赖与预检**：实现上**无**统一「跑前一键检测」；缺 FFmpeg/ffprobe、TTS、LLM 凭证、飞书凭证等会在 **Step5 / Step6 / Step0/1 / Step7** 等处失败。给用户与 Agent 的**收窄规则、条件表、自检命令、现象→排查**已写在 **[SKILL.md](SKILL.md)**「首次运行 — Onboarding」**第二步（检查配置项）**（含 **E**）；README 接入节与之对齐。
 
 #### 已知限制
 

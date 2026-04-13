@@ -1,6 +1,6 @@
 {
   "name": "slide-forge",
-  "version": "3.1.2",
+  "version": "3.1.3",
   "description": "把一篇飞书文档、本地 Markdown/文本或网页收成可上台讲的 1920×1080 演示：画面跟主题与样张走，嘴里有大纲与逐字稿；可导出 video、pdf、html（可多选），Step0–7 依次执行，在已有中间产物时可对之后的 Step 单独补跑。适用：用户要把材料尽快变成 deck，且接受在本机执行 node executor。注意：内容分析与写逐字稿走 .env 里配置的 LLM（MiniMax 或兼容端点），与当前对话里的大模型不是同一条 API。",
   "type": "agent",
   "metadata": {

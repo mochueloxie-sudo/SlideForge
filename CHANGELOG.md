@@ -25,6 +25,22 @@
 
 ---
 
+## [3.1.3] — 2026-04-10
+
+### 文档与 Agent 体验
+
+- **`SKILL.md`**：Onboarding 四段（意图 → **按 `format`/`channel`/`source` 收窄**的配置检查 → 拼 JSON → 交付/HTML）；**主动列 13 主题 +「自动」不传 `design_mode`**；Onboarding **不问**页内动效；**不引导**手持外援 `scenes.json` 跳过 Step0/1；分步模板前注明 **按 `format` 裁剪**；维护约定改为文末脚注 **`[^maint]`**；示例 `source` 为 **`./examples/tencent_intro_light.md`**；Step4 须带 **`design_params`**；HTML 预览 **`npm run preview:html -- <output_dir>`**、勿依赖 `file://` 打开 iframe 壳。
+- **`_meta.json`**：`version` **3.1.3**；`description` 与 `SKILL.md` 文首 **逐字一致**（叙事摘要 + 适用场景 + LLM 与对话模型分流说明）。
+- **`README.md` / `README_en.md`**：摘要与「跑前确认」与 SKILL 对齐（主题第 4 条、动效不问、依赖节指向 Onboarding 第二步 / **E**）；快速开始示例与 SKILL 同源；章节分隔统一为 **`***`**；流程说明与「仅在有本机前置产物时补跑」一致。
+- **`CLAUDE.md`**：项目概述与「外部依赖」交叉引用改为指向 SKILL **Onboarding 第二步**；主文档结构描述与当前 SKILL 章节名对齐。
+
+### 工程
+
+- **`check_tools.sh`**：`tool-locator.js` 改为**相对仓库根**加载（去掉硬编码 `~/.openclaw/...`），便于本地诊断。
+- **`package.json` / `package-lock.json`**：版本号 **3.1.3**；`package.json` 的 `description` 与 **`_meta.json`** 对齐。
+
+---
+
 ## [3.1.2] — 2026-04-13
 
 ### 页内动画与截图
