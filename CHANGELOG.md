@@ -12,7 +12,8 @@
 
 ### 进行中
 
-- （暂无）
+- **`steps/utils/content_extractor.js`** — `extractBlockText` 全面重写为按 `block_type` 的 `switch-case`，覆盖 Heading1–9、Bullet、Ordered、Code、Quote、Divider、Todo、Callout 等全部飞书块类型；新增 `getElementsText` 统一处理元素数组，支持 `docs_link`、`equation` 等非纯文本元素。
+- **`steps/step1_script.js`** — JSON 输出提示大幅强化：明确转义规则、增加格式示例、强化围栏禁止说明；System 消息追加 `The output MUST start with [ and end with ]. No other text outside the JSON array.`；**temperature 从 0.7 降至 0.3**，提升 JSON 格式稳定性。
 
 ### 候选（从 Roadmap 挑选）
 

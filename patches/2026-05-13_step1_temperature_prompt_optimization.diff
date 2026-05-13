@@ -1,0 +1,42 @@
+diff --git a/steps/step1_script.js b/steps/step1_script.js
+index d4e34f3..58d1bed 100644
+--- a/steps/step1_script.js
++++ b/steps/step1_script.js
+@@ -103,14 +103,17 @@ function buildPrompt(scenes, language) {
+ - 总结页：简短收尾，有力呼吁或总结金句
+ - 不要使用"首先""其次""最后"等机械词
+ - 直接以播出文字作答，不加任何前缀
+-- 只输出 JSON：不要 markdown 围栏，不要在 JSON 前后写说明
+ 
+-请返回一个 JSON 数组，格式如下：
+-[
+-  { "id": 1, "script": "..." },
+-  { "id": 2, "script": "..." },
+-  ...
+-]
++⚠️ 严格 JSON 输出规则（重要）：
++- 你的回答必须是一个 JSON 数组，以 [ 开头，以 ] 结尾
++- 数组的每个元素是 { "id": 数字, "script": "口播稿文字..." }
++- 不要在 JSON 前后写任何说明文字、不要用 markdown 代码围栏
++- JSON 中的 script 字段值里的引号必须转义（\"）
++- 示例格式（仅供格式参考，内容按实际幻灯片填写）：
++  [
++    { "id": 1, "script": "各位好，欢迎收看本期AI新鲜事，今天聚焦语音交互和AI工具进展。" },
++    { "id": 2, "script": "ElevenLabs CEO认为语音正在成为最有情感连接价值的交互方式。" }
++  ]
+ 
+ 幻灯片内容如下：
+ 
+@@ -153,10 +156,10 @@ process.stdin.on('end', async () => {
+     const prompt = buildPrompt(scenes, language);
+     const scripts = await callMiniMaxJson(
+       [
+-        { role: 'system', content: JSON_SYSTEM_PROMPT },
++        { role: 'system', content: JSON_SYSTEM_PROMPT + ' The output MUST start with [ and end with ]. No other text outside the JSON array.' },
+         { role: 'user', content: prompt },
+       ],
+-      { maxTokens: 4000, temperature: 0.7 },
++      { maxTokens: 4000, temperature: 0.3 },
+     );
+ 
+     if (!Array.isArray(scripts)) throw new Error('Expected JSON array from MiniMax');

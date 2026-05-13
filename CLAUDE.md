@@ -24,7 +24,7 @@
 | 截图     | `utils/screenshot.js`                  | Puppeteer 批量截图 1920×1080                                                                                                                                                            |
 | 样张     | `samples/{theme}/` + `samples/shared/` | 13 主题；每主题一组样张 + `shared/` 通用变体（含 compare / process_flow / architecture_stack / funnel），纯 HTML + CSS                                                                                 |
 | Step 0 | `steps/step0_analyze.js`               | MiniMax LLM 分析内容 → scenes.json                                                                                                                                                      |
-| Step 1 | `steps/step1_script.js`                | MiniMax LLM 生成逐字稿                                                                                                                                                                   |
+| Step 1 | `steps/step1_script.js`                | MiniMax LLM 生成逐字稿；temperature 0.3，System+User 双重约束 JSON 输出格式                                                                                                                       |
 | Step 2 | `steps/step2_design.js`                | 规则引擎：主题选择 + 变体推断 + layout_hint                                                                                                                                                      |
 | Step 3 | `steps/step3_html.js`                  | 调用 html_generator                                                                                                                                                                   |
 | Step 4 | `steps/step4_screenshot.js`            | 调用 screenshot.js                                                                                                                                                                    |
@@ -33,7 +33,7 @@
 | Step 7 | `steps/step7_channel.js`               | 交付渠道：local / feishu                                                                                                                                                                 |
 | 内部     | `steps/step6_video.js`                 | FFmpeg H.264+AAC 25fps（被 step6_format 调用）                                                                                                                                           |
 | 内部     | `steps/step7_publish.js`               | lark-cli 飞书发布（被 step7_channel 调用）                                                                                                                                                   |
-| 工具     | `steps/utils/content_extractor.js`     | 多源内容提取（飞书 / 本地 / 网页）                                                                                                                                                                |
+| 工具     | `steps/utils/content_extractor.js`     | 多源内容提取（飞书 / 本地 / 网页）；`extractBlockText` 按 `block_type` switch-case 覆盖 Heading1–9 / Bullet / Ordered / Code / Quote / Divider / Todo / Callout 等完整飞书块类型                        |
 | 工具     | `steps/utils/minimax_utils.js`         | Step0/1 共用：OpenAI Chat Completions 兼容 HTTP；`**MINIMAX_*` 优先**（建议 MiniMax）、无则 `**LLM_*`**；**L3** `JSON_SYSTEM_PROMPT`、**L1** 括号配平抽取 JSON、**L2** HTTP 429/5xx 与连接错误退避 + **解析失败**整段重请求 |
 | 工具     | `steps/utils/llm_client.js`            | MiniMax HTTP 封装（历史兼容；新逻辑以 `minimax_utils` 为准）                                                                                                                                       |
 | 工具     | `steps/utils/tool-locator.js`          | ffmpeg / ffprobe / imagemagick 自动发现                                                                                                                                                 |
@@ -365,7 +365,7 @@ Step0：`scenes.json` 仍为**纯 scenes 数组**；`project.json` 可含 `recom
 
 | 层级      | 方案                                                                               | 实现位置                                              |
 | ------- | -------------------------------------------------------------------------------- | ------------------------------------------------- |
-| **L3**  | System 消息约束：只输出 JSON，不要围栏与前后说明                                                   | `JSON_SYSTEM_PROMPT` + Step0/1 `messages[0]`      |
+| **L3**  | System 消息约束：只输出 JSON，不要围栏与前后说明；Step1 追加 `The output MUST start with [ and end with ]` 硬约束    | `JSON_SYSTEM_PROMPT` + 追加约束字符串               |
 | **L1**  | Strip markdown 代码围栏；失败则按 **引号感知** 从首个 `{` 或 `[` 起括号配平截取，再 `JSON.parse`           | `parseJsonFromModelText` / `extractJsonSubstring` |
 | **L2**  | 单次请求内：HTTP 429/5xx、连接错误、API `error`、空 `content` → `attempt * 2000ms` 退避重试，最多 3 次 | `callMiniMaxMessages`                             |
 | **L2′** | 仍解析失败时：**整段重新请求**模型（最多 3 次），避免仅重试 HTTP 而内容仍坏                                     | `callMiniMaxJson`                                 |
