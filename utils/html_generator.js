@@ -732,18 +732,18 @@ function getDensityCSS(density) {
   /* ── adaptive: rich content — compress & tighten ── */
   body.density-rich h1,
   body.density-rich .title { font-size: clamp(54px, 3.5vw, 68px) !important; line-height: 1.05 !important; margin-bottom: 18px !important; }
-  body.density-rich .body-text { font-size: 20px !important; line-height: 1.55 !important; }
+  body.density-rich .body-text { font-size: 26px !important; line-height: 1.55 !important; }
   body.density-rich .kp-item   { padding: 5px 0 !important; }
-  body.density-rich .kp-item span:last-child { font-size: 20px !important; }
-  body.density-rich .bullet-text { font-size: 20px !important; }
+  body.density-rich .kp-item span:last-child { font-size: 24px !important; }
+  body.density-rich .bullet-text { font-size: 24px !important; }
   body.density-rich .panel    { padding: 24px 32px !important; gap: 8px !important; }
   body.density-rich .eyebrow  { margin-bottom: 10px !important; }
-  body.density-rich .step-label { font-size: 22px !important; }
-  body.density-rich .step-desc  { font-size: 16px !important; }
+  body.density-rich .step-label { font-size: 24px !important; }
+  body.density-rich .step-desc  { font-size: 18px !important; }
   body.density-rich .icon-card  { padding: 16px 10px !important; max-height: 180px !important; }
   body.density-rich .icon-emoji { font-size: 48px !important; }
-  body.density-rich .icon-label { font-size: 20px !important; }
-  body.density-rich .icon-desc  { font-size: 15px !important; }`;
+  body.density-rich .icon-label { font-size: 24px !important; }
+  body.density-rich .icon-desc  { font-size: 18px !important; }`;
 
   return ''; // normal: no override needed
 }
