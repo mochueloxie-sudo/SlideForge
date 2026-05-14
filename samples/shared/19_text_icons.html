@@ -13,7 +13,7 @@
     background: {{BODY_BG}};
     font-family: '{{FONT}}', 'PingFang SC', sans-serif;
     color: {{TEXT_PRIMARY}};
-    display: flex; align-items: stretch;
+    display: flex; flex-direction: row; align-items: stretch;
     position: relative; overflow: hidden;
   }
   /* ── Left: text content ─────────────────────────────────── */
@@ -98,7 +98,7 @@
   body.layout-vertical .icon-grid { grid-template-columns: repeat(4, 1fr); }
 </style>
 </head>
-<body>
+<body style="flex-direction: row !important;">
   <div class="left">
     <div class="eyebrow">{{EYEBROW}}</div>
     <h1 class="title">{{TITLE}}</h1>
