@@ -2,6 +2,7 @@
 name: slide-forge
 description: |-
   把一篇飞书文档、本地 Markdown/文本或网页收成可上台讲的 1920×1080 演示：画面跟主题与样张走，嘴里有大纲与逐字稿；可导出 video、pdf、html（可多选），Step0–7 依次执行，在已有中间产物时可对之后的 Step 单独补跑。适用：用户要把材料尽快变成 deck，且接受在本机执行 node executor。注意：内容分析与写逐字稿走 .env 里配置的 LLM（MiniMax 或兼容端点），与当前对话里的大模型不是同一条 API。
+  进阶模式：当用户提供 N 份参考资料（飞书文档/PDF/网页）加一个内容框架时，Agent 在 Step 0 前执行 Step 0.5 内容策展，把多源素材按框架拼接融合后再喂给流水线。
 ---
 
 # SlideForge
@@ -165,6 +166,36 @@ echo '{"command":"all","source":"./examples/tencent_intro_light.md","format":["p
 ***
 
 ## 执行 — 日常调用
+
+### Step 0.5 内容策展（可选前置步骤）
+
+当用户提供 **多份参考资料（飞书文档/PDF/网页链接）+ 一个 PPT 内容框架** 时，需要我在 Step 0 之前先做内容融合。此步骤由**我（Agent）**手动执行，不涉及 `executor.js`。
+
+**触发条件**：用户说类似「我有 X 篇参考文章 + 一个框架，帮我整合成一份完整内容再出 PPT」。
+
+**流程**：
+
+1. **读所有参考资料** — 根据不同来源调不同工具：
+   - 飞书文档 → `lark-doc` skill（`action=read`）
+   - 本地 PDF/Word/Excel → `markdown-converter` skill（`markitdown` 转 Markdown）
+   - 网页链接 → `web_fetch`
+2. **理解用户的内容框架** — 通常是一个大纲或章节标题列表，标记每页想讲什么
+3. **按框架拼接素材** — 把各参考资料中对应章节的内容贴到框架对应位置，做简单衔接润色，不新增原创内容（参考 → B. 信息融合 → 则重新组织提炼）
+4. **输出一篇完整的 Markdown 内容稿** — 写入临时文件（如 `/tmp/teemo_curated.md`），供 Step 0 的 `source` 指向
+
+**来源类型与工具对照**：
+
+| 来源 | 工具 |
+|------|------|
+| 飞书文档链接 | `lark-doc` action=read |
+| 本地 .pdf/.docx/.pptx | `markdown-converter` skill |
+| 本地 .md/.txt | 直接 `read` |
+| 网页 URL | `web_fetch` |
+| 飞书云盘文件 | `lark-drive` + markdown-converter |
+
+**输出**：`/tmp/<project>_curated.md`，后续 Step 0 的 `source` 指向此文件。
+
+---
 
 ### Pipeline（Step0 → Step7）
 

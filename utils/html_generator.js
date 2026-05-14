@@ -755,7 +755,7 @@ function buildTokens(scene, tpl, pageNum, totalPages) {
     : escapeHtml(scene.title || '');
 
   const eyebrow = escapeHtml(scene.eyebrow || scene.section_label || `Section ${String(pageNum).padStart(2,'0')}`);
-  const subtitle = escapeHtml(scene.subtitle || scene.secondary || scene.body?.[0] || '');
+  const subtitle = escapeHtml(scene.subtitle || scene.secondary || (typeof scene.body === 'string' ? scene.body : scene.body?.[0]) || '');
 
   return {
     TITLE: titleHtml,
