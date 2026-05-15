@@ -1,6 +1,6 @@
 # 腾讯主题 · HTML 交付测试案例
 
-用预先写好的离线 `scenes.json` 直接跑 **design → html → screenshot → package**（v4.0 起这是默认工作流：宿主 Agent 自产 scenes.json），验证：
+用预先写好的离线 `scenes.json` 直接跑 **design → html → screenshot → package**（默认工作流：宿主 Agent 自产 scenes.json），验证：
 
 - `presentation.html`：iframe 主入口（入场动画 + **hover**）
 - `presentation_static.html`：PNG 轮播（与 PDF 帧一致，无组件 hover）

@@ -1,7 +1,7 @@
 # SCENES_SCHEMA — Agent 自产 scenes.json 指南
 
 > **读者**：宿主 Agent（Cursor / Claude Code / OpenClaw 等大模型驱动的智能体）
-> **作用**：v4.0 起 SlideForge **不再调用任何外部 LLM**。Agent 在对话内读完源材料后，按本文档**自己写出** `scenes.json` 落盘，再交给 SlideForge 渲染。
+> **作用**：SlideForge **不调任何外部 LLM**。Agent 在对话内读完源材料后，按本文档**自己写出** `scenes.json` 落盘，再交给 SlideForge 渲染。
 > **自检**：写完用 `command: "validate"` 跑一遍，按报错改，直到 `valid: true`。
 
 ---
