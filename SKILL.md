@@ -1,320 +1,276 @@
 ---
-name: slide-forge
-description: |-
-  把一篇飞书文档、本地 Markdown/文本或网页收成可上台讲的 1920×1080 演示：画面跟主题与样张走，嘴里有大纲与逐字稿；可导出 video、pdf、html（可多选），Step0–7 依次执行，在已有中间产物时可对之后的 Step 单独补跑。适用：用户要把材料尽快变成 deck，且接受在本机执行 node executor。注意：内容分析与写逐字稿走 .env 里配置的 LLM（MiniMax 或兼容端点），与当前对话里的大模型不是同一条 API。
-  进阶模式：当用户提供 N 份参考资料（飞书文档/PDF/网页）加一个内容框架时，Agent 在 Step 0 前执行 Step 0.5 内容策展，把多源素材按框架拼接融合后再喂给流水线。
+name: "slide-forge"
+description: "Agent-first 演示生成 Skill：你（宿主 Agent）自己读源材料、按 docs/SCENES_SCHEMA.md 写 scenes.json，本 Skill 把它渲染为 1920×1080 演示（HTML / PDF / video，可多选），13 套主题与 22+ 变体由样张驱动。本 Skill 不依赖任何外部 LLM——scenes 与 script 全由你产出。可选工具：extract（把飞书/网页/本地文件抽成 raw_content.txt 给你阅读）、validate（本地 schema 自检）。适用：你接到「把这堆材料做成 PPT」的任务，并能在用户本机执行 `node executor.js`。"
 ---
 
-# SlideForge
+# SlideForge — Agent-first Skill
 
-你是跑在**用户本机**上的演示生成助手：把飞书链接、本地 `.md`/`.txt` 或网页里的文字，收成一套固定 **1920×1080** 画幅的幻灯与口播稿——版式、动效和约二十余种内容变体交给**主题与样张**决定；你要把**源材料**、**交付格式**问清楚，并**主动交代可选视觉主题**（或帮用户选「自动」），再让管线去跑。
+你（宿主 Agent）是这条链路里的「内容大脑」。本 Skill 提供**纯工具管道**——内容理解、结构化、写口播稿全由你完成；本 Skill 只负责把你写出的 `scenes.json` 渲染为 1920×1080 演示。**不调任何外部 LLM**。
 
-**原则**：工具链和依赖摊在桌面上（`node executor.js`、各 Step 的输入输出），创意留在版式与叙事里；不要替用户在未确认时默认「只做视频」，也不要假装当前对话里的模型已经替他们跑完 Step0/1。
-
-**入口**：仓库根执行 `node executor.js`，stdin 一行 JSON，或 `node executor.js /path/to/request.json`。样张、token、变体与实现细节见 [CLAUDE.md](CLAUDE.md)。[^maint]
-
-***
-
-## 首次运行 — Onboarding
-
-在第一次帮用户跑通前，按顺序做完下面四步。**不要**在用户没说清前把 `format` 写成只有 `"video"`（耗时长，且依赖 FFmpeg、TTS）。
-
-### 第一步：明确用户意图（必做）
-
-用下面清单**逐项问清或根据上下文推断**，并记下将要写入 JSON 的值（含「故意省略」的默认行为）。跑命令前用一句话向用户复述 JSON 要点，征得同意再执行。
-
-**对用户说话时的用语（必遵守）**
-
-- **不要**对用户说 **Step0 / Step1 / Step2**、**`design_mode`**、**`source` / `format` / `channel`** 等实现层名词（除非对方明确在改 JSON / 查日志）。
-- 主题：说 **「视觉风格」「主题」**；用户说「你看着办 / 自动」时，用人话说 **「我会根据你的文档内容自动配一套合适的风格」**，**禁止**说「Step0 会推荐」「不传 `design_mode`」之类。
-- 交付：说 **「要 PDF、网页版还是视频」**，不要说「`format`」。
-- 来源：说 **「飞书链接 / 本地文件 / 网页」**，少说裸字段名。
-- **给用户听的复述**用人话；**拼给 `node executor.js` 的 JSON** 仍用正确字段名（你心里完成翻译即可）。
-
-| 序号  | 需要落地的事实      | 写入 JSON 的字段 / 行为                                                                                                                                                 |
-| --- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | 内容从哪来？       | `source`：飞书文档 URL、本地 `.md`/`.txt` 路径、或网页 URL                                                                                                                     |
-| 2   | 要哪些交付物？      | `format`：字符串或数组，取值 `pdf` / `html` / `video`。实现默认偏 `video`，**须由用户明确选择**，可多选                                                                                       |
-| 3   | 产物目录、是否上传飞书？ | `output_dir`（默认 `./output`）；`channel`：`local`（默认）或 `feishu`。选飞书时还要在 JSON 里准备 `**doc_title`**、`**folder_token`** 等（见 `.env.example` 与 Step7 要求）                   |
-| 4   | 视觉主题怎么定？     | **主动**用**人话**介绍 **13** 套风格（气质 + 可选展示内部 id，见话术块与下文表）。用户指定其一则 JSON 写 `design_mode`；说「自动」等则**省略**该字段，由流水线按内容推断（实现上等价于先内容分析再落设计参数）。**对用户说明时勿提步骤编号。** |
-| 5   | 页内动效（不向用户问）  | **勿在确认清单里提问**。`page_animations`、`page_animation_preset` 用实现默认；仅当用户**自己明确提出**要改时再写入 JSON。                                                                         |
-
-
-**与对话模型的关系**：Step0/1 在独立 Node 进程里通过 **HTTP** 调用你写在 `**.env`** 里的 LLM（`MINIMAX_*` 优先，否则 `LLM_*`），与当前聊天窗口里的大模型**不是同一条调用链**。
-
-用户只用口语时，帮他把「交付物 / 渠道 / 主题倾向」翻译成上表合法取值即可；主题部分优先对照下文 id 列表做口语→id 映射，映射不了就建议「自动」（JSON 省略 `design_mode`）。**翻译成 JSON 是 Agent 内部事，复述给用户时仍用人话。**
-
-#### 中文话术（对用户，可直接复述或略作改写）
-
-**开场（第一次带跑时）：**
-
-> 我会用仓库里的 SlideForge 流水线：先读你的材料、生成每页结构和逐字稿，再按你选的格式导出（PDF / 可交互 HTML / 视频），分辨率固定 1920×1080。开始前想跟你确认几件事，避免默认做成视频或后面缺依赖报错。
-
-**逐项确认（可一条消息里连续问）：**
-
-> 1）**内容从哪来？** 请发我飞书文档链接、本地 `.md` 或 `.txt` 路径，或网页 URL。  
-> 2）**这次要哪些交付？** 可以只要 PDF、只要 HTML、只要视频，或多选。视频会久一点，需要本机装好 FFmpeg 和朗读（如 edge-tts）。**没有特别说明的话，我不会替你默认「只做视频」。**  
-> 3）**产物放哪、要不要发飞书？** 默认可以放在项目的 `./output` 或你指定目录；若要上传到飞书，还需要文档标题、目标文件夹 token 等，我会写进请求 JSON。  
-> 4）**视觉风格（我来主动说明，你选或说自动）：** 内置 **13** 套风格，偏深色 / 偏浅色都有；你也可以直接说想要什么气质（比如偏商务、偏技术、偏活泼），我帮你对上具体一套。下面我列的是**程序里用的英文名**，你**任记一个或说代号**都行，**懒得挑就说「自动」**——我会**根据你的文档内容自动配一套最搭的风格**，不用你现在拍板。  
-> **偏深色：** electric-studio、bold-signal、creative-voltage、dark-botanical、neon-cyber、terminal-green、deep-tech-keynote  
-> **偏浅色：** swiss-modern、paper-ink、vintage-editorial、notebook-tabs、pastel-geometry、split-pastel  
-> 每套大概适合什么场景，我可以用一句话帮你对照；需要完整对照表也可以说一声。
-
-**执行前复述（征得同意再跑命令）：**
-
-> 跟你确认一下：**材料**从「……」来；**交付**要「……」（PDF / 网页 / 视频，可多选）；输出放在「……」；**视觉风格**你选了「……」，或**由我按文档内容自动搭配**。（若发飞书我会说明还要哪些信息。）**你点头我就去本机跑生成命令。**
-
-***
-
-### 第二步：检查配置项（必做）
-
-在**实际执行 `node executor.js` 的那台机器**上核对；缺项会在对应 Step 以非零退出和 stderr 报错（无统一预检）。
-
-**收窄规则**：以**第一步**已确认的 `source`、`format`、`channel` 为准，**只核对本次会用到的子项**——例如不含 `video` 就不必按视频链去查 FFmpeg/TTS；`channel` 不是 `feishu` 就不必查 lark-cli 与飞书 Step7 字段；飞书 `source` 才叠加飞书读文档凭证。下面各小节按条件选用，不必条条跑满。
-
-#### A. 仓库与 Node
-
-- 已在项目根执行 `**npm install`**
-- `**node -v`** 可用
-
-#### B. 大模型与飞书读文档（仅当本次会跑 Step0 和/或 Step1）
-
-
-| 条件                    | 检查什么                                                                                                                                                                       |
-| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 任意从零 `source` 的 `all` | `.env` 里配置 `**MINIMAX_*`**（建议，见 `**.env.example**`），**或** `**LLM_API_KEY` + `LLM_BASE_URL`（通常含 `/v1`）+ `LLM_MODEL`**（OpenAI Chat Completions 兼容）。二者都填时以 `**MINIMAX_*`** 为准 |
-| `source` 为飞书 URL      | `.env` 中飞书应用凭证齐全，能读文档（见 `**.env.example**`）                                                                                                                                |
-
-
-#### C. 与 `format` 绑定的工具链
-
-
-| `format` 含               | 需要                                                                                                           |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------ |
-| `video`                  | **ffmpeg**、**ffprobe**；TTS：**edge-tts**（`pip install edge-tts`）或 `**python3 -m edge_tts`**，或 macOS `**say`** |
-| `pdf` 和/或 `html`         | Puppeteer 能启动浏览器（随依赖安装）                                                                                      |
-| 任意 + `channel":"feishu"` | **lark-cli**、飞书相关环境变量、Step7 所需 JSON 字段                                                                       |
-
-
-#### D. 建议自检命令（可选）
-
-按第一步的 `**format`** 选用，**不要**对用不到的链路强行跑一遍：
-
-```bash
-node -v
-# 仅当 format 含 video 时再跑：
-ffmpeg -version && ffprobe -version
-(command -v edge-tts >/dev/null 2>&1 && edge-tts --version) || python3 -m edge_tts --version || which say
-```
-
-#### E. 缺配置时的典型报错落点（便于排查）
-
-
-| 现象                    | 优先查                                            |
-| --------------------- | ---------------------------------------------- |
-| Step0/1 立即失败          | `MINIMAX_*` / `LLM_*`、网络、Base URL、模型名          |
-| Step5 报找不到 TTS        | edge-tts / `python3 -m edge_tts` / macOS `say` |
-| Step6 video 报缺工具      | `ffmpeg`、`ffprobe`                             |
-| Step0 飞书读文档或 Step7 失败 | 飞书凭证、lark-cli、`doc_title` / `folder_token`     |
-
-
-#### 中文话术（对用户，可直接复述或略作改写）
-
-**说明「要在执行机自查」：**
-
-> 命令会在**你这台电脑上**的 Node 里跑，所以依赖和 `.env` 也要在这台机器上就绪。我会根据你前面定下的 **来源 / 交付格式 / 是否发飞书**，**只查这次真正用得上的几项**（不会没事让你全装一遍）；若有某条自检命令报错，把终端完整输出贴给我，我们对照文档排查。
-
-**环境 / LLM（需要分析或写逐字稿时）：**
-
-> 如果要从新文档一路生成，请确认项目根目录已经跑过 `npm install`，并且 `.env` 里按 `.env.example` 配好了 **MiniMax（`MINIMAX_`*）** 或 **兼容 OpenAI 的接口（`LLM_`*）**。另外说明一下：**这里用的 API 是你本机环境变量里的**，和你在聊天里用的模型不是同一条链路。
-
-**按格式提醒依赖：**
-
-> 你选了 **视频** 的话，需要本机已装 **ffmpeg / ffprobe**，以及 **edge-tts**（或 macOS 自带的 **say**）做配音。  
-> 只要 **PDF 或 HTML** 的话，主要依赖 Node 和装好依赖后的浏览器（Puppeteer）。  
-> 若要 **上传到飞书**，还需要本机配好飞书应用凭证、安装 **lark-cli**，并在请求里带上飞书要求的字段。
-
-***
-
-### 第三步：组装 JSON 并执行
-
-把前两步的结论写成**一行** JSON。`designMode` 等价于 `design_mode`，`projectDir` 等价于 `output_dir`。
-
-`**all` 示例**（替换 `source`、`format`、`output_dir`）：
-
-```bash
-echo '{"command":"all","source":"./examples/tencent_intro_light.md","format":["pdf","html"],"output_dir":"./output"}' | node executor.js
-```
-
-**从文件执行**：`node executor.js ./request.json`
-
-***
-
-### 第四步：结果说明与 HTML 特别注意
-
-- 输出目录内通常有 `**outline.md`**、`**script.md`**，以及按 `format` 生成的 mp4/pdf/html 等。
-- `**format` 含 `html` 时必读**：
-  - `**presentation.html`** 是 iframe 壳，**不能**单文件分发；须与同目录全部 `**page_*.html`** 一起打包（建议整个 `output_dir`）。
-  - **单文件分享**用 `**presentation_static.html`**（内嵌图）或 **PDF**。
-  - 本地预览 iframe 壳：仓库根执行 `**npm run preview:html -- <output_dir>`**（`<output_dir>` 为含 `presentation.html` 的目录）。勿指望仅靠 `file://` 打开壳页。
-
-#### 中文话术（跑完后对用户）
-
-> 生成结果在「……」目录里，有 `outline.md`、`script.md` 以及你选的格式对应文件。  
-> 如果包含 **HTML**：`presentation.html` 必须和同文件夹里所有 `page_*.html` **一起发**，单独发一个文件对方打不开；若只想发**一个文件**，请用 `presentation_static.html` 或导出的 **PDF**。本地想预览壳页，在项目根执行：`npm run preview:html -- <你的输出目录>`。
-
-***
-
-## 执行 — 日常调用
-
-### Step 0.5 内容策展（可选前置步骤）
-
-当用户提供 **多份参考资料（飞书文档/PDF/网页链接）+ 一个 PPT 内容框架** 时，需要我在 Step 0 之前先做内容融合。此步骤由**我（Agent）**手动执行，不涉及 `executor.js`。
-
-**触发条件**：用户说类似「我有 X 篇参考文章 + 一个框架，帮我整合成一份完整内容再出 PPT」。
-
-**流程**：
-
-1. **读所有参考资料** — 根据不同来源调不同工具：
-   - 飞书文档 → `lark-doc` skill（`action=read`）
-   - 本地 PDF/Word/Excel → `markdown-converter` skill（`markitdown` 转 Markdown）
-   - 网页链接 → `web_fetch`
-2. **理解用户的内容框架** — 通常是一个大纲或章节标题列表，标记每页想讲什么
-3. **按框架拼接素材** — 把各参考资料中对应章节的内容贴到框架对应位置，做简单衔接润色，不新增原创内容（参考 → B. 信息融合 → 则重新组织提炼）
-4. **输出一篇完整的 Markdown 内容稿** — 写入临时文件（如 `/tmp/teemo_curated.md`），供 Step 0 的 `source` 指向
-
-**来源类型与工具对照**：
-
-| 来源 | 工具 |
-|------|------|
-| 飞书文档链接 | `lark-doc` action=read |
-| 本地 .pdf/.docx/.pptx | `markdown-converter` skill |
-| 本地 .md/.txt | 直接 `read` |
-| 网页 URL | `web_fetch` |
-| 飞书云盘文件 | `lark-drive` + markdown-converter |
-
-**输出**：`/tmp/<project>_curated.md`，后续 Step 0 的 `source` 指向此文件。
+**入口**：仓库根执行 `node executor.js`，stdin 一行 JSON，或 `node executor.js /path/to/request.json`。Schema、变体、token 细节见 [docs/SCENES_SCHEMA.md](docs/SCENES_SCHEMA.md) 与 [CLAUDE.md](CLAUDE.md)。[^maint]
 
 ---
 
-### Pipeline（Step0 → Step7）
+## 推荐工作流（5 步）
+
+```
+1. 问意图    ── 跟用户确认 source / format / channel / 主题倾向
+2. extract   ── (可选) 把外部素材抽成 raw_content.txt，供你阅读
+3. 写 scenes ── 你在对话内按 SCENES_SCHEMA 写 scenes.json 落盘
+4. validate  ── 本地自检；valid:false 时按 errors 修订
+5. render    ── 一把跑完 design → deliver，产出 HTML / PDF / video
+```
+
+---
+
+## 第一步：明确用户意图
+
+逐项问清或根据上下文推断，用一句人话向用户复述后再执行。
+
+### 先识别输入模式（**必做、最早做**）
+
+用户的「内容供给方式」是**整个工作流最早的分叉点**。在问任何字段前先识别：
 
 
-| Step | 名称   | 输入 → 输出（摘要）                                                            |
-| ---- | ---- | ---------------------------------------------------------------------- |
-| 0    | 内容分析 | `source` → `scenes.json`                                               |
-| 1    | 逐字稿  | `scenes.json` → 写入 `script`                                            |
-| 2    | 设计参数 | `scenes.json` + 可选 `design_mode` → `design_params.json`                |
-| 3    | HTML | scenes + `design_params` → `html/page_*.html`                          |
-| 4    | 截图   | `html_dir` + `**design_params`（路径，建议始终传入）** → `screenshots/page_*.png` |
-| 5    | TTS  | scenes → `audio/page_*.mp3`                                            |
-| 6    | 交付格式 | 截图 + 音频等 → video / pdf / html + 大纲 + 逐字稿                               |
-| 7    | 交付渠道 | Step6 产出 → 本地或飞书                                                       |
+| 输入模式     | 触发信号                                       | 后续怎么走               |
+| -------- | ------------------------------------------ | ------------------- |
+| **单源**   | 用户给 1 份材料（一个链接 / 一个文件 / 一段文本）              | 直接走下方主表             |
+| **多源融合** | 用户**同时**给 N（≥2）份资料 **+ 一个内容框架/大纲**，要求按框架整合 | 先看下方「多源融合补充」小节，再走主表 |
 
 
-`command: "all"` 会依次跑 Step0→Step7。若要对某一 Step 单独补跑，须先有该 Step 所需的、**由本机前置 Step 写出的**输入文件，再调用对应 `command`。
+**判断要点**：多源融合的关键不是「资料多」，而是**「资料多 + 用户给了一个框架」**。如果用户只是连发几个相关链接、没有框架，按单源处理（你自行裁剪取舍即可）；如果用户明确说「按这个大纲，从这几篇里取材」，就是多源融合。
 
-### `all` 常用字段摘要
+不确定时**主动问一句**：「你是想直接从这一份做演示，还是把这几份按你给的框架先合一份再做？」
 
+### 主表
 
-| 字段                                        | 说明                                                               |
-| ----------------------------------------- | ---------------------------------------------------------------- |
-| `command`                                 | 全流程 `"all"`                                                      |
-| `source`                                  | 飞书 / 本地 / 网页                                                     |
-| `format`                                  | `pdf` / `html` / `video` 或数组                                     |
-| `output_dir`                              | 默认 `./output`                                                    |
-| `channel`                                 | `local` / `feishu`                                               |
-| `design_mode`                             | 下表 id；省略则由 Step0→Step2 自动选                                       |
-| `page_animations`、`page_animation_preset` | 实现默认（一般为开 + stagger）；**勿在 Onboarding 里问用户**；仅当用户明确要求改默认时再写入 JSON |
+**对用户说话用语**
 
+- 用「视觉风格 / 主题」，不要说 `design_mode`
+- 用「PDF / 网页版 / 视频」，不要说 `format`
+- 用「飞书链接 / 本地文件 / 网页」，不要说 `source`
+- 实现层（`scenes.json` / `design`）只在用户主动要看日志时才提
 
-### 分步调用时按需携带的路径字段
+**要落地的事实**
 
 
-| 字段                                      | 用于                     |
-| --------------------------------------- | ---------------------- |
-| `scenes`                                | step1–6                |
-| `design_params`                         | step3、**step4（务必带路径）** |
-| `html_dir`                              | step4                  |
-| `screenshots_dir`、`audio_dir`           | step6                  |
-| `output`                                | step6 自定义视频路径（可选）      |
-| `video_path`、`doc_title`、`folder_token` | step7 `feishu`         |
-| `voice`、`language`                      | step0/5                |
-| `source_url`                            | 可选                     |
+| 序号  | 问题      | 写入 JSON                                                                                       |
+| --- | ------- | --------------------------------------------------------------------------------------------- |
+| 1   | 内容从哪来？  | `source`：飞书 URL / 本地 `.md`/`.txt`/`.docx`/`.pdf` / 网页 URL（多源融合时见下方补充）                         |
+| 2   | 要哪些交付物？ | `format`：`pdf` / `html` / `video`，可单选可数组。**默认建议先 `html`**，video 耗时且要 FFmpeg+TTS               |
+| 3   | 输出去哪？   | `output_dir`（默认 `./output`）；`channel`：`local`（默认）/ `feishu`                                   |
+| 4   | 视觉风格？   | 用人话介绍 13 套（见下表）；用户说「自动」时 JSON 省略 `design_mode`，由你（Agent）在写 `project.json` 时挑、或交给 `design` 内容推断兜底 |
+| 5   | 页内动效    | **不主动问**；用默认（开 + stagger）；用户明说才改                                                              |
 
 
-### 分步命令模板（`P` 为输出目录）
+**13 套主题（用户选哪套你就把 id 填进 JSON）**
 
-下链为 **step0→step7 全量**示例。**按第一步的 `format` 裁剪**：不含 `**video`** 时跳过 **step5**，且 **step6** 里 `"format"` 必须与用户约定一致（勿照抄示例中的 `video`）；只要 pdf/html 时同理删掉不需要的交付与字段。
+
+| 色系  | id                  | 气质           |
+| --- | ------------------- | ------------ |
+| 深   | `electric-studio`   | 通用兜底，深蓝黑     |
+| 深   | `bold-signal`       | 商业 / 品牌      |
+| 深   | `creative-voltage`  | 创意 / 设计      |
+| 深   | `dark-botanical`    | 人文 / 教育      |
+| 深   | `neon-cyber`        | 科幻 / 数字 / AI |
+| 深   | `terminal-green`    | 技术 / 代码      |
+| 深   | `deep-tech-keynote` | 深度技术演讲       |
+| 浅   | `swiss-modern`      | 极简瑞士         |
+| 浅   | `paper-ink`         | 印刷 / 编辑      |
+| 浅   | `vintage-editorial` | 复古文艺         |
+| 浅   | `notebook-tabs`     | 笔记 / 手账      |
+| 浅   | `pastel-geometry`   | 轻快活泼         |
+| 浅   | `split-pastel`      | 柔和温柔         |
+
+
+### 多源融合补充（**仅当上面识别为「多源融合」时**）
+
+跟用户额外确认两件事：
+
+1. **内容框架在哪**：以**用户给的框架**为骨架（一段大纲 / 一个章节列表 / 一份模板 PPT 截图）。如果用户只是隐晦地提了几条要点，主动复述一遍让对方确认。
+2. **N 份资料分别是什么角色**：是「主稿 + 数据补充」，还是「N 份地位平等的素材」？这决定了你后续融合时的取舍优先级。
+
+**主表怎么填**
+
+- `source` 字段：**只填主资料路径**（或留空，多源完全在你脑里融合）；其余 N-1 份记在你的工作记忆里，第三步 extract 各自跑一次
+- `output_dir`：和单源一样，一个就够（融合产物、scenes.json、最终交付都在这里）
+- 其他字段（`format` / `channel` / `design_mode` / `page_animations`）与单源完全一致
+
+**后续步骤会做的事**（提前心里有数）
+
+- 第三步 `extract`：对每份资料各跑一次（落到 `<output_dir>/raw_<n>.txt` 或独立子目录）
+- 第四步写 `scenes.json`：先**在你脑里**按用户框架对齐 N 份资料 → 再产出 scenes.json，与单源情况下的产出**结构无差别**
+- **不需要**专门的「策展 step」或「中间稿 markdown」（除非用户要求复审融合结果）
+
+---
+
+## 第二步：检查依赖（按本次 format / source / channel 收窄）
+
+**本 Skill 不需要任何 LLM 凭证**。只在用到对应链路时才需要：
+
+
+| 条件                        | 需要什么                                                                     |
+| ------------------------- | ------------------------------------------------------------------------ |
+| 任何场景                      | `node -v` 可用；项目根已 `npm install`                                          |
+| `source` 是飞书 URL          | `.env` 里 `FEISHU_APP_ID` / `FEISHU_APP_SECRET`（见 `.env.example`）         |
+| `format` 含 `video`        | `ffmpeg` / `ffprobe`；TTS：`edge-tts`（`pip install edge-tts`）或 macOS `say` |
+| `format` 含 `pdf` 或 `html` | Puppeteer 能启动浏览器（随依赖安装）                                                  |
+| `channel` 为 `feishu`      | `lark-cli` + 飞书凭证 + JSON 里的 `doc_title` / `folder_token`                 |
+
+
+**典型报错落点**
+
+
+| 现象                 | 优先查                                              |
+| ------------------ | ------------------------------------------------ |
+| `extract` 飞书源失败       | 飞书凭证、应用权限 `docx:document`                        |
+| `screenshot` 启动浏览器失败 | Puppeteer 的 Chrome 是否就绪、沙箱权限                     |
+| `tts` 找不到 TTS          | `edge-tts` / `python3 -m edge_tts` / macOS `say` |
+| `package` video 报缺工具  | `ffmpeg` / `ffprobe`                             |
+| `deliver feishu` 失败    | `lark-cli`、飞书凭证、`doc_title` / `folder_token`     |
+
+
+---
+
+## 第三步：（可选）extract 把素材抽到本地
+
+**何时跑**：用户给的是飞书 / 网页 / 你还没读过的本地文件，且内容较长。
+**何时跳过**：用户已把全文贴在对话里，或源是简短 markdown 你已读过。
+
+```bash
+echo '{"command":"extract","source":"<URL或路径>","output_dir":"./project"}' | node executor.js
+```
+
+产物：
+
+- `./project/raw_content.txt` — 抽出的纯文本（你接着 read 它）
+- `./project/source_meta.json` — `{ source, source_type, title, char_count, ... }`
+
+**多源融合时**：对每份资料各跑一次 `extract`；为避免互相覆盖，每次传不同的 `output_dir`（如 `./project/src1`、`./project/src2`），或跑完立即把 `raw_content.txt` 改名为 `raw_<n>.txt` 收到主目录。融合工作在第四步你脑里完成，不需要落中间 markdown。
+
+---
+
+## 第四步：你写 scenes.json（核心）
+
+**完整 schema 见 [docs/SCENES_SCHEMA.md](docs/SCENES_SCHEMA.md)**。本节是速查与原则。
+
+### 决策清单
+
+1. **页数**：短文（≤800 字）5–7 页 / 中（800–3000）7–10 / 长（>3000）10–14
+2. **首页必须 `type:"cover"`**；末页通常 `type:"summary"`
+3. **每页选最贴合叙事意图的 `content_variant`**（22 种，决策树见 SCENES_SCHEMA §3）
+4. **不要连续两页同变体**——会被 validate 报 warning
+5. `**script`（口播稿）字段可选**：只在 `format` 含 `video` 时必填，zh 150–200 字 / en 50–80 词
+6. `**recommended_design_mode` 可选**：写在 `project.json` 里；不写则交 `design` 内容推断兜底
+
+### 22 个变体一句话速查
+
+```
+panel / card_grid / icon_grid       — 列举要点
+stats_grid / number / panel_stat    — 数字主导
+timeline / process_flow / funnel    — 时序 / 流程 / 漏斗
+architecture_stack                  — 系统分层
+two_col / text / text_icons         — 散文 + 旁注
+quote / quote_context               — 引用
+compare                             — A vs B 对照
+table / chart                       — 结构化数据 / 趋势
+nav_bar                             — 章节封面
+code                                — 代码片段
+number_bullets / quote_context …    — 混合变体（详见 SCENES_SCHEMA）
+```
+
+### 落盘
+
+把 JSON 写到 `<output_dir>/scenes.json`。需要锁定主题时，再写 `<output_dir>/project.json`：
+
+```json
+{
+  "title": "演示标题",
+  "language": "zh",
+  "recommended_design_mode": "deep-tech-keynote"
+}
+```
+
+### 自检
+
+```bash
+echo '{"command":"validate","scenes":"./project/scenes.json"}' | node executor.js
+```
+
+输出含 `valid: true|false`、`errors[]`、`warnings[]`。`**valid: false` 时按 `errors[]` 修订 scenes.json，再跑一次**，直到通过。
+
+> 多源融合的处理已在「第一步 → 多源融合补充」与「第三步 extract」中说明；本步骤对单/多源**没有差别**——你拿到融合后的内容素材后，按 SCENES_SCHEMA 写 scenes.json 即可。
+
+---
+
+## 第五步：render
+
+把 `scenes.json` 一把渲染为最终交付。
+
+```bash
+echo '{"command":"render","scenes":"./project/scenes.json","output_dir":"./project","format":["html"],"design_mode":"deep-tech-keynote"}' | node executor.js
+```
+
+**字段速查**
+
+
+| 字段                                          | 说明                                                          |
+| ------------------------------------------- | ----------------------------------------------------------- |
+| `command`                                   | `"render"`（或别名 `"all"`）                                     |
+| `scenes`                                    | scenes.json 路径，**必填**                                       |
+| `output_dir`                                | 默认 `./output`                                               |
+| `format`                                    | `"html"` / `"pdf"` / `"video"` 或数组                          |
+| `design_mode`                               | 可省略；用户明确选过就填                                                |
+| `channel`                                   | `"local"`（默认）/ `"feishu"`（须配套 `doc_title` / `folder_token`） |
+| `page_animations` / `page_animation_preset` | 默认开 + stagger，一般无需写                                         |
+
+
+`render` 会依次跑：**design 设计参数 → html 渲染 → screenshot 截图 → tts 配音（仅 format 含 video）→ package 打包格式 → deliver 交付渠道**。
+
+### 单步补跑
+
+任何中间产物都可以单独再跑：
 
 ```bash
 P=./project
-
-echo '{"command":"step0","source":"./examples/tencent_intro_light.md","output_dir":"'"$P"'"}' | node executor.js
-echo '{"command":"step1","scenes":"'"$P"'/scenes.json","output_dir":"'"$P"'"}' | node executor.js
-echo '{"command":"step2","scenes":"'"$P"'/scenes.json","output_dir":"'"$P"'","design_mode":"terminal-green"}' | node executor.js
-echo '{"command":"step3","scenes":"'"$P"'/scenes.json","design_params":"'"$P"'/design_params.json","output_dir":"'"$P"'/html"}' | node executor.js
-echo '{"command":"step4","html_dir":"'"$P"'/html","output_dir":"'"$P"'/screenshots","design_params":"'"$P"'/design_params.json"}' | node executor.js
-echo '{"command":"step5","scenes":"'"$P"'/scenes.json","output_dir":"'"$P"'/audio"}' | node executor.js
-echo '{"command":"step6","format":["video","pdf","html"],"scenes":"'"$P"'/scenes.json","screenshots_dir":"'"$P"'/screenshots","audio_dir":"'"$P"'/audio","output_dir":"'"$P"'"}' | node executor.js
-echo '{"command":"step7","channel":"local","output_dir":"'"$P"'"}' | node executor.js
+# 仅换主题 / 微调字段
+echo '{"command":"design","scenes":"'"$P"'/scenes.json","output_dir":"'"$P"'","design_mode":"neon-cyber"}' | node executor.js
+echo '{"command":"html","scenes":"'"$P"'/scenes.json","design_params":"'"$P"'/design_params.json","output_dir":"'"$P"'"}' | node executor.js
+echo '{"command":"screenshot","html_dir":"'"$P"'","output_dir":"'"$P"'/screenshots","design_params":"'"$P"'/design_params.json"}' | node executor.js
+# 仅重出 PDF / HTML（已有截图）
+echo '{"command":"package","scenes":"'"$P"'/scenes.json","screenshots_dir":"'"$P"'/screenshots","html_dir":"'"$P"'","output_dir":"'"$P"'","format":["pdf","html"]}' | node executor.js
 ```
 
-***
+---
+
+## 交付提醒（HTML 必读）
+
+- `presentation.html` 是 **iframe 壳**，**不能**单文件分发；要带上同目录所有 `page_*.html`（建议整个 `output_dir` 打包）
+- 单文件分享请用 `presentation_static.html`（内嵌图）或导出的 PDF
+- 本地预览壳页：仓库根执行 `npm run preview:html -- <output_dir>`，**勿**直接 `file://` 打开壳页
+
+跑完后用人话告诉用户：
+
+> 生成结果在「……」，含 `outline.md`、`script.md` 与你选的格式产物。HTML 须连同 `page_*.html` **整目录** 一起发；想单文件分享请用 `presentation_static.html` 或 PDF。
+
+---
 
 ## 意图变更 — 最小重跑
 
 
-| 用户目标            | 做法                                                                                                      |
-| --------------- | ------------------------------------------------------------------------------------------------------- |
-| 只换主题            | 保留 `scenes.json`，`step2`（JSON 写明 `design_mode`）→ step3 → step4 → step6 → step7；step4 仍带 `design_params` |
-| 只改逐字稿           | `step1`；若画面不变可再按需 step5/step6                                                                           |
-| 只要重新导出 PDF/HTML | 已有 `screenshots/`、`html_dir/` 时 `step6`，`format` 设成对应项；路径字段传齐                                           |
-| 换源文档            | `all` 或从 `step0` 重跑；`output_dir` 建议新目录                                                                  |
+| 用户目标           | 做法                                                                       |
+| -------------- | ------------------------------------------------------------------------ |
+| 只换主题           | `design`（带新 `design_mode`）→ `html` → `screenshot` → `package`            |
+| 只改某页文案         | 你直接改 `scenes.json` → `validate` → `html` → `screenshot` → `package`     |
+| 加/换口播稿         | 你给每页补 `script` 字段 → `tts` → `package`（`format` 含 `video`）                 |
+| 只重出 PDF / HTML | 已有 `screenshots/` + `html_dir/`，跑 `package`                              |
+| 换源文档           | 新 `output_dir`：extract（可选）→ 重写 scenes → validate → render                |
 
 
-***
+---
 
-## `design_mode` 合法取值（13 主题）
+## `_meta.json` 维护
 
-首次向用户介绍视觉选项时，应结合**上节话术里的 id 速览**与**本表**一句说清气质；用户无偏好时鼓励「自动」——**对用户只说「我会按你的材料自动搭配风格」**，JSON 里省略 `design_mode` 即可。**勿**对用户解释「Step0 推荐」或流水线步骤。
+`_meta.json` 供宿主做输入输出 schema 发现；`description` 应与本文 YAML `description` 对齐。执行语义以 `executor.js` 与本文为准。
 
-
-| `design_mode`       | 色系  | 气质 / 场景（摘要）  |
-| ------------------- | --- | ------------ |
-| `electric-studio`   | 深   | 深蓝黑，通用兜底     |
-| `bold-signal`       | 深   | 商业 / 品牌 / 营销 |
-| `creative-voltage`  | 深   | 创意 / 设计      |
-| `dark-botanical`    | 深   | 人文 / 教育      |
-| `neon-cyber`        | 深   | 科幻 / 数字 / AI |
-| `terminal-green`    | 深   | 技术 / 代码      |
-| `deep-tech-keynote` | 深   | 深度技术演讲       |
-| `swiss-modern`      | 浅   | 极简 / 瑞士      |
-| `paper-ink`         | 浅   | 印刷 / 编辑      |
-| `vintage-editorial` | 浅   | 复古 / 文艺      |
-| `notebook-tabs`     | 浅   | 笔记 / 手账      |
-| `pastel-geometry`   | 浅   | 轻快 / 活泼      |
-| `split-pastel`      | 浅   | 柔和 / 温柔      |
-
-
-用户要「自动」：对用户用人话确认「按内容自动配风格」；**JSON 省略** `design_mode`。口语可映射到上表 id（例如赛博风 → `neon-cyber`）；不确定时同样省略该字段。
-
-指定主题示例：
-
-```bash
-echo '{"command":"all","source":"./examples/tencent_intro_light.md","format":"html","output_dir":"./output","design_mode":"deep-tech-keynote"}' | node executor.js
-```
-
-***
-
-## 变体与实现细节
-
-Step0 为每页选择 `content_variant`（约 **22** 种，含 shared 变体）。完整列表、token 规范、layout_hint、动效与截图等待逻辑见 [CLAUDE.md](CLAUDE.md)。
-
-***
-
-## `_meta.json`
-
-与技能包同发的 `**_meta.json`** 供宿主做输入输出模式发现；其中 `**description`** 须与本文 YAML `**description`** 对齐。**执行语义**以 `**executor.js`** 与本文为准。
-
-[^maint]: 维护约定：文首 `description` 解析结果须与 `_meta.json` 的 `description` **逐字一致**（可用 `description: |-` 下一行缩进写整句）。正文章节分隔请用单独一行的 `*`**，勿使用单独一行的 `---`，以免与 YAML 边界混淆。
+[^maint]: 维护约定：文首 `description` 与 `_meta.json` 的 `description` **保持同义**（措辞可有差异，但「Agent 自产 scenes.json」「不调外部 LLM」「适用场景与执行入口」三件事必须都覆盖到）。正文章节分隔请用单独一行的三星号，勿用 `---` 以免与 YAML 边界混淆。

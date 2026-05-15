@@ -53,7 +53,7 @@ process.stdin.on('end', () => {
 
     console.log(JSON.stringify({
       success: true,
-      step: 'step3',
+      step: 'html',
       outputs: files,
       design_mode: resolvedDesignMode,
       message: `生成 ${files.length} 个 HTML 页面 (${resolvedDesignMode} · 样张模式)`

@@ -126,7 +126,7 @@ process.stdin.on('end', async () => {
 
     writeResult({
       success: true,
-      step: 'step5',
+      step: 'tts',
       outputs,
       message: `TTS 完成: ${outputs.length} 个音频文件（${provider}）`,
       metadata: { provider, voice: useVoice, file_count: outputs.length }

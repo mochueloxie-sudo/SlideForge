@@ -141,7 +141,7 @@ process.stdin.on('end', async () => {
 
     writeResult({
       success: true,
-      step: 'step2',
+      step: 'design',
       outputs: [designFile],
       message: `生成设计参数（${design_mode}）`,
       metadata: {

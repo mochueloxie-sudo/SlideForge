@@ -3,7 +3,7 @@
  * Step 6: 交付格式
  *
  * 根据 format 参数生成对应的交付物：
- *   - "video" → MP4 (delegates to step6_video.js logic)
+ *   - "video" → MP4 (delegates to video.js logic)
  *   - "pdf"   → PDF from screenshots
  *   - "html"  → presentation.html（主入口：iframe 单页，可重播动效 + 组件 hover）+ presentation_static.html（PNG 轮播）
  *
@@ -103,7 +103,7 @@ process.stdin.on('end', async () => {
 
     console.log(JSON.stringify({
       success: true,
-      step: 'step6',
+      step: 'package',
       outputs,
       message: `交付格式生成完成: ${formats.join(', ')} + outline + script`,
       metadata: { formats, pages: scenesData.length }
@@ -185,12 +185,12 @@ function generateScript(scenes, outPath) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// Video format (delegates to existing step6_video logic)
+// Video format (delegates to video.js)
 // ═══════════════════════════════════════════════════════════════════════════════
 
 async function generateVideo(params) {
   const { spawn } = require('child_process');
-  const videoScript = path.resolve(__dirname, 'step6_video.js');
+  const videoScript = path.resolve(__dirname, 'video.js');
   return new Promise((resolve, reject) => {
     const proc = spawn('node', [videoScript], { stdio: ['pipe', 'pipe', 'pipe'] });
     let stdout = '', stderr = '';

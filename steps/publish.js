@@ -111,7 +111,7 @@ process.stdin.on('end', async () => {
 
     writeResult({
       success: true,
-      step: "step7",
+      step: "deliver",
       outputs: [docToken, fileToken],
       message: "飞书发布完成",
       metadata: {

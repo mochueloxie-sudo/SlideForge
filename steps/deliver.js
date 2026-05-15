@@ -3,7 +3,7 @@
  * Step 7: 交付渠道
  *
  *   - "local"  → 汇总所有产出文件清单，打包到 output_dir（默认）
- *   - "feishu" → 创建飞书文档，嵌入视频/附件，写入大纲和逐字稿
+ *   - "feishu" → 创建飞书文档，嵌入视频，写入大纲和逐字稿（当前仅 presentation.mp4；PDF 直传待实现，见 CLAUDE.md 已知限制 / 待优化）
  */
 
 const fs   = require('fs');
@@ -105,7 +105,7 @@ function deliverLocal(outputPath) {
 
   return {
     success: true,
-    step: 'step7',
+    step: 'deliver',
     outputs: deliverables,
     message: `本地交付完成: ${manifest.length} 个文件 → ${outputPath}`,
     metadata: { channel: 'local', manifest, output_dir: outputPath }
@@ -119,7 +119,7 @@ function formatSize(bytes) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// Feishu delivery: delegates to existing step7_publish.js
+// Feishu delivery: delegates to publish.js
 // ═══════════════════════════════════════════════════════════════════════════════
 
 async function deliverFeishu(params) {
@@ -132,7 +132,7 @@ async function deliverFeishu(params) {
     }
   }
 
-  const publishScript = path.resolve(__dirname, 'step7_publish.js');
+  const publishScript = path.resolve(__dirname, 'publish.js');
   return new Promise((resolve, reject) => {
     const proc = spawn('node', [publishScript], { stdio: ['pipe', 'pipe', 'pipe'] });
     let stdout = '', stderr = '';
@@ -143,7 +143,7 @@ async function deliverFeishu(params) {
     proc.on('close', code => {
       if (code === 0) {
         try { resolve(JSON.parse(stdout)); }
-        catch { resolve({ success: true, step: 'step7', outputs: [], message: '飞书发布完成' }); }
+        catch { resolve({ success: true, step: 'deliver', outputs: [], message: '飞书发布完成' }); }
       } else {
         reject(new Error(`Feishu publish failed: ${stderr}`));
       }

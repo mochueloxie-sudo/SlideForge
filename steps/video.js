@@ -58,7 +58,7 @@ process.stdin.on('end', async () => {
 
     // 创建临时目录
     const baseDir = path.dirname(output);
-    const pageVideoDir = path.join(baseDir, 'step6_pages');
+    const pageVideoDir = path.join(baseDir, 'package_pages');
     fs.mkdirSync(pageVideoDir, { recursive: true });
 
     const FPS = 25;
@@ -107,7 +107,7 @@ process.stdin.on('end', async () => {
 
     console.log(JSON.stringify({
       success: true,
-      step: "step6",
+      step: "package",
       outputs: [output],
       message: `视频合成完成（动画策略: ${design.design_mode || 'default'}）`,
       metadata: {

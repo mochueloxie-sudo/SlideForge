@@ -77,7 +77,7 @@ process.stdin.on('end', async () => {
 
     console.log(JSON.stringify({
       success: true,
-      step: "step4",
+      step: "screenshot",
       outputs: files.map(f => path.join(outDir, f)),
       message: `截图完成: ${files.length} 张`,
       preprocessing: preprocessing ? 'applied' : 'none'

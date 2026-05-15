@@ -1,14 +1,31 @@
 #!/usr/bin/env node
 /**
- * slide-forge skill (Lightweight v2.0)
- * 8个独立Step，自由组合，无锁死流水线
+ * slide-forge skill (Agent-First v4.0)
+ *
+ * AI-GENERATED (Cursor)
+ *
+ * 定位：宿主 Agent 调用的 Skill。Agent 自己读源材料、按
+ * docs/SCENES_SCHEMA.md 写 scenes.json；本执行器只提供管道工具：
+ *
+ *   extract  → 把 source 抽成 raw_content.txt（零 LLM）
+ *   validate → 校验 scenes.json（零 LLM、零网络）
+ *   design   → 主题 + 变体推断 → design_params.json
+ *   html     → 渲染 HTML 页面
+ *   screenshot → Puppeteer 截图
+ *   tts      → 文字转语音
+ *   package  → 打包成 video / pdf / html
+ *   deliver  → 交付到 local / feishu
+ *   render   → 一把跑完 design → deliver
+ *
+ * v4.0 移除：step0_analyze / step1_script / minimax_utils / llm_client
+ *           （不再调用任何外部大语言模型）
+ *           原 step2..step7 已重命名为上述语义动词
  */
 
 const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
 
-// Load .env file (if present) into process.env
 (function loadEnv() {
   const envFile = path.join(__dirname, '.env');
   if (!fs.existsSync(envFile)) return;
@@ -31,33 +48,61 @@ async function dispatch(params) {
 
   let result;
   switch (command) {
-    case 'step0':
-      result = await step0_analyze(params);
+    case 'extract':
+      result = await extract(params);
       break;
-    case 'step1':
-      result = await step1_script(params);
+    case 'validate':
+      result = await validate(params);
       break;
-    case 'step2':
-      result = await step2_design(params);
+    case 'design':
+      result = await design(params);
       break;
-    case 'step3':
-      result = await step3_html(params);
+    case 'html':
+      result = await html(params);
       break;
-    case 'step4':
-      result = await step4_screenshot(params);
+    case 'screenshot':
+      result = await screenshot(params);
       break;
-    case 'step5':
-      result = await step5_tts(params);
+    case 'tts':
+      result = await tts(params);
       break;
-    case 'step6':
-      result = await step6_format(params);
+    case 'package':
+      result = await pkg(params);
       break;
-    case 'step7':
-      result = await step7_channel(params);
+    case 'deliver':
+      result = await deliver(params);
       break;
+    case 'render':
     case 'all':
-      result = await run_all(params);
+      result = await run_render(params);
       break;
+    case 'step0':
+    case 'step1':
+      throw new Error(
+        `command "${command}" was removed in v4.0. SlideForge no longer calls any external LLM. ` +
+        `The host Agent should now read source content (use command "extract" to fetch it) and ` +
+        `produce scenes.json directly per docs/SCENES_SCHEMA.md, then call "render" ` +
+        `(or design / html / screenshot / tts / package / deliver).`
+      );
+    case 'step2':
+    case 'step3':
+    case 'step4':
+    case 'step5':
+    case 'step6':
+    case 'step7': {
+      const renamed = {
+        step2: 'design',
+        step3: 'html',
+        step4: 'screenshot',
+        step5: 'tts',
+        step6: 'package',
+        step7: 'deliver'
+      }[command];
+      throw new Error(
+        `command "${command}" was renamed in v4.0. Use command "${renamed}" instead. ` +
+        `Full pipeline aliases: extract / validate / design / html / screenshot / tts / package / deliver / render.`
+      );
+    }
     default:
       throw new Error(`Unknown command: ${command}`);
   }
@@ -100,150 +145,106 @@ async function main() {
 }
 
 // ============================================
-// Step 0-7: 统一转发到 steps/*.js
-// ============================================
-
 // 参数标准化：统一 executor 外部名 → step 内部名
-function normalizeParams(params, stepName) {
+// ============================================
+function normalizeParams(params) {
   const p = { ...params };
-  // projectDir / output_dir
   if (p.projectDir && !p.output_dir) p.output_dir = p.projectDir;
-  // designMode / design_mode
   if (p.designMode && !p.design_mode) p.design_mode = p.designMode;
-  // docUrl / doc_url
   if (p.docUrl && !p.doc_url) p.doc_url = p.docUrl;
   return p;
 }
 
-async function step0_analyze(params) {
-  return runStepScript('step0_analyze.js', normalizeParams(params, 'step0'));
-}
-
-async function step1_script(params) {
-  return runStepScript('step1_script.js', normalizeParams(params, 'step1'));
-}
-
-async function step2_design(params) {
-  return runStepScript('step2_design.js', normalizeParams(params, 'step2'));
-}
-
 // ============================================
-// Step 3: HTML 渲染（调用独立脚本）
+// v4.0 命令分派（每个命令对应 steps/<name>.js）
 // ============================================
-async function step3_html(params) {
-  return runStepScript('step3_html.js', normalizeParams(params, 'step3'));
-}
+async function extract(params)    { return runStepScript('extract.js',    normalizeParams(params)); }
+async function validate(params)   { return runStepScript('validate.js',   normalizeParams(params)); }
+async function design(params)     { return runStepScript('design.js',     normalizeParams(params)); }
+async function html(params)       { return runStepScript('html.js',       normalizeParams(params)); }
+async function screenshot(params) { return runStepScript('screenshot.js', normalizeParams(params)); }
+async function tts(params)        { return runStepScript('tts.js',        normalizeParams(params)); }
+async function pkg(params)        { return runStepScript('package.js',    normalizeParams(params)); }
+async function deliver(params)    { return runStepScript('deliver.js',    normalizeParams(params)); }
 
 // ============================================
-// Step 4: 截图（调用现有 screenshot.js）
+// render（原 "all"）：从 scenes.json 起，跑 design → deliver
+// v4.0 起：本命令不再调用 LLM；scenes.json 必须由宿主 Agent 预先准备
 // ============================================
-async function step4_screenshot(params) {
-  return runStepScript('step4_screenshot.js', normalizeParams(params, 'step4'));
-}
-
-// ============================================
-// Step 5: TTS 合成
-// ============================================
-async function step5_tts(params) {
-  return runStepScript('step5_tts.js', normalizeParams(params, 'step5'));
-}
-
-// ============================================
-// Step 6: 交付格式（video / pdf / html + outline + script）
-// ============================================
-async function step6_format(params) {
-  return runStepScript('step6_format.js', normalizeParams(params, 'step6'));
-}
-
-// ============================================
-// Step 7: 交付渠道（local / feishu）
-// ============================================
-async function step7_channel(params) {
-  return runStepScript('step7_channel.js', normalizeParams(params, 'step7'));
-}
-
-// ============================================
-// 辅助：运行所有 Steps（顺序执行）
-// ============================================
-async function run_all(params) {
+async function run_render(params) {
   const results = [];
 
-  // Step 0
-  console.log("\n🔄 Step 0: 分析内容...");
-  const r0 = await step0_analyze(params);
-  params.scenes = r0.outputs[0];
-  results.push(r0);
+  if (!params.scenes) {
+    throw new Error(
+      'render: missing required field "scenes". ' +
+      'Provide a path to scenes.json (produced by the host Agent per docs/SCENES_SCHEMA.md). ' +
+      'If you need to fetch raw content first, run command "extract".'
+    );
+  }
+  if (!params.output_dir) params.output_dir = './output';
 
-  // Step 1
-  console.log("🔄 Step 1: 生成逐字稿...");
-  const r1 = await step1_script({ ...params, scenes: params.scenes });
-  params.scenes = r1.outputs[0];
-  results.push(r1);
+  console.log("\n🔄 design: 生成设计参数...");
+  const rDesign = await design(params);
+  params.design_params = rDesign.outputs[0];
+  results.push(rDesign);
 
-  // Step 2 — design_mode: user-specified or auto-selected inside step2
-  console.log("🔄 Step 2: 生成设计参数...");
-  const r2 = await step2_design({ ...params, scenes: params.scenes });
-  params.design_params = r2.outputs[0];
-  results.push(r2);
-
-  // Step 3
-  console.log("🔄 Step 3: 渲染 HTML...");
-  const r3 = await step3_html({ ...params, scenes: params.scenes, design_params: params.design_params });
+  console.log("🔄 html: 渲染 HTML...");
+  const rHtml = await html({
+    ...params,
+    scenes: params.scenes,
+    design_params: params.design_params
+  });
   params.html_dir = params.output_dir;
-  results.push(r3);
+  results.push(rHtml);
 
-  // Step 4
-  console.log("🔄 Step 4: 截图...");
+  console.log("🔄 screenshot: 截图...");
   const screenshotsDir = path.join(params.output_dir, 'screenshots');
-  const r4 = await step4_screenshot({
+  const rShot = await screenshot({
     ...params,
     html_dir: params.html_dir,
     output_dir: screenshotsDir,
-    design_params: params.design_params,
+    design_params: params.design_params
   });
   params.screenshots_dir = screenshotsDir;
-  results.push(r4);
+  results.push(rShot);
 
-  // Step 5 (TTS — only needed if format includes video)
-  const formats = Array.isArray(params.format) ? params.format : [params.format || 'video'];
+  const formats = Array.isArray(params.format) ? params.format : [params.format || 'html'];
   const needsAudio = formats.includes('video');
 
   if (needsAudio) {
-    console.log("🔄 Step 5: TTS...");
-    const r5 = await step5_tts({ ...params, scenes: params.scenes });
-    results.push(r5);
+    console.log("🔄 tts: 文字转语音...");
+    const rTts = await tts({ ...params, scenes: params.scenes });
+    results.push(rTts);
   } else {
-    console.log("⏭️  Step 5: 跳过 TTS（当前格式不需要音频）");
+    console.log("⏭️  tts: 跳过（当前格式不需要音频）");
   }
 
-  // Step 6: 交付格式
-  console.log("🔄 Step 6: 生成交付格式...");
-  const r6 = await step6_format({
+  console.log("🔄 package: 打包交付格式...");
+  const rPkg = await pkg({
     ...params,
     format: formats,
     scenes: params.scenes,
     screenshots_dir: params.screenshots_dir || path.join(params.output_dir, 'screenshots'),
     audio_dir: params.audio_dir || path.join(params.output_dir, 'audio'),
-    html_dir: params.html_dir || params.output_dir,
+    html_dir: params.html_dir || params.output_dir
   });
-  results.push(r6);
+  results.push(rPkg);
 
-  // Step 7: 交付渠道
   const channel = params.channel || 'local';
-  console.log(`🔄 Step 7: 交付渠道 (${channel})...`);
-  const r7 = await step7_channel({
+  console.log(`🔄 deliver: 交付渠道 (${channel})...`);
+  const rDeliver = await deliver({
     ...params,
     channel,
     scenes: params.scenes,
     video_path: formats.includes('video') ? path.join(params.output_dir, 'presentation.mp4') : undefined
   });
-  results.push(r7);
+  results.push(rDeliver);
 
   return {
     success: true,
-    step: "all",
+    step: "render",
     results,
-    message: `完整流程执行完毕 → 格式: ${formats.join('+')} / 渠道: ${channel}`
+    message: `渲染流程执行完毕 → 格式: ${formats.join('+')} / 渠道: ${channel}`
   };
 }
 
@@ -253,9 +254,6 @@ async function runStepScript(scriptName, params) {
   return JSON.parse(stdout);
 }
 
-// ============================================
-// 辅助：运行外部命令
-// ============================================
 function runCommand(cmd, args = [], options = {}) {
   return new Promise((resolve, reject) => {
     const proc = spawn(cmd, args, { stdio: ['pipe', 'pipe', 'pipe'] });
