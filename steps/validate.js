@@ -120,7 +120,9 @@ const MSG_PATTERN_HINTS = [
   { pattern: /unknown content_variant/,
     hint: '22 种合法变体：panel / stats_grid / timeline / two_col / number / quote / text / code / table / chart / nav_bar / panel_stat / number_bullets / quote_context / text_icons / icon_grid / card_grid / compare / process_flow / architecture_stack / funnel。决策图见 SCENES_SCHEMA §0.2' },
   { pattern: /content scene must declare content_variant/,
-    hint: '每个 type:"content" 的 scene 必须有 content_variant 字段；拿不准选 "panel" 兜底' },
+    hint: '每个 type:"content" 必须有 content_variant。先按 §0.2a 填字段，再写与之匹配的变体名；仅当只有 key_points[] 时用 panel' },
+  { pattern: /declared ".+" but fields suggest/,
+    hint: '见 quality_warnings 的 suggested_content_variant；改 content_variant 或删/移字段。详见 SCENES_SCHEMA §0.2a' },
 ];
 
 function lookupHint(at, msg) {

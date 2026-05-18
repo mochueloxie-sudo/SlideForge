@@ -16,39 +16,62 @@
 2. **首页必须 `type:"cover"`**；末页通常 `type:"summary"`；中间页都是 `type:"content"`
 3. **每个 content 页要选一个 `content_variant`**（决定版式），并填该变体要求的字段
 
-### 0.2 按内容形态选变体（决策图）
+### 0.2 先字段、后变体（推荐工作流）
+
+1. **先写本页数据结构**（下表「若你已填写…」列）
+2. **再写与之匹配的 `content_variant`**（「则用」列）
+3. **`validate`** → 若有 `QUALITY_VARIANT_MISMATCH`，按 `suggested_content_variant` 改声明
+
+> **渲染规则**：`html` 以 scenes 里的 `content_variant` 为准；填了 `stats[]` 却写 `panel` 不会自动变成 `stats_grid`。
+
+### 0.2a 字段 → 变体（优先于决策树）
+
+| 若你已填写（或本页核心信息是） | 则用 `content_variant` | 不要误用 |
+|------------------------------|----------------------|----------|
+| `compare_left_points` + `compare_right_points` | `compare` | `panel` |
+| `big_number`（主指标一页一数） | `number` | `panel` + 数字塞 title |
+| `stats[]`（2–4 个并列指标） | `stats_grid` | `panel` |
+| `process_stages[]` 或 `flow_lanes[]` | `process_flow` | `panel` / `timeline` |
+| `steps[]`（时间序节点） | `timeline` | `panel` |
+| `layers[]`（3–5 层架构） | `architecture_stack` | `panel` |
+| `funnel_stages[]` | `funnel` | `panel` |
+| `cards[]` | `card_grid` | `panel` |
+| `icons[]`（4–9 个） | `icon_grid` | `panel` |
+| `nav_items[]`（章节顶栏） | `nav_bar` | 把章节名只写进 `key_points` |
+| `quote_body` + `context_body` | `quote_context` | `quote` / `panel` |
+| `quote_body`（单句金句） | `quote` | `panel` |
+| `left_body` + 右栏要点 | `two_col` | `panel` |
+| `code_snippet` | `code` | `panel` |
+| `table_headers` + `table_rows` | `table` | `panel` |
+| `chart_data` | `chart` | `panel` |
+| **仅** `key_points[]`（3–6 条并列要点） | `panel` | 有数字/对照却仍用 panel |
+| **仅** `body` / 一句呼吸页 | `text` | 有列表却用 text |
+
+`validate` 在声明与字段不一致时报 **`QUALITY_VARIANT_MISMATCH`**（含 `suggested_content_variant`，不阻塞 render）。
+
+### 0.2b 按叙事形态选变体（决策图 · 补充）
 
 ```
 你这页要表达什么？
 │
-├─ 列举 3-6 个要点 ─────────────────────────▶ panel        ← 90% 场景选它
+├─ 列举 3-6 个要点（且无上表专用字段）────▶ panel
 ├─ 列举 4-6 张图文卡片 ─────────────────────▶ card_grid
 ├─ 列举 4-9 个图标 + 标签 ─────────────────▶ icon_grid
-│
-├─ 一个核心数字（"3.4 万亿"、"+86%"） ─────▶ number
+├─ 一个核心数字 ─────────────────────────▶ number
 ├─ 2-4 个并列数字 ─────────────────────────▶ stats_grid
-│
-├─ 时间顺序的 3-5 个节点 ─────────────────▶ timeline
+├─ 时间顺序节点 ─────────────────────────▶ timeline
 ├─ 业务流程 / 阶段链路 ───────────────────▶ process_flow
-├─ 系统分层（接入/服务/数据）───────────────▶ architecture_stack
-├─ 转化漏斗（曝光 → 成交） ────────────────▶ funnel
-│
-├─ A vs B 对照（before/after、方案对比） ──▶ compare
-│
-├─ 一段散文 + 右侧要点 ────────────────────▶ two_col
-├─ 整页散文段落 ───────────────────────────▶ text
-│
-├─ 一句金句引用 ───────────────────────────▶ quote
-├─ 引用 + 出处 + 上下文段 ─────────────────▶ quote_context
-│
-├─ 表格数据 ──────────────────────────────▶ table
-├─ 趋势 / 对比柱状图 ──────────────────────▶ chart
-├─ 代码片段 ──────────────────────────────▶ code
-└─ 章节封面 / 大纲页 ──────────────────────▶ nav_bar
+├─ 系统分层 ───────────────────────────────▶ architecture_stack
+├─ 转化漏斗 ───────────────────────────────▶ funnel
+├─ A vs B 对照 ────────────────────────────▶ compare
+├─ 散文 + 右栏要点 ────────────────────────▶ two_col
+├─ 整页散文 / 呼吸句 ──────────────────────▶ text
+├─ 金句 / 引用+上下文 ─────────────────────▶ quote / quote_context
+├─ 表格 / 图表 / 代码 ─────────────────────▶ table / chart / code
+└─ 章节过渡 / 大纲锚点 ────────────────────▶ nav_bar
 ```
 
-> 拿不准时**选 `panel`**——通用兜底，几乎任何要点列表都能塞进去。  
-> **要作品感而非模板感**：为关键页加 `visual_weight` / `composition`（见 §0.7），并穿插 `number` / `quote` / `compare` 等高能变体。
+**要作品感**：在 §0.2a 选对变体后，为关键页加 `visual_weight` / `composition`（§0.7），并避免连续多页 `panel`（见 §0.8）。
 
 ### 0.7 艺术指导（可选 · 抬品质）
 
@@ -104,6 +127,7 @@
 | content `title` >48 字 | 缩短标题，细节放 `body` / `key_points` |
 | `panel` 且 `key_points.length` >5 | 拆页或改用 `card_grid` / `timeline` |
 | 非法 `visual_weight` / `composition` | 见 §0.7 合法值表 |
+| `QUALITY_VARIANT_MISMATCH` | 按 `suggested_content_variant` 改 `content_variant`，或删多余字段（§0.2a） |
 
 **deck 节奏模板（7–10 页）**：`cover(hero)` → 冲击页（`number` 或 `compare`）→ 呼吸页（`text` + `title-only` + `breathing`）→ 信息页（`panel` / `stats_grid`）→ 可选 `timeline` / `two_col` → `summary`（2–4 条 CTA，`breathing` 可选）。
 
@@ -113,7 +137,10 @@
 |------|------|-------------------|
 | `examples/golden/product_launch_scenes.json` | 产品发布 | `neon-cyber` |
 | `examples/golden/business_report_scenes.json` | 商业报告 | `bold-signal` |
+| `examples/golden/business_swiss_scenes.json` | 商务浅色简报 | `swiss-modern` |
 | `examples/golden/humanities_narrative_scenes.json` | 人文叙事 | `dark-botanical` |
+| `examples/golden/editorial_notes_scenes.json` | 编辑长文 | `paper-ink` |
+| `examples/golden/variant_showcase_scenes.json` | shared 变体陈列 | `paper-ink` |
 
 ### 0.9 主视觉资产（Q1-B · 可选）
 

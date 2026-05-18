@@ -22,6 +22,22 @@
 
 ---
 
+## [4.2.2] — 2026-05-18 — 变体选择：先字段后变体 + validate _MISMATCH
+
+> **patch**：文档与 `quality_warnings`；`scenes.json` 契约不变。
+
+### 新增
+
+- **`QUALITY_VARIANT_MISMATCH`**：`validate` → `quality_warnings[]` 含 `suggested_content_variant`（字段与声明的 `content_variant` 不一致时）。
+- **`utils/variant_suggest.js`**：与 `html` 推断优先级对齐的字段→变体建议。
+
+### 变更
+
+- **SCENES_SCHEMA §0.2a**：字段→变体表；去掉「拿不准选 panel」；§0.2b 决策图作补充。
+- **SKILL.md**：「先字段、后变体」三步；链 `business_swiss` 等 6 套金标。
+
+---
+
 ## [4.2.1] — 2026-05-18 — 第二波：shared 变体 · 主题 token · 第六金标
 
 > **patch**：视觉与金标回归；`scenes.json` 契约不变。

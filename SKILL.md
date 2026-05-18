@@ -98,11 +98,19 @@ echo '{"command":"extract","source":"<URL或路径>","output_dir":"./project"}' 
 
 **完整 schema、22 个变体的字段表与最小示例见 [docs/SCENES_SCHEMA.md](docs/SCENES_SCHEMA.md)**。本节只列原则。
 
+### 先字段、后变体（三步 · 必读）
+
+1. **定本页数据结构** — 对照 [SCENES_SCHEMA §0.2a](docs/SCENES_SCHEMA.md#02a-字段--变体优先于决策树)：有 `stats[]` 就准备 `stats_grid`，有 `big_number` 就准备 `number`，有左右对照列就准备 `compare`……**不要先写 `panel` 再往里面硬塞数字**。
+2. **写匹配的 `content_variant` + 必填字段** — 仅当本页**只有** `key_points[]` 时用 `panel`；整页一句用 `text` + 可选 `composition:"title-only"`。
+3. **`validate` 自检** — 处理 `quality_warnings` 里的 `QUALITY_VARIANT_MISMATCH`（看 `suggested_content_variant`）、连续 `panel`、缺高能页等，再 `render`。
+
+**金标抄作业**（字段 + 节奏已对齐）：`examples/golden/business_swiss_scenes.json`（商务 7 页）、`product_launch_scenes.json`（发布 8 页）、`editorial_notes_scenes.json`（编辑 9 页）。
+
 ### 决策清单
 
 1. **页数**：短文（≤800 字）5–7 页 / 中（800–3000）7–10 / 长（>3000）10–14
 2. **首页必须 `type:"cover"`**；末页通常 `type:"summary"`
-3. **每页选最贴合叙事的 `content_variant`**（决策树见 SCENES_SCHEMA §3）
+3. **变体**：按 §0.2a 字段表选；决策树见 SCENES_SCHEMA §0.2b / §3
 4. **不要连续两页同变体**——会被 validate 报 warning
 5. **`script` 字段可选**：只在 `format` 含 `video` 时必填，zh 150–200 字 / en 50–80 词
 6. **`recommended_design_mode` 可选**：写在 `<output_dir>/project.json` 里；不写则交 `design` 命令兜底
@@ -148,7 +156,7 @@ echo '{"command":"extract","source":"<URL或路径>","output_dir":"./project"}' 
 | **标题** | content 页 `title` 建议 ≤48 字；细节放进 `key_points` / `body` |
 | **收尾** | `summary` 用 2–4 条短 CTA（`key_points`）；可加 `visual_weight:"breathing"`（`design` 会为 summary 选 `layout_hint: cards`） |
 | **封面** | `cover` 可加 `visual_weight:"hero"` |
-| **示范** | 可参考 `examples/golden/*.json`（产品 / 商业 / 人文三套金标） |
+| **示范** | `examples/golden/*.json`（6 套：product_launch / business_report / **business_swiss** / humanities / editorial_notes / variant_showcase） |
 | **主视觉（Q1）** | `panel` + `composition:"split-visual"` + `hero_image`（相对路径或 URL）；见 SCENES_SCHEMA §0.9 |
 
 ```json
@@ -173,7 +181,7 @@ echo '{"command":"validate","scenes":"./project/scenes.json"}' | node executor.j
 npm run check -- ./project/scenes.json
 ```
 
-输出 `valid: true|false` + `errors[]` + `warnings[]` + `quality_warnings[]`，每条可带 `hint`。**`valid: false` 时按 `errors[]` 修订**；`quality_warnings` 用于抬品质（panel 堆砌、缺高能页、标题过长等），建议改完再 render。`validate` 永远 exit 0，结果在 JSON 字段里。
+输出 `valid: true|false` + `errors[]` + `warnings[]` + `quality_warnings[]`，每条可带 `hint`。**`valid: false` 时按 `errors[]` 修订**；`quality_warnings` 用于抬品质（**`QUALITY_VARIANT_MISMATCH`**、panel 堆砌、缺高能页等），建议改完再 render。`validate` 永远 exit 0，结果在 JSON 字段里。
 
 开发/发版前可跑：`npm run check:golden`（金标 validate + 渲染 + HTML 回归）。
 

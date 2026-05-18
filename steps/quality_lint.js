@@ -9,6 +9,7 @@
 
 const { resolveVisualAsset } = require('../utils/visual_assets');
 const { navBarHasLede, deriveNavBarLedePoints } = require('../utils/nav_bar_helpers');
+const { suggestContentVariant, variantsMismatch } = require('../utils/variant_suggest');
 
 const VALID_VISUAL_WEIGHT = new Set(['hero', 'normal', 'dense', 'breathing']);
 const VALID_COMPOSITION = new Set(['default', 'title-only', 'stat-hero', 'split-visual']);
@@ -30,6 +31,7 @@ const QUALITY_HINTS = {
   QUALITY_VISUAL_ASSET_MISSING: 'scene 声明了 hero_image / diagram / brand_mark 但路径解析不到文件；渲染时会回退到 SVG 占位（带 data-vp-placeholder）',
   QUALITY_NAV_BAR_NO_LEDE: 'nav_bar 须填 subtitle（或 secondary/body[0]）或 key_points；仅有 title 且无 nav_items 时正文区会空。并列概念页请用 card_grid / icon_grid',
   QUALITY_NAV_BAR_LEDE_INFERRED: 'nav_bar 未写 subtitle/key_points；渲染已用 nav_items 生成标题下摘要。建议显式写 subtitle 或 key_points，顶栏 nav_items 保持短标签',
+  QUALITY_VARIANT_MISMATCH: 'content_variant 与页面字段不匹配：渲染以你声明的变体为准，不会自动改。请按字段改 content_variant，或删掉错误字段。对照 SCENES_SCHEMA §0.2a',
 };
 
 function attachQualityHints(items) {
@@ -75,6 +77,18 @@ function lintQuality(scenesData, ctx = {}) {
         code: 'QUALITY_TITLE_LONG',
         msg: `content title long (${scene.title.length} chars); keep under ~48 for layout headroom`
       });
+    }
+
+    if (scene.type === 'content' && scene.content_variant) {
+      const suggested = suggestContentVariant(scene);
+      if (suggested && variantsMismatch(scene.content_variant, suggested)) {
+        quality_warnings.push({
+          at: `${at}.content_variant`,
+          code: 'QUALITY_VARIANT_MISMATCH',
+          msg: `declared "${scene.content_variant}" but fields suggest "${suggested}"`,
+          suggested_content_variant: suggested
+        });
+      }
     }
 
     if (scene.content_variant === 'panel' && Array.isArray(scene.key_points) && scene.key_points.length > 5) {
