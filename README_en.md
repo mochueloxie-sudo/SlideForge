@@ -5,9 +5,11 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%E2%89%A518-brightgreen)](https://nodejs.org/)
 
-> **Agent-first** slide generation skill — your host Agent (Cursor / Claude Code / OpenClaw, …) reads the source itself, writes `scenes.json`, and SlideForge renders it into a stage-ready **1920×1080** deck (**video** / **pdf** / **html**, multi-select), with outline & narration script. **No external LLM dependency.**
+> **Agent-first** slide generation skill — your host Agent writes `scenes.json`; SlideForge renders **1920×1080** decks. **Primary delivery: PDF / HTML** (video optional). **No external LLM dependency.**
 
-[中文](README.md) · [SKILL.md](SKILL.md) · [SCENES_SCHEMA](docs/SCENES_SCHEMA.md) · [CLAUDE.md](CLAUDE.md) · [CHANGELOG](CHANGELOG.md)
+**v4.2 highlights**: `preview` (theme try-on) · `critique` (pre-ship HTML checks) · optional per-page `art-directed` CSS. Visual quality from 4.1 (hero slots, typography adapt, depth layouts) in [CHANGELOG](CHANGELOG.md#420--2026-05-18--q2-双模式预览与-critique).
+
+[中文](README.md) · [SKILL.md](SKILL.md) · [SCENES_SCHEMA](docs/SCENES_SCHEMA.md) · [CRITIQUE](docs/CRITIQUE.md) · [CLAUDE.md](CLAUDE.md) · [CHANGELOG](CHANGELOG.md)
 
 **[View demo output →](examples/demo-output/)** Open `presentation.html` (iframe shell + co-located `page_*.html`; **never ship a single HTML alone**). For single-file sharing use `presentation_static.html`.
 
@@ -30,16 +32,23 @@ echo '{"command":"extract","source":"<URL or path>","output_dir":"./project"}' |
 
 # 2. Agent reads the text → writes ./project/scenes.json per docs/SCENES_SCHEMA.md
 
-# 3. Self-check
+# 3. Self-check (while writing scenes)
 echo '{"command":"validate","scenes":"./project/scenes.json"}' | node executor.js
 
+# 3b. (optional) Try Top 3 themes — cover + first content page only
+echo '{"command":"preview","scenes":"./project/scenes.json","output_dir":"./project/preview"}' | node executor.js
+open ./project/preview/preview.html
+
 # 4. Render (design → html → screenshot → tts → package → deliver)
-echo '{"command":"render","scenes":"./project/scenes.json","output_dir":"./project","format":["html"],"design_mode":"deep-tech-keynote"}' | node executor.js
+echo '{"command":"render","scenes":"./project/scenes.json","output_dir":"./project","format":["pdf","html"],"design_mode":"deep-tech-keynote"}' | node executor.js
+
+# 5. (optional) Pre-ship HTML critique
+echo '{"command":"critique","html_dir":"./project","scenes":"./project/scenes.json"}' | node executor.js
 
 open ./project/presentation.html
 ```
 
-More commands, fields, troubleshooting in **[SKILL.md](SKILL.md)**; `scenes.json` schema in **[docs/SCENES_SCHEMA.md](docs/SCENES_SCHEMA.md)**.
+More in **[SKILL.md](SKILL.md)**; schema **[docs/SCENES_SCHEMA.md](docs/SCENES_SCHEMA.md)**; critique rules **[docs/CRITIQUE.md](docs/CRITIQUE.md)**.
 
 ---
 
@@ -56,11 +65,15 @@ More commands, fields, troubleshooting in **[SKILL.md](SKILL.md)**; `scenes.json
 
 ## Features
 
-- **13 themes** × **22 variants**: entirely sample-driven, swap themes without changing HTML structure
-- **3 input sources** / **3 output formats**: Feishu / local (`.md`/`.txt`/`.docx`/`.pdf`) / web → MP4 / PDF / interactive HTML
-- **Page-level animations**: CSS entrance (`page_animation_preset`: `none` / `fade` / `stagger`)
-- **9 independent commands**: `extract` / `validate` / `design` / `html` / `screenshot` / `tts` / `package` / `deliver` / `render`, any intermediate artifact re-runnable
-- **Outline + narration script** + **local schema validation**
+- **13 themes** × **22 variants**: sample-driven; depth layouts in `samples/_core/layouts/` + per-theme tokens
+- **3 input sources** / **3 output formats**: Feishu / local / web → **PDF / HTML (recommended)** / MP4 (optional)
+- **Pre-ship QA**: `validate` (JSON + `quality_warnings`) → post-render `critique` (static HTML scan)
+- **Theme preview**: `preview` — Top 3 themes × 2-page slice → `preview.html` grid
+- **Hero & typography (optional)**: `hero_image` / `diagram`; `typography: "adapt"` or `typography_scale: "adapt"`
+- **Per-page CSS**: `mode: "art-directed"` + `custom_css` / `custom_css_file` (sanitized injection)
+- **Page animations**: CSS entrance in browser; **video export still uses static screenshot frames**
+- **11 commands**: `extract` / `validate` / `preview` / `design` / `html` / `critique` / `screenshot` / `tts` / `package` / `deliver` / `render`
+- **5 golden decks** regression (`npm run check:golden`)
 
 ---
 
@@ -78,7 +91,7 @@ More commands, fields, troubleshooting in **[SKILL.md](SKILL.md)**; `scenes.json
 | Dark | `terminal-green` | Tech docs / APIs |
 | Dark | `deep-tech-keynote` | Technical keynotes |
 | Light | `swiss-modern` | Minimal / Swiss |
-| Light | `paper-ink` | Editorial / publishing |
+| Light | `paper-ink` | Editorial / publishing (golden: `editorial_notes`) |
 | Light | `vintage-editorial` | Vintage / literary |
 | Light | `notebook-tabs` | Notes / journaling |
 | Light | `pastel-geometry` | Lively / playful |
@@ -97,11 +110,11 @@ Pin one with `design_mode` in JSON; omit and the `design` command auto-matches b
 ## Pipeline
 
 ```
-source ── (optional) extract ──▶ you (Agent) write scenes.json ──▶ validate ──▶
-  design ──▶ html ──▶ screenshot ──▶ (optional) tts ──▶ package ──▶ deliver
+source ── (optional) extract ──▶ Agent writes scenes.json ──▶ validate
+       ──▶ (optional) preview pick theme ──▶ render ──▶ (optional) critique
 ```
 
-Every step persists JSON / HTML / PNG to disk; any command can be re-run individually.
+Every step persists artifacts to disk; any command can be re-run. Run `critique` after `html`, before `package`.
 
 ---
 
@@ -109,7 +122,8 @@ Every step persists JSON / HTML / PNG to disk; any command can be re-run individ
 
 | Dependency | When needed | Install |
 |------------|-------------|---------|
-| **Node.js ≥ 18** | Always | [nodejs.org](https://nodejs.org/) |
+| **Node.js ≥ 18** (**20+ for critique**) | Always | [nodejs.org](https://nodejs.org/) |
+| **npm deps (incl. cheerio)** | `critique` / `check:golden` | `npm install` in repo |
 | **Google Chrome / bundled Puppeteer** | Screenshots + PDF (screenshot / package) | Usually pre-installed |
 | `edge-tts` | video only | `pip install edge-tts` (or macOS `say`) |
 | `ffmpeg` | video only | `brew install ffmpeg` |
@@ -132,6 +146,7 @@ output/
 ├── presentation_static.html     # Embedded PNGs, single-file shareable
 ├── presentation.pdf
 ├── presentation.mp4             # when format=video
+├── critique.json / critique_report.md   # critique command
 ├── outline.md / script.md
 └── MANIFEST.md                  # channel=local
 ```
@@ -156,7 +171,7 @@ git checkout -b feat/my-feature
 # Visual decisions go in samples/*.html (not in generator code)
 # Templates use px (target 1920×1080); token naming {{UPPER_CASE}}
 # New variants must also update docs/SCENES_SCHEMA.md and steps/validate.js
-npm run test:e2e
+npm run check:golden   # or npm run test:e2e
 ```
 
 Full dev guide, debugging tips, and Roadmap in **[CLAUDE.md](CLAUDE.md)**.
