@@ -16,7 +16,11 @@ const SETS = [
   { name: 'humanities_narrative', scenes: 'examples/golden/humanities_narrative_scenes.json', theme: 'dark-botanical' },
   { name: 'editorial_notes', scenes: 'examples/golden/editorial_notes_scenes.json', theme: 'paper-ink' },
   { name: 'variant_showcase', scenes: 'examples/golden/variant_showcase_scenes.json', theme: 'paper-ink' },
-  { name: 'business_swiss', scenes: 'examples/golden/business_swiss_scenes.json', theme: 'swiss-modern' }
+  { name: 'business_swiss', scenes: 'examples/golden/business_swiss_scenes.json', theme: 'swiss-modern' },
+  { name: 'tech_variants', scenes: 'examples/golden/tech_variants_scenes.json', theme: 'deep-tech-keynote' },
+  { name: 'ops_terminal', scenes: 'examples/golden/ops_terminal_scenes.json', theme: 'terminal-green' },
+  { name: 'pastel_product', scenes: 'examples/golden/pastel_product_scenes.json', theme: 'pastel-geometry' },
+  { name: 'creative_pitch', scenes: 'examples/golden/creative_pitch_scenes.json', theme: 'creative-voltage' }
 ];
 
 function run(cmd) {

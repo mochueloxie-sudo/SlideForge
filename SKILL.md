@@ -98,11 +98,12 @@ echo '{"command":"extract","source":"<URL或路径>","output_dir":"./project"}' 
 
 **完整 schema、22 个变体的字段表与最小示例见 [docs/SCENES_SCHEMA.md](docs/SCENES_SCHEMA.md)**。本节只列原则。
 
-### 先字段、后变体（三步 · 必读）
+### 先字段、后变体（四步 · 必读）
 
 1. **定本页数据结构** — 对照 [SCENES_SCHEMA §0.2a](docs/SCENES_SCHEMA.md#02a-字段--变体优先于决策树)：有 `stats[]` 就准备 `stats_grid`，有 `big_number` 就准备 `number`，有左右对照列就准备 `compare`……**不要先写 `panel` 再往里面硬塞数字**。
-2. **写匹配的 `content_variant` + 必填字段** — 仅当本页**只有** `key_points[]` 时用 `panel`；整页一句用 `text` + 可选 `composition:"title-only"`。
-3. **`validate` 自检** — 处理 `quality_warnings` 里的 `QUALITY_VARIANT_MISMATCH`（看 `suggested_content_variant`）、连续 `panel`、缺高能页等，再 `render`。
+2. **写 `content_variant` + 必填字段** — 专用字段齐全时优先 **`"content_variant":"auto"`**（§0.2c）；仅当本页**只有** `key_points[]` 时显式 `panel`；呼吸页用 `text` + `composition:"title-only"`。
+3. **主题 + 主视觉** — 选 `design_mode` 前扫 [refs/STYLE_PRESETS.md](refs/STYLE_PRESETS.md) 气质表；全 deck **至多 1～2 页** `composition:"split-visual"` + `diagram` / `hero_image` / `brand_mark`（§0.9；用户无图时优先 `diagram` + SVG，见 §主视觉补图）。
+4. **`validate` 自检** — 探索阶段普通 `validate`；**定稿前**加 `"strict": true`（见 [SCENES_SCHEMA §0.10](docs/SCENES_SCHEMA.md#010-agent-品质清单写完后自检--v425)）。再 `render`。
 
 **金标抄作业**（字段 + 节奏已对齐）：`examples/golden/business_swiss_scenes.json`（商务 7 页）、`product_launch_scenes.json`（发布 8 页）、`editorial_notes_scenes.json`（编辑 9 页）。
 
@@ -156,8 +157,8 @@ echo '{"command":"extract","source":"<URL或路径>","output_dir":"./project"}' 
 | **标题** | content 页 `title` 建议 ≤48 字；细节放进 `key_points` / `body` |
 | **收尾** | `summary` 用 2–4 条短 CTA（`key_points`）；可加 `visual_weight:"breathing"`（`design` 会为 summary 选 `layout_hint: cards`） |
 | **封面** | `cover` 可加 `visual_weight:"hero"` |
-| **示范** | `examples/golden/*.json`（6 套：product_launch / business_report / **business_swiss** / humanities / editorial_notes / variant_showcase） |
-| **主视觉（Q1）** | `panel` + `composition:"split-visual"` + `hero_image`（相对路径或 URL）；见 SCENES_SCHEMA §0.9 |
+| **示范** | `examples/golden/*.json`（7 套：product_launch / business_report / **business_swiss** / humanities / editorial_notes / variant_showcase / **tech_variants**） |
+| **主视觉（Q1）** | 至多 1～2 页 `panel` + `split-visual` + `diagram` 或 `hero_image`；见 §主视觉补图、SCENES_SCHEMA §0.9 |
 
 ```json
 {
@@ -177,11 +178,17 @@ echo '{"command":"extract","source":"<URL或路径>","output_dir":"./project"}' 
 ```bash
 echo '{"command":"validate","scenes":"./project/scenes.json"}' | node executor.js
 
+# 定稿前严格模式（品质 warning → error）：
+echo '{"command":"validate","scenes":"./project/scenes.json","strict":true}' | node executor.js
+
 # 人类开发者的快捷方式（与上面等价，少打字）：
 npm run check -- ./project/scenes.json
+npm run check:strict -- ./project/scenes.json
 ```
 
-输出 `valid: true|false` + `errors[]` + `warnings[]` + `quality_warnings[]`，每条可带 `hint`。**`valid: false` 时按 `errors[]` 修订**；`quality_warnings` 用于抬品质（**`QUALITY_VARIANT_MISMATCH`**、panel 堆砌、缺高能页等），建议改完再 render。`validate` 永远 exit 0，结果在 JSON 字段里。
+输出 `valid: true|false` + `errors[]` + `warnings[]` + `quality_warnings[]`，每条可带 `hint`。**`valid: false` 时按 `errors[]` 修订**；`quality_warnings` 用于抬品质（**`QUALITY_VARIANT_MISMATCH`**、panel 堆砌、缺高能页等），建议改完再 render。`strict:true` 时上述品质项会进入 `errors[]`。`validate` 永远 exit 0，结果在 JSON 字段里。
+
+**排版默认**：`design` 默认开启内容感知字号（`typography_scale:"adapt"`）；若需旧行为，JSON 传 `"typography_scale":"static"`。
 
 开发/发版前可跑：`npm run check:golden`（金标 validate + 渲染 + HTML 回归）。
 
@@ -222,6 +229,43 @@ echo '{"command":"render","scenes":"./project/scenes.json","output_dir":"./proje
 - **换源文档**：新 `output_dir`，从第三步重新走
 - **多主题快速看版**（不跑全 deck）：`{"command":"preview","scenes":"./project/scenes.json","output_dir":"./project/preview"}` → 打开 `preview.html`；选定主题后写 `recommended_design_mode` 或传 `design_mode` 再 `render`
 - **HTML 静态点评**：`{"command":"critique","html_dir":"./project","scenes":"./project/scenes.json"}` → `critique.json` + `critique_report.md`（进程 exit 0）
+- **用户补图（第二轮）**：更新 `scenes.json` 资产路径 → `html` →（`screenshot` →）`package`；见 §主视觉补图
+
+---
+
+### 主视觉补图（用户素材无图时 · 必读）
+
+用户输入**多半只有文字**；主视觉是**可选品质层**，不是每页必填。
+
+| 策略 | 何时用 | scenes 写法 |
+|------|--------|-------------|
+| **不强行要图** | 默认多数页 | 不用 `split-visual`；或 `diagram` 指向仓库/自产 SVG（`examples/assets/*.svg`） |
+| **预留补图位** | 产品 demo / 封面级截图 | `composition:"split-visual"` + `hero_image` 或 `diagram`；路径可先写 `assets/xxx.png` |
+| **等用户供图** | 首轮先交付 PDF/HTML | 占位渲染 + 交付后主动列出补图页 |
+
+**写稿**：路径相对 **`scenes.json` 所在目录**（推荐 `project/assets/`）。支持 `https://` URL。缺文件时引擎用 **SVG 占位**（不挡 render）；`validate` → `QUALITY_VISUAL_ASSET_MISSING`；`critique` → `CRIT_PLACEHOLDER_IMAGE`。
+
+**首轮 render 后（Agent 必做）**：
+
+1. 跑 `critique`（带 `scenes` 路径）→ 读 `visual_slots_report.json`（有缺口时生成）或 `critique_report.md` 末尾 **Visual slots** 表。
+2. 若 `gaps_for_user` 非空，**用人话告诉用户**哪几页可补图、建议文件名、放哪条路径。
+3. 用户供图后：落盘 → 改 `scenes[i].hero_image` / `diagram` → `validate` → **`html`** → 若需 PDF 再 `screenshot` → `package`（不必整份重讲稿）。
+
+```bash
+echo '{"command":"critique","html_dir":"./project","scenes":"./project/scenes.json"}' | node executor.js
+# → project/visual_slots_report.json（有待补位时）
+# → project/critique_report.md（含补图表）
+
+# 用户供图后（示例）
+echo '{"command":"html","scenes":"./project/scenes.json","design_params":"./project/design_params.json","output_dir":"./project"}' | node executor.js
+echo '{"command":"package","scenes":"./project/scenes.json","screenshots_dir":"./project/screenshots","html_dir":"./project","output_dir":"./project","format":["pdf","html"]}' | node executor.js
+```
+
+**对用户话术模板**（按需改页码/标题）：
+
+> 初版已生成。第 **6** 页「现场演示」留了主视觉位（目前是占位网格）。若你有产品截图，请放到 `project/assets/demo-ui.png`，告诉我一声我会重出 PDF；也可直接把图发在对话里由我写入工程。
+
+字段说明见 [docs/SCENES_SCHEMA.md](docs/SCENES_SCHEMA.md) §0.9。
 
 ---
 
@@ -231,4 +275,4 @@ echo '{"command":"render","scenes":"./project/scenes.json","output_dir":"./proje
 - **单文件分享**请用 `presentation_static.html`（内嵌图）或导出的 PDF
 - 本地预览壳页：`npm run preview:html -- <output_dir>`；**勿**直接 `file://` 打开
 
-跑完后用人话告诉用户：交付目录、含哪些文件、HTML 必须整目录一起发、单文件分享用 static 或 PDF。
+跑完后用人话告诉用户：交付目录、含哪些文件、HTML 必须整目录一起发、单文件分享用 static 或 PDF。**若 `visual_slots_report.json` 有 `gaps_for_user`**，同一轮回复里附上补图指引（见 §主视觉补图）。

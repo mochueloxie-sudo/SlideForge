@@ -1,6 +1,6 @@
 # `_core` — Q1 布局语法（设计系统）
 
-> **状态**：Q1-D。全部 **13** 个 `design_mode` 在缺主题内同名文件时回退 **`layouts/*.html`**；有 `samples/themes/{id}/tokens.css` 的用文件，否则 **`utils/depth_tokens_from_tpl.js`** 从 `DESIGN_TEMPLATES` 生成完整 `--sf-*`。
+> **状态**：Q1-D + **wave6**（2026-05）深度 8 页 DOM 抛光（首项强调、呼吸页左条、compare/process 层级）。全部 **13** 个 `design_mode` 在缺主题内同名文件时回退 **`layouts/*.html`**；有 `samples/themes/{id}/tokens.css` 的用文件，否则 **`utils/depth_tokens_from_tpl.js`** 从 `DESIGN_TEMPLATES` 生成完整 `--sf-*`。
 
 ## 目录
 

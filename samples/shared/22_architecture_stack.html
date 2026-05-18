@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=1920, height=1080">
 <title>Architecture Stack</title>
 <style>
+  /* wave7 — architecture stack DOM polish (--sf-* only) */
   @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Manrope:wght@400;500;800&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { width: 1920px; height: 1080px; overflow: hidden; }
@@ -24,6 +25,7 @@
     color: var(--sf-eyebrow); text-transform: uppercase; margin-bottom: 20px;
     flex-shrink: 0;
   }
+  .eyebrow:empty { display: none; }
   .title {
     font-size: var(--sf-title-size, 58px); font-weight: 800; line-height: 1.05;
     color: var(--sf-text-primary); margin-bottom: 36px; max-width: 1100px;
@@ -97,14 +99,27 @@
     border: var(--sf-panel-border);
     border-top: var(--sf-panel-border-top);
     border-bottom: var(--sf-panel-border-bottom);
-    box-shadow: var(--sf-panel-shadow-inner, var(--sf-panel-shadow));
+    box-shadow: var(--sf-panel-shadow-inner, var(--sf-panel-shadow)),
+      0 0 0 1px color-mix(in srgb, var(--sf-accent) 22%, transparent);
   }
   .arch-layer:nth-child(1) .arch-accent { opacity: 1; width: 8px; }
-  .arch-layer:nth-child(1) .arch-layer-title { font-size: 30px; }
+  .arch-layer:nth-child(1) .arch-layer-title {
+    font-size: 30px;
+    color: var(--sf-accent);
+  }
+  .arch-layer:nth-child(1)::before {
+    background: color-mix(in srgb, var(--sf-accent) 20%, transparent);
+    color: var(--sf-accent);
+  }
+  .arch-layer:not(:first-child) { opacity: 0.92; }
+  .arch-layer:not(:first-child) .arch-layer-title { color: var(--sf-text-primary); }
+  .arch-layer:not(:first-child) .arch-layer-desc { color: var(--sf-text-muted); }
+  .arch-layer:not(:first-child) .arch-accent { opacity: 0.65; }
   .arch-layer:nth-child(2) { width: 94%; }
-  .arch-layer:nth-child(3) { width: 88%; opacity: 0.95; }
-  .arch-layer:nth-child(4) { width: 82%; opacity: 0.9; }
-  .arch-layer:nth-child(5) { width: 76%; opacity: 0.86; }
+  .arch-layer:nth-child(3) { width: 88%; opacity: 0.9; }
+  .arch-layer:nth-child(4) { width: 82%; opacity: 0.86; }
+  .arch-layer:nth-child(5) { width: 76%; opacity: 0.82; }
+  .arch-layer:nth-child(n+6) { width: 72%; opacity: 0.78; }
   .arch-layer-title {
     font-size: 26px;
     font-weight: 700;
@@ -121,10 +136,17 @@
 
   body.layout-compact .arch-stack { gap: 8px; }
   body.layout-compact .arch-layer { min-height: 68px; }
+  body.layout-compact .arch-layer:nth-child(1) { min-height: 88px; }
   body.layout-compact .arch-inner { padding: 14px 24px 16px 0; }
   body.layout-compact .arch-layer:nth-child(1) .arch-layer-title { font-size: 24px; }
+  body.layout-compact .arch-layer:nth-child(2) { width: 96%; }
+  body.layout-compact .arch-layer:nth-child(3) { width: 90%; }
+  body.layout-compact .arch-layer:nth-child(4) { width: 84%; }
+  body.layout-compact .arch-layer:nth-child(5) { width: 78%; }
+  body.layout-compact .arch-layer:nth-child(n+6) { width: 74%; }
   body.layout-compact .arch-layer-title { font-size: 21px; margin-bottom: 4px; }
   body.layout-compact .arch-layer-desc { font-size: 16px; }
+  body.layout-compact .arch-layer:not(:first-child) { opacity: 0.88; }
 
   .hairline {
     position: absolute; bottom: 80px; left: 120px; right: 120px;

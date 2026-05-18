@@ -8,6 +8,7 @@ const { ensureDir, writeResult } = require('./utils/step-utils');
 
 const STYLE_PRESETS = require('./presets/frontend-presets.json');
 const { normalizePreset } = require('../utils/page_animations');
+const { resolveContentVariant } = require('../utils/resolve_content_variant');
 const DEFAULT_PRESET = 'electric-studio';
 const PROFESSIONAL_MODE = 'deep-tech-keynote';
 const VALID_DESIGN_MODES = new Set(Object.keys(STYLE_PRESETS.presets || {}));
@@ -106,7 +107,8 @@ process.stdin.on('end', async () => {
     designParams.enhancement = params.enhancement === 'full' ? 'full' : 'minimal';
     designParams.render_mode =
       params.mode === 'art-directed' || params.render_mode === 'art-directed' ? 'art-directed' : 'production';
-    designParams.typography_scale = params.typography_scale === 'adapt' ? 'adapt' : 'static';
+    // Default adapt (v4.2.5+): content-aware title/stat sizing; pass typography_scale:"static" to disable
+    designParams.typography_scale = params.typography_scale === 'static' ? 'static' : 'adapt';
 
     const outputPath = path.resolve(output_dir);
     ensureDir(outputPath);
@@ -167,7 +169,10 @@ function buildPageDirections(scenes, designParams, design_mode) {
 
     let page_intent = 'concept';
     let hero_element = 'none';
-    let content_variant = scene.content_variant || 'text';
+    let content_variant =
+      scene.content_variant && scene.content_variant !== 'auto'
+        ? scene.content_variant
+        : 'text';
     let alignment = ['cover', 'summary', 'end'].includes(scene.type) ? 'center' : 'left';
     let density = 'low';
     let decoration_policy = idx === 0 ? 'subtle_glow' : 'none';
@@ -358,6 +363,11 @@ function buildPageDirections(scenes, designParams, design_mode) {
       avoid_elements.push('quote', 'code-block', 'key-points');
     }
 
+    // Align with html_generator: explicit variant > design inference > field suggest (auto)
+    const scene_content_variant = scene.content_variant || null;
+    const resolved_content_variant = resolveContentVariant(scene, { content_variant });
+    content_variant = resolved_content_variant;
+
     // ── layout_hint: 内容属性驱动，scene 已有值则直接采用 ─────────────────
     const layout_hint = scene.layout_hint || computeLayoutHint(scene, content_variant);
 
@@ -373,7 +383,12 @@ function buildPageDirections(scenes, designParams, design_mode) {
     }
     if (!composition && scene.type === 'content') {
       if (content_variant === 'number' || content_variant === 'stats_grid') composition = 'stat-hero';
-      else if (scene.hero_image && content_variant === 'panel') composition = 'split-visual';
+      else if (
+        content_variant === 'panel'
+        && (scene.hero_image || scene.diagram || scene.brand_mark)
+      ) {
+        composition = 'split-visual';
+      }
     }
 
     return {
@@ -383,6 +398,8 @@ function buildPageDirections(scenes, designParams, design_mode) {
       density,
       hero_element,
       content_variant,
+      scene_content_variant,
+      resolved_content_variant,
       layout_hint,
       decoration_policy,
       negative_space,
@@ -525,6 +542,8 @@ function computeLayoutHint(scene, variant) {
     }
     case 'process_flow': {
       if (Array.isArray(scene.flow_lanes) && scene.flow_lanes.length >= 1) return 'swimlane';
+      const n = Array.isArray(scene.process_stages) ? scene.process_stages.length : 0;
+      if (n >= 5) return 'compact';
       return 'horizontal';
     }
     case 'architecture_stack': {

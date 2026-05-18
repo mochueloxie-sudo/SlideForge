@@ -34,12 +34,13 @@ const GOLDEN_EXAMPLES = [
 ];
 
 const useGolden = args.includes('--golden');
+const strict = args.includes('--strict');
 
 const files = useGolden
   ? GOLDEN_EXAMPLES
   : useAll
     ? ALL_EXAMPLES
-    : args.filter(a => !a.startsWith('-'));
+    : args.filter(a => !a.startsWith('-') && a !== '--strict');
 
 if (files.length === 0) {
   console.error('Usage: npm run check -- <path/to/scenes.json> [more...]');
@@ -74,6 +75,6 @@ function runValidate(file) {
     p.stdout.on('data', d => (out += d));
     p.on('error', reject);
     p.on('close', () => resolve(out));
-    p.stdin.end(JSON.stringify({ command: 'validate', scenes: file }));
+    p.stdin.end(JSON.stringify({ command: 'validate', scenes: file, strict: strict || undefined }));
   });
 }

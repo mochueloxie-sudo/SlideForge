@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=1920, height=1080">
 <title>Card Grid</title>
 <style>
+  /* wave7 — card grid DOM polish (--sf-* only) */
   @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Manrope:wght@400;500;800&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { width: 1920px; height: 1080px; overflow: hidden; }
@@ -24,6 +25,7 @@
     color: var(--sf-eyebrow); text-transform: uppercase; margin-bottom: 20px;
     flex-shrink: 0;
   }
+  .eyebrow:empty { display: none; }
   .title {
     font-size: var(--sf-title-size, 58px); font-weight: 800; line-height: 1.05;
     letter-spacing: -0.03em; color: var(--sf-text-primary);
@@ -80,6 +82,9 @@
     font-size: 19px;
     color: var(--sf-text-secondary);
   }
+  .grid > .card:first-child .card-title { color: var(--sf-accent); }
+  .grid > .card:not(:first-child) { opacity: 0.9; }
+  .grid > .card:not(:first-child)::before { opacity: 0.22; }
   .card-num {
     font-size: 42px; font-weight: 800; line-height: 1;
     color: var(--sf-accent);
@@ -122,6 +127,16 @@
   body.layout-2x2 .card { padding: 36px 32px; min-height: 180px; }
   body.layout-2x2 .card-title { font-size: 26px; }
   body.layout-2x2 .card-body { font-size: 18px; }
+
+  body.layout-compact .grid { gap: 16px; }
+  body.layout-compact .card { padding: 24px 22px 26px; min-height: 160px; }
+  body.layout-compact .card-title { font-size: 20px; }
+  body.layout-compact .card-body { font-size: 15px; }
+  body.layout-compact .grid > .card:first-child {
+    min-height: 200px;
+    padding: 32px 28px 34px;
+  }
+  body.layout-compact .grid > .card:first-child .card-title { font-size: 24px; }
 
   .hairline {
     position: absolute; bottom: 80px; left: 120px; right: 120px;

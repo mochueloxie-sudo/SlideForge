@@ -1,0 +1,93 @@
+[
+  {
+    "id": "ot-cover",
+    "type": "cover",
+    "eyebrow": "SRE RUNBOOK",
+    "title": "Incident 响应手册",
+    "secondary": "terminal-green · 运维金标 · 2026 Q2",
+    "visual_weight": "hero"
+  },
+  {
+    "id": "ot-number",
+    "type": "content",
+    "content_variant": "number",
+    "visual_weight": "hero",
+    "composition": "stat-hero",
+    "eyebrow": "SLO",
+    "title": "本季可用性",
+    "big_number": "99.97%",
+    "body": "错误预算消耗 41%；P0 平均恢复 18 分钟"
+  },
+  {
+    "id": "ot-stats",
+    "type": "content",
+    "content_variant": "auto",
+    "layout_hint": "2x2",
+    "title": "值班仪表盘",
+    "stats": [
+      { "number": "18m", "label": "MTTR", "desc": "P0 中位数，较上季 -22%" },
+      { "number": "0", "label": "未关闭 P0", "desc": "连续 47 天" },
+      { "number": "142", "label": "变更", "desc": "本周发布；回滚率 1.4%" },
+      { "number": "3", "label": "演练", "desc": "季度混沌工程已完成" }
+    ]
+  },
+  {
+    "id": "ot-flow",
+    "type": "content",
+    "content_variant": "auto",
+    "title": "事件处置链",
+    "process_stages": [
+      { "label": "检测", "desc": "告警聚合 + 关联变更单" },
+      { "label": "分诊", "desc": "影响面评估 + 指挥官任命" },
+      { "label": "缓解", "desc": "回滚 / 扩容 / 流量切换" },
+      { "label": "根因", "desc": "日志、追踪、配置漂移对齐" },
+      { "label": "复盘", "desc": "行动项入库 + 回归用例" }
+    ]
+  },
+  {
+    "id": "ot-timeline",
+    "type": "content",
+    "content_variant": "timeline",
+    "title": "升级路径",
+    "steps": [
+      { "label": "L1", "desc": "值班工程师 5 分钟内 ack" },
+      { "label": "L2", "desc": "服务负责人 15 分钟内介入" },
+      { "label": "L3", "desc": "架构委员会 + 法务（数据类）" }
+    ]
+  },
+  {
+    "id": "ot-funnel",
+    "type": "content",
+    "content_variant": "funnel",
+    "title": "可靠性漏斗",
+    "funnel_stages": [
+      { "label": "变更", "desc": "每周发布次数" },
+      { "label": "检测", "desc": "告警 → 事件关联" },
+      { "label": "恢复", "desc": "MTTR 中位数" },
+      { "label": "学习", "desc": "事后复盘入库" },
+      { "label": "预防", "desc": "回归用例 + 策略门禁" }
+    ]
+  },
+  {
+    "id": "ot-breath",
+    "type": "content",
+    "content_variant": "text",
+    "visual_weight": "breathing",
+    "composition": "title-only",
+    "eyebrow": "原则",
+    "title": "先恢复，再根因；先沟通，再优化",
+    "body": "所有变更必须可回滚、可观测、可审计"
+  },
+  {
+    "id": "ot-close",
+    "type": "summary",
+    "visual_weight": "breathing",
+    "layout_hint": "cards",
+    "title": "本季行动",
+    "key_points": [
+      "统一 Runbook 模板 v3",
+      "混沌演练纳入发布门禁",
+      "下次演练：2026-06-01"
+    ]
+  }
+]

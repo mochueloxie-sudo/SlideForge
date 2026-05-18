@@ -1,6 +1,6 @@
 {
   "name": "slide-forge",
-  "version": "4.2.2",
+  "version": "4.2.10",
   "description": "Agent-first slide generation skill: turns a host Agent's structured scenes.json into a 1920×1080 deck (HTML / PDF / video) using 13 themes and 22+ content variants. Zero LLM dependency — the host Agent reads sources and writes scenes.json itself; SlideForge only renders.",
   "main": "executor.js",
   "type": "commonjs",
@@ -52,6 +52,7 @@
     "test:tencent-html": "rm -rf test_tencent_html && mkdir -p test_tencent_html && cp examples/tencent_intro_scenes_fixture.json test_tencent_html/scenes.json && echo '{\"command\":\"render\",\"scenes\":\"./test_tencent_html/scenes.json\",\"output_dir\":\"./test_tencent_html\",\"design_mode\":\"neon-cyber\",\"format\":[\"html\"]}' | node executor.js",
     "test:e2e": "rm -rf test_e2e && mkdir -p test_e2e && cp examples/four_new_variants_scenes.json test_e2e/scenes.json && echo '{\"command\":\"render\",\"scenes\":\"./test_e2e/scenes.json\",\"output_dir\":\"./test_e2e\",\"format\":[\"pdf\",\"html\"]}' | node executor.js",
     "check": "node scripts/check-scenes.js",
+    "check:strict": "node scripts/check-scenes.js --strict",
     "check:all": "node scripts/check-scenes.js --all",
     "check:golden": "node scripts/check-golden.js",
     "golden:render": "node scripts/golden-render.js",

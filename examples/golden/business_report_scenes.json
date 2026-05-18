@@ -34,7 +34,7 @@
   {
     "id": "br-grid",
     "type": "content",
-    "content_variant": "stats_grid",
+    "content_variant": "auto",
     "layout_hint": "2x2",
     "title": "运营仪表盘",
     "stats": [

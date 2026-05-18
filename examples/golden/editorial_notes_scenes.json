@@ -47,7 +47,7 @@
   {
     "id": "en-stats",
     "type": "content",
-    "content_variant": "stats_grid",
+    "content_variant": "auto",
     "composition": "stat-hero",
     "eyebrow": "指标",
     "title": "浅色纸面上的数据块",

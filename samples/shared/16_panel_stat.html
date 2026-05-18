@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=1920, height=1080">
 <title>{{TITLE}}</title>
 <style>
+  /* wave7 — panel stat DOM polish (--sf-* only) */
   @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700;800&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { width: 1920px; height: 1080px; overflow: hidden; }
@@ -26,6 +27,7 @@
     font-size: 13px; font-weight: 800; letter-spacing: 0.2em;
     color: var(--sf-eyebrow); text-transform: uppercase; margin-bottom: 18px;
   }
+  .eyebrow:empty { display: none; }
   .title {
     font-size: var(--sf-title-size, 52px); font-weight: 800; line-height: 1.05;
     color: var(--sf-text-primary); margin-bottom: 40px;
@@ -48,10 +50,20 @@
     border-bottom: 1px solid var(--sf-hairline);
   }
   .kp-item:last-child { border-bottom: none; }
+  .panel .kp-item:first-child {
+    color: var(--sf-text-primary);
+    font-weight: 600;
+  }
+  .panel .kp-item:not(:first-child) { opacity: 0.9; }
   .kp-dot {
     flex-shrink: 0; width: 8px; height: 8px;
     background: var(--sf-accent); border-radius: 50%;
   }
+  .panel .kp-item:first-child .kp-dot {
+    width: 10px; height: 10px;
+    box-shadow: 0 0 12px color-mix(in srgb, var(--sf-accent) 50%, transparent);
+  }
+  .panel .kp-item:not(:first-child) .kp-dot { background: var(--sf-text-muted); }
   .right {
     flex: 1;
     display: flex; flex-direction: column;
@@ -89,12 +101,15 @@
   }
   .hairline {
     position: absolute; bottom: 80px; left: 120px; right: 120px;
-    height: 1px; background: var(--sf-hairline);
+    height: 1px; background: var(--sf-hairline-gradient, var(--sf-hairline));
   }
   .page-num {
     position: absolute; bottom: 56px; right: 120px;
-    font-size: 13px; color: var(--sf-text-muted);
+    font-size: 13px; color: var(--sf-page-num);
   }
+  body.layout-compact .panel { padding: 24px 32px; }
+  body.layout-compact .kp-item { font-size: 20px; padding: 8px 0; }
+  body.layout-compact .title { margin-bottom: 32px; font-size: var(--sf-title-size, 48px); }
   body.layout-wide-stat .stat-value { font-size: 168px; }
 </style>
 </head>

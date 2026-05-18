@@ -292,3 +292,158 @@ git diff --stat
 - [x] B：shared 无 03/20/21 重复；11–15 存在；utility 主题副本已删（79）
 - [x] C：13 主题 tokens；variant_showcase 10 页
 - [x] `npm run check:golden` 全绿（2026-05-18）
+
+---
+
+# 第四波 — 收尾 P1/P2（STYLE_PRESETS · 金标 · auto · shared 抛光）
+
+> **目标**：补齐上轮「未做完」项；发版 **v4.2.4**。
+
+## 剩余清单（对照）
+
+| ID | 项 | 负责 |
+|----|-----|------|
+| R1 | `refs/STYLE_PRESETS.md`：13 主题气质 + 避免清单 + 链 SCENES_SCHEMA | **A** |
+| R2 | 修复 `shared/14_nav_bar.html`、`15_chart_demo.html`（当前含 `TOKEN` 占位 bug）→ 全 `--sf-*` | **A** |
+| R3 | 7 主题生成版 `tokens.css` 手写精修（paper-ink / terminal-green / …） | **A**（时间允许） |
+| R4 | 第七套金标 `tech_variants` × `deep-tech-keynote`（code + architecture_stack + cover + summary） | **B** |
+| R5 | `check-golden.js` / `golden-render.js` / `critique_baseline` / `golden/README` / `VISUAL_DIFF` | **B** |
+| R6 | `content_variant: "auto"`：validate + `html_generator` + `design` + SCENES_SCHEMA + SKILL | **C** |
+| R7 | 协调：`npm run check:golden` + CHANGELOG **4.2.4** + GitHub Release | **协调窗口** |
+
+## 冲突面（第四波）
+
+| 路径 | A | B | C |
+|------|---|---|---|
+| `refs/STYLE_PRESETS.md` | ✅ | ❌ | ❌ |
+| `samples/shared/14_nav_bar.html` `15_chart_demo.html` | ✅ | ❌ | ❌ |
+| `samples/themes/**/tokens.css`（7 个精修） | ✅ | ❌ | ❌ |
+| `examples/golden/tech_variants*.json` | ❌ | ✅ | ❌ |
+| `scripts/check-golden.js` `golden-render.js` | ❌ | ✅ **唯一** | ❌ |
+| `utils/html_generator.js` `steps/validate.js` `steps/design.js` | ❌ | ❌ | ✅ |
+| `docs/SCENES_SCHEMA.md` `SKILL.md` | A 可补 STYLE 链；C 补 §auto | 协商一句交叉引用 |
+
+## Prompt A — STYLE_PRESETS + shared 抛光 + token 精修
+
+```markdown
+1. 修复 samples/shared/14_nav_bar.html、15_chart_demo.html：去掉错误 `TOKEN` 字面量，全部 var(--sf-*)，与 13_card_grid 同级质量
+2. 在 refs/STYLE_PRESETS.md 末尾增 **SlideForge 13 主题** 表：气质 / 推荐场景 / 避免（紫白渐变、连续 panel、假 stock 图等）
+3. SCENES_SCHEMA §0 增加一句链到 STYLE_PRESETS
+4. 精修 samples/themes/{paper-ink,terminal-green,deep-tech-keynote,creative-voltage,notebook-tabs,pastel-geometry,split-pastel}/tokens.css（对比 neon/swiss 手写质量）
+5. 禁止：golden JSON、check-golden、html_generator inferVariant
+```
+
+## Prompt B — 第七套金标 tech_variants
+
+```markdown
+1. examples/golden/tech_variants_scenes.json（7–8 页，theme deep-tech-keynote）
+   - cover → code → architecture_stack → panel(hero_image) → summary
+2. scripts/golden-render.js + check-golden.js + critique_baseline 登记
+3. examples/golden/README.md 矩阵 + VISUAL_DIFF.md 一节
+4. 禁止改 samples/**、validate 规则、html_generator
+```
+
+## Prompt C — content_variant: "auto"
+
+```markdown
+1. content_variant 合法值增加 "auto"
+2. utils/html_generator.js inferVariant：
+   - "auto" 或缺省 → suggestContentVariant(scene)（utils/variant_suggest.js）
+   - 显式非 auto → 保持现行为（尊重 Agent 声明）
+3. steps/design.js buildPageDirections：scene.content_variant === 'auto' 时同 infer
+4. steps/validate.js：auto 不要求 VARIANT_MISMATCH；可选 resolved_variant 写入 warning info
+5. docs/SCENES_SCHEMA.md §0.2c + SKILL.md 一段示例
+6. 禁止：samples/**、golden JSON、check-golden 数组（除非协调合并）
+```
+
+## 汇合清单（第四波）
+
+- [x] A：14/15 无 `TOKEN`；STYLE_PRESETS 13 主题表
+- [x] B：第七套金标 render 通过
+- [x] C：auto 金标 scenes 可写 `"content_variant":"auto"`
+- [x] 协调：check:golden 7 套全绿；CHANGELOG **4.2.4**（tag/release 按需）
+
+---
+
+# 第五波 — 13 主题 token 全矩阵（v4.2.7）
+
+> **目标**：换任意 `design_mode` 都不掉档次；**只改** `samples/themes/*/tokens.css`。
+
+## 分工（3 Agent 并行 · 无冲突）
+
+| Agent | 主题 | 气质关键词 |
+|-------|------|------------|
+| **A** | `neon-cyber` `bold-signal` `terminal-green` `creative-voltage` | 赛博 / 橙卡 SaaS / CLI 绿 / 黄蓝分屏 |
+| **B** | `electric-studio` `deep-tech-keynote` `dark-botanical` `vintage-editorial` | 默认蓝 keynote / 冰蓝控制面 / 人文金绿 / 杂志纸 |
+| **C** | `paper-ink` `swiss-modern` `notebook-tabs` `pastel-geometry` `split-pastel` | 编辑绯红 / 瑞士红网格 / 暗壳便签 / 玫瑰几何 / 粉青双 pastel |
+
+## 硬约束
+
+- **仅** `samples/themes/<id>/tokens.css`
+- 保留 `TOKENS.md` 全部 `--sf-*` 键（尤其 compare-right、stats-hero、panel-border-top）
+- 对照 `refs/STYLE_PRESETS.md` § SlideForge 13 themes
+
+## 汇合清单（第五波）
+
+- [x] 13/13 `tokens.css` header `matrix polish v4.2.7`
+- [x] 必填 token 键抽检通过
+- [x] `npm run check:golden` 全绿
+
+---
+
+# 第六波 — `_core` DOM 全量抛光（v4.2.8）
+
+> **目标**：8 个深度 layout **共用 DOM** 更少模板感；**13 主题自动受益**（配色仍靠 `tokens.css`）。
+
+## 分工（3 Agent · 按文件拆分）
+
+| Agent | 文件 |
+|-------|------|
+| **A** | `cover.html` `01_text_only.html` `05_quote.html` |
+| **B** | `02_panel.html` `03_stats_grid.html` `04_number.html` |
+| **C** | `20_compare.html` `21_process_flow.html` |
+
+## wave6 要点（全主题生效）
+
+| 页 | 改动摘要 |
+|----|----------|
+| cover | 空 eyebrow/subtitle/accent-bar 隐藏 |
+| text | 呼吸页标题左 accent 条 + lede 字号 |
+| panel | 有图时隐藏占位条；首条 kp 强调；cards 首卡顶条 |
+| stats | hero-1 次卡略退；`--sf-panel-radius`；stat-number clamp |
+| number | dense 弱化光晕；hero 标题/上下文层级 |
+| quote | left-bar 用 accent；hero/breathing 排版 |
+| compare | 左列略退、VS/右列层级、hero 间距 |
+| process | 首阶段 accent 强调；后续阶段略淡；compact |
+
+## 汇合清单（第六波）
+
+- [x] 8/8 `layouts/*.html` wave6 注释
+- [x] `npm run check:golden` 全绿
+
+---
+
+# 第七波 — `shared/` DOM 全量抛光 + 换肤金标（v4.2.9）
+
+> **目标**：14 个 `samples/shared/` 变体与 `_core` 同级质感；**3 套新金标**覆盖 terminal / pastel / creative 主题。
+
+## 分工（3 Agent）
+
+| Agent | 文件 |
+|-------|------|
+| **A** | `07_timeline` `08_two_col` `10_icon_grid` `13_card_grid` `16_panel_stat` |
+| **B** | `17_number_bullets` `18_quote_context` `19_text_icons` `11_code_block` `12_table` |
+| **C** | `14_nav_bar` `15_chart_demo` `22_architecture_stack` `23_funnel` |
+
+## 协调项（主 Agent）
+
+| 项 | 交付 |
+|----|------|
+| 金标 | `ops_terminal` `pastel_product` `creative_pitch` |
+| 引擎 | `QUALITY_VARIANT_RUN`；`process_flow` compact ≥5 阶段 |
+| CI | `GOLDEN_MAX_CRITIQUE_WARNINGS`（默认 0） |
+
+## 汇合清单（第七波）
+
+- [x] 14/14 `shared/*.html` wave7
+- [x] 10 套金标 `check:golden` 全绿

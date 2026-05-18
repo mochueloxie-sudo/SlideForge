@@ -1,123 +1,125 @@
-/* Q1-A — swiss-modern tokens (light · Swiss grid · red accent) */
+/* Q1-A — swiss-modern tokens (matrix polish v4.2.7 · Swiss grid · red accent · 0 radius) */
 /* Contract: samples/_core/TOKENS.md */
 :root {
-  --sf-font: 'Helvetica Neue', 'Arial', 'PingFang SC', sans-serif;
+  --sf-font: 'Helvetica Neue', 'Helvetica', 'Arial', 'PingFang SC', sans-serif;
   --sf-body-bg: #ffffff;
-  --sf-body-gradient: linear-gradient(165deg, #ffffff 0%, #f6f6f6 55%, #ffffff 100%);
-  --sf-text-primary: #1a1a1a;
-  --sf-text-secondary: #3a3a3a;
-  --sf-text-muted: #6b6b6b;
-  --sf-text-subtitle: #4a4a4a;
-  --sf-accent: #ff3b30;
-  --sf-accent-secondary: #ff6b61;
+  --sf-body-gradient: linear-gradient(180deg, #ffffff 0%, #f7f7f7 50%, #ffffff 100%);
+  --sf-text-primary: #111111;
+  --sf-text-secondary: #333333;
+  --sf-text-muted: #5a5a5a;
+  --sf-text-subtitle: #444444;
+  --sf-accent: #e62e24;
+  --sf-accent-secondary: #ff4d42;
   --sf-accent-light: #ff6b61;
-  --sf-eyebrow: #ff3b30;
-  --sf-eyebrow-ring: 1px solid rgba(255, 59, 48, 0.35);
-  --sf-subtitle-lede: #4a4a4a;
-  --sf-page-num: rgba(60, 60, 70, 0.45);
+  --sf-eyebrow: #e62e24;
+  --sf-eyebrow-ring: 1px solid rgba(230, 46, 36, 0.4);
+  --sf-subtitle-lede: #444444;
+  --sf-page-num: rgba(90, 90, 90, 0.55);
 
-  --sf-panel-bg: #f8f8f8;
-  --sf-panel-border: 1px solid #e5e5e5;
-  --sf-panel-border-top: 4px solid #ff3b30;
-  --sf-panel-border-bottom: 1px solid #e5e5e5;
-  --sf-panel-shadow: 0 2px 0 rgba(0, 0, 0, 0.04);
+  --sf-panel-bg: #f5f5f5;
+  --sf-panel-border: 1px solid #e0e0e0;
+  --sf-panel-border-top: 4px solid #e62e24;
+  --sf-panel-border-bottom: 1px solid #d8d8d8;
+  --sf-panel-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
   --sf-panel-radius: 0px;
 
-  --sf-hairline: #e5e5e5;
-  --sf-hairline-gradient: linear-gradient(90deg, transparent, rgba(255, 59, 48, 0.35), rgba(255, 107, 97, 0.28), transparent);
+  --sf-hairline: #e0e0e0;
+  --sf-hairline-gradient: linear-gradient(90deg, transparent 0%, #e0e0e0 20%, #e0e0e0 80%, transparent 100%);
 
   --sf-cover-bg:
-    radial-gradient(ellipse at 62% 40%, rgba(255, 59, 48, 0.08) 0%, transparent 52%),
-    radial-gradient(circle at 8% 92%, rgba(255, 59, 48, 0.05) 0%, transparent 38%),
-    linear-gradient(165deg, #ffffff 0%, #f4f4f4 52%, #ffffff 100%);
-  --sf-corner-accent: radial-gradient(circle at 100% 0%, rgba(255, 59, 48, 0.1) 0%, transparent 65%);
-  --sf-bottom-line-gradient: linear-gradient(90deg, transparent 0%, #ff3b30 30%, #ff6b61 60%, transparent 100%);
-  --sf-accent-bar-gradient: linear-gradient(90deg, #ff3b30, #ff6b61);
-  --sf-cover-title-glow: rgba(255, 59, 48, 0.1);
+    linear-gradient(90deg, rgba(230, 46, 36, 0.04) 0%, transparent 28%),
+    radial-gradient(ellipse at 64% 38%, rgba(230, 46, 36, 0.06) 0%, transparent 50%),
+    var(--sf-body-gradient);
+  --sf-corner-accent: none;
+  --sf-bottom-line-gradient: linear-gradient(90deg, transparent 0%, #e62e24 35%, #ff4d42 65%, transparent 100%);
+  --sf-accent-bar-gradient: linear-gradient(90deg, #e62e24, #ff4d42);
+  --sf-cover-title-glow: rgba(230, 46, 36, 0.08);
 
   --sf-page-bg-text:
-    radial-gradient(circle at 22% 18%, rgba(255, 59, 48, 0.06) 0%, transparent 30%),
-    radial-gradient(circle at 78% 82%, rgba(255, 107, 97, 0.05) 0%, transparent 36%),
+    linear-gradient(0deg, rgba(224, 224, 224, 0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(224, 224, 224, 0.35) 1px, transparent 1px),
     var(--sf-body-gradient);
   --sf-page-bg-panel:
-    radial-gradient(circle at 20% 15%, rgba(255, 59, 48, 0.05) 0%, transparent 28%),
+    radial-gradient(circle at 18% 14%, rgba(230, 46, 36, 0.04) 0%, transparent 26%),
     var(--sf-body-gradient);
   --sf-page-bg-number:
-    radial-gradient(circle at 18% 20%, rgba(255, 59, 48, 0.08) 0%, transparent 32%),
-    radial-gradient(circle at 82% 70%, rgba(255, 107, 97, 0.06) 0%, transparent 38%),
+    radial-gradient(circle at 16% 18%, rgba(230, 46, 36, 0.06) 0%, transparent 30%),
     var(--sf-body-gradient);
   --sf-page-bg-stats:
-    radial-gradient(circle at 20% 15%, rgba(255, 59, 48, 0.06) 0%, transparent 30%),
+    radial-gradient(circle at 20% 15%, rgba(230, 46, 36, 0.05) 0%, transparent 28%),
     var(--sf-body-gradient);
   --sf-page-bg-compare:
-    radial-gradient(circle at 12% 18%, rgba(255, 59, 48, 0.07) 0%, transparent 34%),
-    radial-gradient(circle at 88% 80%, rgba(255, 107, 97, 0.05) 0%, transparent 36%),
+    radial-gradient(circle at 10% 16%, rgba(230, 46, 36, 0.05) 0%, transparent 32%),
     var(--sf-body-gradient);
   --sf-page-bg-process:
-    radial-gradient(circle at 15% 20%, rgba(255, 59, 48, 0.06) 0%, transparent 32%),
+    radial-gradient(circle at 14% 18%, rgba(230, 46, 36, 0.04) 0%, transparent 30%),
     var(--sf-body-gradient);
   --sf-page-bg-quote:
-    radial-gradient(circle at 20% 15%, rgba(255, 59, 48, 0.05) 0%, transparent 28%),
+    radial-gradient(circle at 20% 15%, rgba(230, 46, 36, 0.04) 0%, transparent 26%),
     var(--sf-body-gradient);
 
-  --sf-kp-text: #3a3a3a;
-  --sf-kp-divider: rgba(255, 59, 48, 0.15);
-  --sf-kp-arrow-glow: 0 0 8px rgba(255, 59, 48, 0.45);
-  --sf-card-muted-border: rgba(255, 59, 48, 0.18);
-  --sf-card-muted-bg: rgba(255, 255, 255, 0.72);
+  --sf-kp-text: #5a5a5a;
+  --sf-kp-divider: #e0e0e0;
+  --sf-kp-arrow-glow: 0 0 6px rgba(230, 46, 36, 0.4);
+  --sf-card-muted-border: 1px solid #e0e0e0;
+  --sf-card-muted-bg: #fafafa;
 
-  --sf-visual-slot-border: 1px solid rgba(255, 59, 48, 0.28);
+  --sf-visual-slot-border: 1px solid #e0e0e0;
   --sf-visual-slot-bg:
-    radial-gradient(circle at 30% 25%, rgba(255, 59, 48, 0.1) 0%, transparent 45%),
-    radial-gradient(circle at 70% 75%, rgba(255, 107, 97, 0.08) 0%, transparent 50%),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.85), rgba(248, 248, 248, 0.95));
-  --sf-visual-slot-shadow: 0 24px 56px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 59, 48, 0.12);
-  --sf-visual-slot-grid-line-a: rgba(255, 59, 48, 0.07);
-  --sf-visual-slot-grid-line-b: rgba(255, 107, 97, 0.06);
-  --sf-visual-slot-bar: linear-gradient(135deg, rgba(255, 59, 48, 0.18), rgba(255, 107, 97, 0.14));
-  --sf-visual-slot-bar-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
-  --sf-visual-slot-frame-border: 1px solid rgba(255, 59, 48, 0.2);
-  --sf-visual-slot-label: rgba(255, 59, 48, 0.75);
+    linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(245, 245, 245, 0.98));
+  --sf-visual-slot-shadow: 0 1px 0 rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(230, 46, 36, 0.08);
+  --sf-visual-slot-grid-line-a: rgba(224, 224, 224, 0.9);
+  --sf-visual-slot-grid-line-b: rgba(230, 46, 36, 0.08);
+  --sf-visual-slot-bar: linear-gradient(135deg, rgba(230, 46, 36, 0.14), rgba(255, 77, 66, 0.1));
+  --sf-visual-slot-bar-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  --sf-visual-slot-frame-border: 1px solid #e0e0e0;
+  --sf-visual-slot-label: rgba(230, 46, 36, 0.82);
 
-  --sf-cta-pill-border: 1px solid rgba(255, 59, 48, 0.35);
-  --sf-cta-pill-bg: rgba(255, 59, 48, 0.1);
+  --sf-cta-pill-border: 1px solid rgba(230, 46, 36, 0.4);
+  --sf-cta-pill-bg: rgba(230, 46, 36, 0.08);
 
-  --sf-compare-col-bg: rgba(255, 255, 255, 0.92);
-  --sf-compare-col-border: 1px solid #e5e5e5;
-  --sf-compare-col-border-top: 3px solid #e5e5e5;
-  --sf-compare-col-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
-  --sf-compare-col-right-border: rgba(255, 59, 48, 0.42);
-  --sf-compare-col-right-shadow: 0 20px 48px rgba(255, 59, 48, 0.12), 0 16px 40px rgba(0, 0, 0, 0.06);
-  --sf-compare-center-line: linear-gradient(180deg, transparent, rgba(255, 59, 48, 0.5) 20%, rgba(255, 107, 97, 0.75) 50%, rgba(255, 59, 48, 0.5) 80%, transparent);
-  --sf-compare-center-glow: 0 0 24px rgba(255, 59, 48, 0.2);
-  --sf-compare-title-border: rgba(255, 59, 48, 0.22);
-  --sf-compare-list-text: #3a3a3a;
-  --sf-compare-dot-right-glow: 0 0 10px rgba(255, 59, 48, 0.35);
-  --sf-compare-vs-border: 2px solid rgba(255, 59, 48, 0.28);
-  --sf-compare-vs-bg: rgba(255, 59, 48, 0.1);
-  --sf-compare-vs-shadow: 0 0 32px rgba(255, 59, 48, 0.12);
+  --sf-compare-col-bg: #ffffff;
+  --sf-compare-col-border: 1px solid #e0e0e0;
+  --sf-compare-col-border-top: 1px solid #e0e0e0;
+  --sf-compare-col-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  --sf-compare-col-right-border: 2px solid #e62e24;
+  --sf-compare-col-right-shadow:
+    0 0 0 1px rgba(230, 46, 36, 0.14),
+    0 18px 44px rgba(230, 46, 36, 0.16),
+    0 8px 24px rgba(0, 0, 0, 0.06);
+  --sf-compare-center-line: linear-gradient(180deg, transparent, #e0e0e0 15%, #e62e24 50%, #e0e0e0 85%, transparent);
+  --sf-compare-center-glow: none;
+  --sf-compare-title-border: #e0e0e0;
+  --sf-compare-list-text: #333333;
+  --sf-compare-dot-right-glow: 0 0 8px rgba(230, 46, 36, 0.45);
+  --sf-compare-vs-border: 2px solid #e62e24;
+  --sf-compare-vs-bg: #ffffff;
+  --sf-compare-vs-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
 
-  --sf-process-rail-line: linear-gradient(90deg, transparent, rgba(255, 59, 48, 0.5), rgba(255, 107, 97, 0.6), transparent);
-  --sf-process-node-bg: #ff3b30;
-  --sf-process-node-shadow: 0 0 16px rgba(255, 59, 48, 0.35), 0 0 32px rgba(255, 59, 48, 0.15);
-  --sf-process-card-bg: rgba(255, 255, 255, 0.94);
-  --sf-process-card-border: 1px solid #e5e5e5;
-  --sf-process-card-border-top: 3px solid #ff3b30;
-  --sf-process-card-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+  --sf-process-rail-line: linear-gradient(90deg, transparent, #e0e0e0 10%, #e62e24 50%, #e0e0e0 90%, transparent);
+  --sf-process-node-bg: #e62e24;
+  --sf-process-node-shadow: 0 0 0 2px #ffffff, 0 0 12px rgba(230, 46, 36, 0.35);
+  --sf-process-card-bg: #ffffff;
+  --sf-process-card-border: 1px solid #e0e0e0;
+  --sf-process-card-border-top: 4px solid #e62e24;
+  --sf-process-card-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
 
-  --sf-stats-card-bg: rgba(255, 255, 255, 0.9);
-  --sf-stats-card-border: 1px solid #e5e5e5;
-  --sf-stats-card-border-top: 3px solid #ff3b30;
-  --sf-stats-card-shadow: 0 12px 32px rgba(0, 0, 0, 0.07);
-  --sf-stats-number-shadow: 0 0 40px rgba(255, 59, 48, 0.15);
-  --sf-stats-label: #3a3a3a;
-  --sf-stats-desc: #6b6b6b;
-  --sf-stats-hero-border: rgba(255, 59, 48, 0.35);
-  --sf-stats-hero-shadow: 0 20px 56px rgba(255, 59, 48, 0.12), 0 12px 32px rgba(0, 0, 0, 0.06);
+  --sf-stats-card-bg: #ffffff;
+  --sf-stats-card-border: 1px solid #e0e0e0;
+  --sf-stats-card-border-top: 4px solid #e62e24;
+  --sf-stats-card-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  --sf-stats-number-shadow: none;
+  --sf-stats-label: #333333;
+  --sf-stats-desc: #5a5a5a;
+  --sf-stats-hero-border: 2px solid #e62e24;
+  --sf-stats-hero-shadow:
+    0 0 0 1px rgba(230, 46, 36, 0.12),
+    0 16px 40px rgba(230, 46, 36, 0.12),
+    0 1px 0 rgba(0, 0, 0, 0.06);
 
-  --sf-quote-mark: rgba(255, 59, 48, 0.22);
-  --sf-number-glow: radial-gradient(circle, rgba(255, 59, 48, 0.18) 0%, transparent 68%);
-  --sf-number-glow-hero: radial-gradient(circle, rgba(255, 59, 48, 0.22) 0%, transparent 65%);
-  --sf-number-text-shadow: 0 0 80px rgba(255, 59, 48, 0.12), 0 0 20px rgba(255, 59, 48, 0.08);
-  --sf-stat-border-left: 3px solid rgba(255, 59, 48, 0.45);
+  --sf-quote-mark: rgba(230, 46, 36, 0.2);
+  --sf-number-glow: none;
+  --sf-number-glow-hero: none;
+  --sf-number-text-shadow: none;
+  --sf-stat-border-left: 4px solid #e62e24;
 }

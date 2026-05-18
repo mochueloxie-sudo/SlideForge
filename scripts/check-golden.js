@@ -8,7 +8,8 @@
 const { spawnSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
-const { runCritique } = require('../utils/critique_static');
+const { runCritique, critiqueReportMarkdown } = require('../utils/critique_static');
+const { buildVisualSlotReport, visualSlotsReportMarkdown } = require('../utils/visual_slot_report');
 
 const ROOT = path.resolve(__dirname, '..');
 const EXECUTOR = path.join(ROOT, 'executor.js');
@@ -19,7 +20,11 @@ const GOLDEN_SCENES = [
   'examples/golden/humanities_narrative_scenes.json',
   'examples/golden/editorial_notes_scenes.json',
   'examples/golden/variant_showcase_scenes.json',
-  'examples/golden/business_swiss_scenes.json'
+  'examples/golden/business_swiss_scenes.json',
+  'examples/golden/tech_variants_scenes.json',
+  'examples/golden/ops_terminal_scenes.json',
+  'examples/golden/pastel_product_scenes.json',
+  'examples/golden/creative_pitch_scenes.json'
 ];
 
 const GOLDEN_OUT = [
@@ -28,8 +33,18 @@ const GOLDEN_OUT = [
   'output_golden/humanities_narrative',
   'output_golden/editorial_notes',
   'output_golden/variant_showcase',
-  'output_golden/business_swiss'
+  'output_golden/business_swiss',
+  'output_golden/tech_variants',
+  'output_golden/ops_terminal',
+  'output_golden/pastel_product',
+  'output_golden/creative_pitch'
 ];
+
+/** Fail golden check if critique warnings exceed this (errors always fail). */
+const GOLDEN_MAX_CRITIQUE_WARNINGS = parseInt(
+  process.env.GOLDEN_MAX_CRITIQUE_WARNINGS || '0',
+  10
+);
 
 /** @type {{ out: string, scenes: string }[]} */
 const GOLDEN_CRITIQUE = GOLDEN_OUT.map((out, i) => ({
@@ -53,6 +68,23 @@ for (const scenes of GOLDEN_SCENES) {
   if (!out.includes('"valid": true')) {
     console.error(`❌ validate failed: ${scenes}`);
     failed = 1;
+  }
+}
+
+console.error('\n── validate golden (strict) ──');
+for (const scenes of GOLDEN_SCENES) {
+  const r = spawnSync('node', [EXECUTOR], {
+    cwd: ROOT,
+    input: JSON.stringify({ command: 'validate', scenes, strict: true }),
+    encoding: 'utf8'
+  });
+  const out = r.stdout || '';
+  if (!out.includes('"valid": true')) {
+    console.error(`❌ strict validate failed: ${scenes}`);
+    process.stderr.write(out);
+    failed = 1;
+  } else {
+    console.error(`✅ strict: ${path.basename(scenes)}`);
   }
 }
 
@@ -114,8 +146,37 @@ for (const { out, scenes } of GOLDEN_CRITIQUE) {
     deckName: path.basename(out),
     applyBaseline: true
   });
+  let scenesMeta = null;
+  if (scenesPath && fs.existsSync(scenesPath)) {
+    try {
+      const parsed = JSON.parse(fs.readFileSync(scenesPath, 'utf8'));
+      scenesMeta = Array.isArray(parsed) ? parsed : parsed.scenes;
+    } catch (_) {
+      scenesMeta = null;
+    }
+  }
+  const visualSlots = scenesMeta
+    ? buildVisualSlotReport(scenesMeta, { scenesPath, htmlDir: abs })
+    : { slots: [], gaps_for_user: [], has_gaps: false };
+
   const critPath = path.join(abs, 'critique.json');
-  fs.writeFileSync(critPath, JSON.stringify(report, null, 2), 'utf8');
+  const critMdPath = path.join(abs, 'critique_report.md');
+  const visualSlotsPath = path.join(abs, 'visual_slots_report.json');
+  fs.writeFileSync(
+    critPath,
+    JSON.stringify({ ...report, visual_slots: visualSlots }, null, 2),
+    'utf8'
+  );
+  fs.writeFileSync(
+    critMdPath,
+    critiqueReportMarkdown(report) + visualSlotsReportMarkdown(visualSlots),
+    'utf8'
+  );
+  if (visualSlots.has_gaps) {
+    fs.writeFileSync(visualSlotsPath, JSON.stringify(visualSlots, null, 2), 'utf8');
+  } else if (fs.existsSync(visualSlotsPath)) {
+    fs.unlinkSync(visualSlotsPath);
+  }
 
   for (const f of report.findings) {
     if (f.level === 'warning' || f.level === 'info') {
@@ -135,6 +196,11 @@ for (const { out, scenes } of GOLDEN_CRITIQUE) {
         console.error(`❌ ${loc}: [${f.code}] ${f.message}`);
       }
     }
+    failed = 1;
+  } else if (report.summary.warnings > GOLDEN_MAX_CRITIQUE_WARNINGS) {
+    console.error(
+      `❌ ${out}: ${report.summary.warnings} critique warning(s) exceed GOLDEN_MAX_CRITIQUE_WARNINGS=${GOLDEN_MAX_CRITIQUE_WARNINGS}`
+    );
     failed = 1;
   } else {
     console.error(

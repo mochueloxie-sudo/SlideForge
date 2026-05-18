@@ -5,13 +5,14 @@
 <meta name="viewport" content="width=1920, height=1080">
 <title>{{TITLE}}</title>
 <style>
+  /* wave7 — quote context DOM polish (--sf-* only) */
   @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Manrope:wght@400;500;700;800&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { width: 1920px; height: 1080px; overflow: hidden; }
   body {
     width: 1920px; height: 1080px;
     background: var(--sf-page-bg-panel, var(--sf-body-gradient, var(--sf-body-bg)));
-    font-family: var(--sf-font, 'PingFang SC', sans-serif;
+    font-family: var(--sf-font);
     color: var(--sf-text-primary);
     padding: 80px 160px 100px;
     display: flex; flex-direction: column; justify-content: center;
@@ -22,10 +23,11 @@
     color: var(--sf-eyebrow); text-transform: uppercase; margin-bottom: 24px;
     flex-shrink: 0;
   }
+  .eyebrow:empty { display: none; }
   /* ── Quote block ────────────────────────────────────────── */
   .quote-wrap {
     flex: 1; display: flex; align-items: center;
-    border-left: 4px solid {{ACCENT}};
+    border-left: 4px solid var(--sf-accent);
     padding-left: 56px;
     margin-bottom: 40px;
   }
@@ -37,23 +39,23 @@
     pointer-events: none;
   }
   .quote-text {
-    font-size: 48px; font-weight: 500; line-height: 1.35;
+    font-size: 48px; font-weight: 600; line-height: 1.35;
     color: var(--sf-text-primary);
     max-width: 1300px;
   }
   /* ── Attribution + context ──────────────────────────────── */
   .context-wrap {
-    background: var(--sf-panel-bg);
+    background: color-mix(in srgb, var(--sf-panel-bg) 88%, transparent);
     border: var(--sf-panel-border);
-    border-top: var(--sf-panel-border-top);
-    border-bottom: var(--sf-panel-border-bottom);
+    border-top: 1px solid color-mix(in srgb, var(--sf-accent) 18%, transparent);
     box-shadow: var(--sf-panel-shadow);
     border-radius: var(--sf-panel-radius, 20px);
-    backdrop-filter: blur(12px;
-    -webkit-backdrop-filter: blur(12px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     padding: 28px 40px;
     display: flex; align-items: flex-start; gap: 40px;
     flex-shrink: 0;
+    opacity: 0.92;
   }
   .attr-block { flex-shrink: 0; }
   .attr-name {
@@ -63,6 +65,7 @@
   .attr-title {
     font-size: 15px; color: var(--sf-text-muted);
   }
+  .attr-title:empty { display: none; }
   .context-divider {
     width: 1px; background: var(--sf-hairline);
     align-self: stretch; flex-shrink: 0;

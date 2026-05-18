@@ -345,3 +345,27 @@ margin-left: calc(-1 * min(10vw, 100px));     /* Works */
 
 CSS does not allow a leading `-` before function names. The browser silently discards the entire declaration — no error, the element just appears in the wrong position. **Always use `calc(-1 * ...)` to negate CSS function values.**
 
+* * *
+
+## SlideForge 13 themes — temperament & avoid (Q0 / v4.2.4)
+
+宿主 Agent 选 `design_mode` 或写 `project.json` → `recommended_design_mode` 时参考。完整 token 见 `samples/themes/<id>/tokens.css`；样张加载顺序见 `CLAUDE.md`。
+
+| Theme id | 气质 / 适用 | 避免 |
+|----------|-------------|------|
+| `electric-studio` | 商务 keynote、高对比分割、冷静专业 | 花哨插画、紫白渐变、过多装饰圆 |
+| `bold-signal` | 指标冲击、橙卡焦点、现代 SaaS | 长段落塞 panel、弱对比灰字 |
+| `creative-voltage` | 创意提案、高能量、双色分屏 | 严肃财报腔、密密麻麻小字 |
+| `dark-botanical` | 人文社科、策展、柔和深色 | 霓虹赛博、冷冰冰纯黑 UI |
+| `neon-cyber` | 产品发布、技术路演、赛博霓虹 | 大面积留白呼吸页、复古衬线 |
+| `terminal-green` | 开发者、CLI、日志美学 | 营销口号式大卡片、粉彩 |
+| `deep-tech-keynote` | 架构评审、控制面、深空科技 | 手账风、复古纸纹 |
+| `notebook-tabs` | 课堂笔记、教程、浅色标签页 | 全屏纯黑、过重毛玻璃 |
+| `paper-ink` | 编辑长文、浅色阅读、衬线标题 | 高饱和霓虹、终端绿 |
+| `pastel-geometry` | 轻快科普、几何色块 | 严肃投行 dense 表 |
+| `split-pastel` | 双栏叙事、柔和对比 | 单栏巨墙文字无节奏 |
+| `swiss-modern` | 商务报告、网格、极简指标 | 装饰插画、脚本字体 |
+| `vintage-editorial` | 文化艺术、杂志、复古 | 赛博渐变、终端 monospace 正文 |
+
+**跨主题**：避免连续 ≥3 页 `panel`；专用字段优先于 `panel`（见 `docs/SCENES_SCHEMA.md` §0.2a）；可用 `content_variant:"auto"` 让字段驱动变体（§0.2c）。
+

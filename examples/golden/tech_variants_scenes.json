@@ -1,0 +1,99 @@
+[
+  {
+    "id": "tv-cover",
+    "type": "cover",
+    "eyebrow": "DEEP TECH · G7",
+    "title": "Nexus Control Plane",
+    "secondary": "deep-tech-keynote · 技术叙事变体验收",
+    "visual_weight": "hero"
+  },
+  {
+    "id": "tv-compare",
+    "type": "content",
+    "content_variant": "compare",
+    "visual_weight": "hero",
+    "title": "单体 vs 控制面",
+    "compare_left_title": "Before",
+    "compare_right_title": "After",
+    "compare_left_points": [
+      "各集群各自运维脚本",
+      "配置漂移靠人肉 diff",
+      "发布窗口不可预测"
+    ],
+    "compare_right_points": [
+      "GitOps 单一事实源",
+      "策略即代码 + 审计链",
+      "渐进交付 + 自动回滚"
+    ]
+  },
+  {
+    "id": "tv-flow-auto",
+    "type": "content",
+    "content_variant": "auto",
+    "title": "变更流水线",
+    "process_stages": [
+      { "label": "Plan", "desc": "变更单、影响面、回滚预案同源" },
+      { "label": "Apply", "desc": "多集群编排 + 契约测试门禁" },
+      { "label": "Observe", "desc": "SLO 驱动放量与自动止血" }
+    ]
+  },
+  {
+    "id": "tv-stack",
+    "type": "content",
+    "content_variant": "architecture_stack",
+    "title": "分层架构",
+    "layers": [
+      { "title": "体验层", "desc": "Console / API / CLI 统一入口" },
+      { "title": "控制面", "desc": "策略引擎、审批、审计" },
+      { "title": "数据面", "desc": "工作负载编排与观测" }
+    ]
+  },
+  {
+    "id": "tv-funnel",
+    "type": "content",
+    "content_variant": "funnel",
+    "title": "可靠性漏斗",
+    "funnel_stages": [
+      { "label": "变更", "desc": "每周发布次数" },
+      { "label": "检测", "desc": "告警 → 事件关联" },
+      { "label": "恢复", "desc": "MTTR 中位数" },
+      { "label": "学习", "desc": "事后复盘入库" }
+    ]
+  },
+  {
+    "id": "tv-code",
+    "type": "content",
+    "content_variant": "code",
+    "title": "本地回归",
+    "code_label": "bash",
+    "code_snippet": "npm run check:golden\nopen output_golden/tech_variants/presentation.html"
+  },
+  {
+    "id": "tv-chart",
+    "type": "content",
+    "content_variant": "chart",
+    "title": "集群规模",
+    "chart_series": ["生产", "预发"],
+    "chart_data": [
+      { "label": "Q1", "values": [42, 18] },
+      { "label": "Q2", "values": [58, 24] },
+      { "label": "Q3", "values": [71, 29] }
+    ],
+    "chart_stats": [
+      { "value": "+69%", "label": "生产环比" },
+      { "value": "99.97%", "label": "季度 SLO" }
+    ]
+  },
+  {
+    "id": "tv-close",
+    "type": "summary",
+    "visual_weight": "breathing",
+    "layout_hint": "cards",
+    "title": "下一步",
+    "key_points": [
+      "sandbox 租户 14 天",
+      "预约架构评审",
+      "nexus.io/deep-tech"
+    ]
+  }
+]

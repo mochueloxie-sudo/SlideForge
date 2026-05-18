@@ -5,13 +5,14 @@
 <meta name="viewport" content="width=1920, height=1080">
 <title>{{TITLE}}</title>
 <style>
+  /* wave7 — number bullets DOM polish (--sf-* only) */
   @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700;800&family=Manrope:wght@400;500;700;800&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { width: 1920px; height: 1080px; overflow: hidden; }
   body {
     width: 1920px; height: 1080px;
     background: var(--sf-page-bg-panel, var(--sf-body-gradient, var(--sf-body-bg)));
-    font-family: var(--sf-font, 'PingFang SC', sans-serif;
+    font-family: var(--sf-font);
     color: var(--sf-text-primary);
     padding: 80px 120px 100px;
     display: flex; flex-direction: column; justify-content: center;
@@ -27,11 +28,12 @@
     color: var(--sf-eyebrow); text-transform: uppercase;
     margin-bottom: 16px;
   }
+  .eyebrow:empty { display: none; }
   .big-number {
     font-size: 160px; font-weight: 800; line-height: 0.85;
     letter-spacing: -0.06em;
     color: var(--sf-accent-light, var(--sf-accent));
-    font-family: var(--sf-font, sans-serif;
+    font-family: var(--sf-font);
   }
   .number-meta {
     margin-left: 28px; padding-bottom: 16px;
@@ -57,21 +59,52 @@
   }
   .bullet-item {
     flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: var(--sf-card-muted-bg, var(--sf-panel-bg));
+    border: var(--sf-card-muted-border, var(--sf-panel-border));
+    border-radius: var(--sf-panel-radius, 20px);
+    box-shadow: var(--sf-panel-shadow);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 28px 32px;
+    display: flex; align-items: flex-start; gap: 16px;
+  }
+  .bullet-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--sf-accent), var(--sf-accent-light, var(--sf-accent-secondary)));
+    opacity: 0.22;
+  }
+  .bullets > .bullet-item:first-child {
     background: var(--sf-panel-bg);
     border: var(--sf-panel-border);
     border-top: var(--sf-panel-border-top);
     border-bottom: var(--sf-panel-border-bottom);
-    box-shadow: var(--sf-panel-shadow);
-    border-radius: var(--sf-panel-radius, 20px);
-    backdrop-filter: blur(12px;
-    -webkit-backdrop-filter: blur(12px;
-    padding: 28px 32px;
-    display: flex; align-items: flex-start; gap: 16px;
+    box-shadow: var(--sf-panel-shadow-inner, var(--sf-panel-shadow));
+    padding: 32px 36px;
+  }
+  .bullets > .bullet-item:first-child::before { opacity: 1; height: 4px; }
+  .bullets > .bullet-item:first-child .bullet-num {
+    font-size: 48px;
+    color: var(--sf-accent);
+  }
+  .bullets > .bullet-item:first-child .bullet-text {
+    font-weight: 600;
+    color: var(--sf-text-primary);
+  }
+  .bullets > .bullet-item:not(:first-child) { opacity: 0.9; }
+  .bullets > .bullet-item:not(:first-child)::before { opacity: 0.12; }
+  .bullets > .bullet-item:not(:first-child) .bullet-num {
+    color: var(--sf-text-muted);
+    opacity: 0.85;
   }
   .bullet-num {
     font-size: 42px; font-weight: 800;
     color: var(--sf-accent); line-height: 1; flex-shrink: 0;
-    font-family: var(--sf-font, sans-serif;
+    font-family: var(--sf-font);
   }
   .bullet-text-wrap {
     display: flex; flex-direction: column; gap: 8px; padding-top: 4px; flex: 1; min-width: 0;
@@ -102,8 +135,8 @@
       outline-offset: 3px;
     }
     .bullets .bullet-item:hover {
-      outline-color: rgba(255,255,255,0.28);
-      box-shadow: 0 10px 36px rgba(0,0,0,0.3);
+      outline-color: color-mix(in srgb, var(--sf-accent) 40%, transparent);
+      box-shadow: var(--sf-panel-shadow-inner, var(--sf-panel-shadow));
     }
   }
 

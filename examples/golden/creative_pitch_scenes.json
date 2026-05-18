@@ -1,0 +1,100 @@
+[
+  {
+    "id": "cp-cover",
+    "type": "cover",
+    "eyebrow": "CREATIVE PITCH",
+    "title": "品牌焕新战役",
+    "secondary": "creative-voltage · 代理提案金标",
+    "visual_weight": "hero"
+  },
+  {
+    "id": "cp-compare",
+    "type": "content",
+    "content_variant": "compare",
+    "visual_weight": "hero",
+    "title": "现状 vs 提案",
+    "compare_left_title": "Today",
+    "compare_right_title": "Tomorrow",
+    "compare_left_points": [
+      "视觉系统分散在三套手册",
+      "社交素材手工拼版",
+      "投放素材 CTR 下滑"
+    ],
+    "compare_right_points": [
+      "单一 Voltage 设计系统",
+      "模板化 motion 套件",
+      "A/B 素材周迭代"
+    ]
+  },
+  {
+    "id": "cp-panel-stat",
+    "type": "content",
+    "content_variant": "panel_stat",
+    "visual_weight": "hero",
+    "composition": "stat-hero",
+    "title": "预期 uplift",
+    "stat_value": "+34%",
+    "stat_label": "品牌搜索量",
+    "key_points": [
+      "首月曝光 120M",
+      "3 条 hero 影片",
+      "KOL 矩阵 18 人"
+    ]
+  },
+  {
+    "id": "cp-arch",
+    "type": "content",
+    "content_variant": "architecture_stack",
+    "title": "战役架构",
+    "layers": [
+      { "title": "品牌层", "desc": "主视觉、字体、声纹识别" },
+      { "title": "渠道层", "desc": "OOH / 社交 / 零售触点" },
+      { "title": "效果层", "desc": "投放、落地页、转化归因" }
+    ]
+  },
+  {
+    "id": "cp-timeline",
+    "type": "content",
+    "content_variant": "timeline",
+    "title": "12 周节奏",
+    "steps": [
+      { "label": "W1–2", "desc": "洞察与创意方向锁定" },
+      { "label": "W3–6", "desc": "主视觉 + 套件生产" },
+      { "label": "W7–12", "desc": "投放、优化、复盘" }
+    ]
+  },
+  {
+    "id": "cp-text-icons",
+    "type": "content",
+    "content_variant": "text_icons",
+    "title": "交付物",
+    "body": "战役包覆盖品牌、渠道与效果三层，可按周迭代素材。",
+    "icons": [
+      { "emoji": "🎬", "label": "Hero 影片", "desc": "15s / 30s / 6s 切片" },
+      { "emoji": "📐", "label": "设计系统", "desc": "Figma + 动效规范" },
+      { "emoji": "📣", "label": "投放套件", "desc": "20+ 尺寸模板" }
+    ]
+  },
+  {
+    "id": "cp-breath",
+    "type": "content",
+    "content_variant": "text",
+    "visual_weight": "breathing",
+    "composition": "title-only",
+    "eyebrow": "主张",
+    "title": "电压，但不吵",
+    "body": "高对比、高能量；留白与节奏同样重要"
+  },
+  {
+    "id": "cp-close",
+    "type": "summary",
+    "visual_weight": "hero",
+    "layout_hint": "cards",
+    "title": "合作方式",
+    "key_points": [
+      "固定费 + 效果奖金池",
+      "8 周 MVP 可见 uplift",
+      "studio@voltage.example"
+    ]
+  }
+]

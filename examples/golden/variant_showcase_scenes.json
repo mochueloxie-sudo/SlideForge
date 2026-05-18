@@ -4,7 +4,7 @@
     "type": "cover",
     "eyebrow": "G2 · 陈列",
     "title": "Shared 变体一览",
-    "secondary": "paper-ink · shared 变体全矩阵验收",
+    "secondary": "paper-ink · shared 变体 + nav_bar / chart 锚点",
     "visual_weight": "hero"
   },
   {
@@ -91,6 +91,33 @@
       ["card_grid", "shared/", "✓ wave3"],
       ["two_col", "shared/", "✓ wave3"],
       ["code", "shared/", "✓ wave3"]
+    ]
+  },
+  {
+    "id": "vs-nav",
+    "type": "content",
+    "content_variant": "nav_bar",
+    "title": "章节导航锚点",
+    "subtitle": "顶栏短标签 + 标题下导语；并列概念请用 card_grid",
+    "nav_logo": "Forge",
+    "nav_items": ["封面", "变体", "图表", "收尾"],
+    "nav_active": 1,
+    "section_label": "SECTION 02 · 12",
+    "progress_pct": 35
+  },
+  {
+    "id": "vs-chart",
+    "type": "content",
+    "content_variant": "chart",
+    "title": "柱状图锚点",
+    "chart_series": ["2025", "2026"],
+    "chart_data": [
+      { "label": "Q1", "values": [42, 58] },
+      { "label": "Q2", "values": [48, 71] },
+      { "label": "Q3", "values": [55, 82] }
+    ],
+    "chart_stats": [
+      { "value": "+38%", "label": "同比峰值" }
     ]
   },
   {

@@ -19,6 +19,7 @@
 const fs   = require('fs');
 const path = require('path');
 const { lintQuality } = require('./quality_lint');
+const { suggestContentVariant } = require('../utils/variant_suggest');
 
 const VALID_SCENE_TYPES   = new Set(['cover', 'content', 'summary']);
 const VALID_VARIANTS = new Set([
@@ -26,8 +27,18 @@ const VALID_VARIANTS = new Set([
   'text', 'code', 'table', 'chart', 'nav_bar',
   'panel_stat', 'number_bullets', 'quote_context', 'text_icons',
   'icon_grid', 'card_grid',
-  'compare', 'process_flow', 'architecture_stack', 'funnel'
+  'compare', 'process_flow', 'architecture_stack', 'funnel',
+  'auto'
 ]);
+/** In strict mode these quality_warnings become errors (block render). */
+const STRICT_QUALITY_CODES = new Set([
+  'QUALITY_VARIANT_MISMATCH',
+  'QUALITY_PANEL_RUN',
+  'QUALITY_VARIANT_RUN',
+  'QUALITY_PANEL_RATIO',
+  'QUALITY_NO_HIGH_ENERGY'
+]);
+
 const VALID_THEMES = new Set([
   'electric-studio', 'bold-signal', 'creative-voltage', 'dark-botanical',
   'neon-cyber', 'terminal-green', 'deep-tech-keynote',
@@ -212,7 +223,11 @@ function validate(scenesData, opts = {}) {
       } else if (!VALID_VARIANTS.has(scene.content_variant)) {
         errors.push({ at: `${at}.content_variant`, msg: `unknown content_variant "${scene.content_variant}"` });
       } else {
-        const required = REQUIRED_BY_VARIANT[scene.content_variant] || [];
+        const effectiveVariant =
+          scene.content_variant === 'auto'
+            ? (suggestContentVariant(scene) || 'text')
+            : scene.content_variant;
+        const required = REQUIRED_BY_VARIANT[effectiveVariant] || [];
         for (const field of required) {
           const v = scene[field];
           const missing = v === undefined || v === null ||
@@ -221,12 +236,12 @@ function validate(scenesData, opts = {}) {
           if (missing) {
             errors.push({
               at: `${at}.${field}`,
-              msg: `content_variant="${scene.content_variant}" requires non-empty "${field}"`
+              msg: `content_variant="${scene.content_variant}" (resolves to ${effectiveVariant}) requires non-empty "${field}"`
             });
           }
         }
 
-        if (scene.content_variant === 'process_flow') {
+        if (effectiveVariant === 'process_flow') {
           const hasStages = Array.isArray(scene.process_stages) && scene.process_stages.length > 0;
           const hasLanes  = Array.isArray(scene.flow_lanes)     && scene.flow_lanes.length > 0;
           const hasSteps  = Array.isArray(scene.steps)          && scene.steps.length > 0;
@@ -274,7 +289,20 @@ function validate(scenesData, opts = {}) {
 
   const { quality_warnings } = lintQuality(scenesData, lintCtx);
 
-  return { valid: errors.length === 0, errors, warnings, quality_warnings };
+  if (opts.strict) {
+    for (const q of quality_warnings) {
+      if (STRICT_QUALITY_CODES.has(q.code)) {
+        errors.push({
+          at: q.at || '$',
+          code: q.code,
+          msg: `[strict] ${q.msg}`,
+          hint: q.hint
+        });
+      }
+    }
+  }
+
+  return { valid: errors.length === 0, errors, warnings, quality_warnings, strict: !!opts.strict };
 }
 
 let input = '';
@@ -304,16 +332,19 @@ process.stdin.on('end', () => {
       if (fs.existsSync(abs)) projectData = JSON.parse(fs.readFileSync(abs, 'utf8'));
     }
 
+    const strict = params.strict === true || params.strict === 'true';
     const result = validate(scenesData, {
       recommended_design_mode: projectData && projectData.recommended_design_mode,
       scenesPath,
-      outputDir: params.output_dir
+      outputDir: params.output_dir,
+      strict
     });
 
     const output = {
       success: result.valid,
       step: 'validate',
       valid: result.valid,
+      strict,
       scenes_count: Array.isArray(scenesData) ? scenesData.length : 0,
       errors: result.errors,
       warnings: result.warnings,
@@ -335,4 +366,4 @@ process.stdin.on('end', () => {
   }
 });
 
-module.exports = { validate, VALID_VARIANTS, VALID_THEMES };
+module.exports = { validate, VALID_VARIANTS, VALID_THEMES, STRICT_QUALITY_CODES };

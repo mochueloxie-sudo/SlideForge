@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=1920, height=1080">
 <title>Timeline</title>
 <style>
+  /* wave7 — timeline DOM polish (--sf-* only) */
   @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Manrope:wght@400;500;800&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { width: 1920px; height: 1080px; overflow: hidden; }
@@ -24,6 +25,7 @@
     color: var(--sf-eyebrow); text-transform: uppercase; margin-bottom: 20px;
     flex-shrink: 0;
   }
+  .eyebrow:empty { display: none; }
   .title {
     font-size: var(--sf-title-size, 58px); font-weight: 800; line-height: 1.05;
     color: var(--sf-text-primary); margin-bottom: 48px; max-width: 900px;
@@ -91,7 +93,17 @@
     color: var(--sf-text-primary); line-height: 1.3;
     margin-bottom: 6px;
   }
-  .step:first-child .step-label { font-size: 28px; }
+  .step:first-child .step-label {
+    font-size: 28px;
+    color: var(--sf-accent);
+  }
+  .step:not(:first-child) { opacity: 0.9; }
+  .step:not(:first-child) .step-dot {
+    background: var(--sf-text-muted);
+    box-shadow: none;
+    opacity: 0.85;
+  }
+  .step:not(:first-child) .step-num { color: var(--sf-text-muted); }
   .step-desc {
     font-size: 18px; font-weight: 400;
     color: var(--sf-text-secondary); line-height: 1.55;
@@ -159,6 +171,15 @@
   }
   body.layout-alternating .step-dot { left: unset; right: -54px; }
   body.layout-alternating .step:nth-child(even) .step-dot { right: unset; left: -54px; }
+
+  body.layout-compact .step { padding: 14px 18px 14px 6px; }
+  body.layout-compact .step:first-child { margin-bottom: 4px; padding: 18px 20px 18px 8px; }
+  body.layout-compact .step-label { font-size: 20px; }
+  body.layout-compact .step:first-child .step-label { font-size: 24px; }
+  body.layout-compact .step-desc { font-size: 16px; }
+  body.layout-compact .timeline { padding-left: 48px; }
+  body.layout-compact .step-dot { width: 14px; height: 14px; top: 24px; }
+  body.layout-compact .step:first-child .step-dot { width: 18px; height: 18px; }
 </style>
 </head>
 <body>

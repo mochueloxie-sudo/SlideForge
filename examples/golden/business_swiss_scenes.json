@@ -21,7 +21,7 @@
   {
     "id": "bsw-grid",
     "type": "content",
-    "content_variant": "stats_grid",
+    "content_variant": "auto",
     "layout_hint": "2x2",
     "composition": "stat-hero",
     "title": "运营仪表盘",
@@ -45,6 +45,23 @@
       "净收入留存 118%",
       "大客户占比 41%",
       "单位经济未因扩张稀释"
+    ]
+  },
+  {
+    "id": "bsw-visual",
+    "type": "content",
+    "content_variant": "auto",
+    "composition": "split-visual",
+    "layout_hint": "sidebar-left",
+    "hero_image": "examples/assets/board-dashboard.svg",
+    "visual_alt": "Q1 运营仪表盘趋势",
+    "eyebrow": "运营观测",
+    "title": "仪表盘议程",
+    "panel_title": "本季口径",
+    "key_points": [
+      "新签 / 续约 / NRR 同屏",
+      "CAC 与 DSO 对齐董事会模板",
+      "异常归因到负责人"
     ]
   },
   {

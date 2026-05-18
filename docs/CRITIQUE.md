@@ -16,8 +16,9 @@ echo '{"command":"critique","html_dir":"./output","scenes":"./output/scenes.json
 
 | 文件 | 说明 |
 |------|------|
-| `critique.json` | 机器可读报告 |
-| `critique_report.md` | 人类可读摘要 |
+| `critique.json` | 机器可读报告（含 `visual_slots` 摘要） |
+| `critique_report.md` | 人类可读摘要 + **Visual slots 补图表** |
+| `visual_slots_report.json` | 仅当存在待补主视觉位时生成；供 Agent 交付后告知用户 |
 
 **进程始终 exit 0**；是否通过以 `critique.json` 的 `ok` 与 `summary.errors` 为准。
 

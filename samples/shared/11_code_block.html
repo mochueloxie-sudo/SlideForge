@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=1920, height=1080">
 <title>{{TITLE}}</title>
 <style>
+  /* wave7 — code block DOM polish (--sf-* only) */
   @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { width: 1920px; height: 1080px; overflow: hidden; }
@@ -21,6 +22,7 @@
     font-size: 13px; font-weight: 600; letter-spacing: 0.15em;
     color: var(--sf-eyebrow); text-transform: uppercase; margin-bottom: 16px; flex-shrink: 0;
   }
+  .eyebrow:empty { display: none; }
   .title {
     font-size: var(--sf-title-size, 52px); font-weight: 700; line-height: 1.08;
     letter-spacing: -0.03em; color: var(--sf-text-primary); margin-bottom: 32px; flex-shrink: 0;
@@ -38,22 +40,29 @@
   .code-header {
     display: flex; align-items: center; gap: 8px;
     padding: 14px 20px;
-    border-bottom: 1px solid var(--sf-hairline);
-    background: rgba(0,0,0,0.12);
+    border-bottom: 1px solid color-mix(in srgb, var(--sf-accent) 22%, var(--sf-hairline));
+    background: color-mix(in srgb, var(--sf-accent) 10%, transparent);
   }
   .dot { width: 12px; height: 12px; border-radius: 50%; }
-  .dot-r { background: #ff5f57; }
-  .dot-y { background: #febc2e; }
-  .dot-g { background: #28c840; }
+  .dot-r { background: color-mix(in srgb, var(--sf-accent) 55%, var(--sf-text-muted)); }
+  .dot-y { background: color-mix(in srgb, var(--sf-accent) 35%, var(--sf-text-muted)); opacity: 0.85; }
+  .dot-g { background: var(--sf-accent); opacity: 0.75; }
   .code-lang {
-    margin-left: auto; font-size: 12px; color: var(--sf-accent);
+    margin-left: auto; font-size: 12px; font-weight: 600;
+    color: var(--sf-accent);
     font-family: 'JetBrains Mono', monospace; letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
+  .code-lang:empty { display: none; }
   .code-body {
     flex: 1; padding: 28px 32px; overflow: hidden;
     font-family: 'JetBrains Mono', 'Courier New', monospace;
     font-size: 20px; line-height: 1.65; color: var(--sf-text-secondary);
     white-space: pre;
+  }
+  .code-body::first-line {
+    color: var(--sf-text-primary);
+    font-weight: 600;
   }
   .hairline {
     position: absolute; bottom: 80px; left: 120px; right: 120px;

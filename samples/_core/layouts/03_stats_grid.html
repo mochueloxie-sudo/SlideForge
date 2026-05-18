@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=1920, height=1080">
 <title>{{TITLE}}</title>
 <style>
+  /* _core · stats_grid · wave6 */
   @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { width: 1920px; height: 1080px; overflow: hidden; }
@@ -40,7 +41,7 @@
     background: var(--sf-stats-card-bg);
     border: var(--sf-stats-card-border);
     border-top: var(--sf-stats-card-border-top);
-    border-radius: 22px;
+    border-radius: var(--sf-panel-radius, 22px);
     box-shadow: var(--sf-stats-card-shadow);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -49,8 +50,9 @@
     flex-direction: column;
     gap: 10px;
   }
-  .stat-number {
-    font-size: 88px; font-weight: 700; line-height: 1;
+  .stat-card .stat-number {
+    font-size: var(--sf-stat-number-size, clamp(72px, 8vw, 120px));
+    font-weight: 700; line-height: 1;
     letter-spacing: -0.04em; color: var(--sf-accent);
     text-shadow: var(--sf-stats-number-shadow);
   }
@@ -73,12 +75,19 @@
     font-size: 13px; color: var(--sf-page-num);
   }
 
+  body.layout-row .stats-row {
+    display: flex;
+    gap: 24px;
+    align-items: stretch;
+  }
   body.layout-hero-1 .stats-row { gap: 24px; align-items: stretch; }
   body.layout-hero-1 .stat-card:first-child {
     flex: 1.65;
     border-color: var(--sf-stats-hero-border);
     box-shadow: var(--sf-stats-hero-shadow);
   }
+  body.layout-hero-1 .stat-card:not(:first-child) { opacity: 0.92; }
+  body.layout-hero-1 .stat-card:not(:first-child) .stat-label { font-size: 20px; }
   body.layout-hero-1 .stat-card:first-child .stat-number {
     font-size: clamp(120px, 10vw, 168px);
   }

@@ -3,90 +3,90 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=1920, height=1080">
-<title>Neon Cyber — Sample</title>
+<title>{{TITLE}}</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap');
+  /* wave7 — chart demo DOM polish (--sf-* only) */
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { width: 1920px; height: 1080px; overflow: hidden; }
-
   body {
     width: 1920px; height: 1080px;
     background: var(--sf-page-bg-panel, var(--sf-body-gradient, var(--sf-body-bg)));
     font-family: var(--sf-font);
-    color: TOKEN;
+    color: var(--sf-text-primary);
     padding: 80px 120px;
     position: relative;
     display: flex; flex-direction: column;
   }
   .title {
-    font-size: 58px; font-weight: 700; line-height: 1.08;
-    letter-spacing: -0.03em; color: TOKEN; margin-bottom: 12px;
+    font-size: var(--sf-title-size, 52px); font-weight: 700; line-height: 1.08;
+    letter-spacing: -0.03em; margin-bottom: 12px;
   }
-  .subtitle { font-size: 18px; color: TOKEN; margin-bottom: 32px; }
+  .subtitle { font-size: 18px; color: var(--sf-subtitle-lede, var(--sf-text-secondary)); margin-bottom: 32px; }
+  .subtitle:empty { display: none; }
   .chart-area {
-    display: flex;
-    align-items: flex-end;
-    gap: 40px;
-    flex: 1; min-height: 260px;
-    padding-bottom: 40px;
-    border-bottom: 1px solid TOKEN;
+    display: flex; align-items: flex-end; gap: 40px;
+    flex: 1; min-height: 260px; padding: 28px 32px 40px;
     max-width: 1100px;
+    background: var(--sf-panel-bg);
+    border: var(--sf-panel-border);
+    border-top: var(--sf-panel-border-top);
+    border-bottom: var(--sf-panel-border-bottom);
+    border-radius: var(--sf-panel-radius, 18px);
+    box-shadow: var(--sf-panel-shadow);
   }
-  .bar-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    flex: 1;
-  }
+  .bar-group { display: flex; flex-direction: column; align-items: center; gap: 12px; flex: 1; }
   .bar-wrap { display: flex; align-items: flex-end; gap: 8px; height: 280px; }
-  .bar {
-    width: 52px;
-    border-radius: 6px 6px 0 0;
-    position: relative;
-    transition: height 0.3s;
+  .bar { width: 52px; border-radius: 6px 6px 0 0; position: relative; }
+  .bar-blue {
+    background: linear-gradient(180deg, var(--sf-accent-light, var(--sf-accent)) 0%, var(--sf-accent-secondary, var(--sf-accent)) 100%);
   }
-  .bar-blue { background: linear-gradient(180deg, TOKEN 0%, #4361ee 100%); }
-  .bar-purple { background: linear-gradient(180deg, #c4b5fd 0%, #7c3aed 100%); }
+  .bar-purple {
+    background: linear-gradient(180deg, color-mix(in srgb, var(--sf-accent) 60%, #fff) 0%, var(--sf-accent-secondary, var(--sf-accent)) 100%);
+  }
   .bar-val {
-    position: absolute;
-    top: -28px; left: 50%; transform: translateX(-50%);
-    font-size: 14px; font-weight: 700; color: TOKEN;
-    white-space: nowrap;
+    position: absolute; top: -28px; left: 50%; transform: translateX(-50%);
+    font-size: 14px; font-weight: 700; color: var(--sf-accent); white-space: nowrap;
   }
-  .bar-label { font-size: 14px; color: TOKEN; text-align: center; margin-top: 8px; }
-  /* Stats row */
-  .stats-row {
-    display: flex; gap: 48px; margin-top: 48px;
-  }
-  .stat-item {}
-  .stat-val { font-size: 48px; font-weight: 700; color: TOKEN; line-height: 1; }
-  .stat-label { font-size: 15px; color: TOKEN; margin-top: 6px; }
-  /* Legend */
+  .bar-label { font-size: 14px; color: var(--sf-text-muted); text-align: center; margin-top: 8px; }
+  .stats-row { display: flex; gap: 48px; margin-top: 48px; }
+  .stat-val { font-size: 48px; font-weight: 700; color: var(--sf-accent); line-height: 1; }
+  .stat-label { font-size: 15px; color: var(--sf-text-secondary); margin-top: 6px; }
   .legend { display: flex; gap: 32px; margin-top: 32px; }
-  .legend-item { display: flex; align-items: center; gap: 10px; font-size: 14px; color: TOKEN; }
+  .legend-item {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14px; color: var(--sf-text-secondary);
+  }
+  .legend-item:not(:first-child) { opacity: 0.82; }
+  .legend-item:first-child {
+    color: var(--sf-accent);
+    font-weight: 600;
+  }
+  .legend-item:first-child .legend-dot {
+    box-shadow: 0 0 12px color-mix(in srgb, var(--sf-accent) 40%, transparent);
+  }
   .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
-  .legend-dot-blue { background: linear-gradient(180deg, TOKEN, #4361ee); }
-  .legend-dot-purple { background: linear-gradient(180deg, #8b5cf6, TOKEN); }
-  .page-num { position: absolute; bottom: 56px; right: 120px; font-size: 13px; color: rgba(154,167,189,0.6); }
+  .bar-group:first-child .bar-val { color: var(--sf-accent); font-size: 15px; }
+  .bar-group:not(:first-child) .bar-val { color: var(--sf-text-muted); opacity: 0.9; }
+  .stats-row .stat-item:first-child .stat-val {
+    color: var(--sf-accent);
+    text-shadow: 0 0 32px color-mix(in srgb, var(--sf-accent) 30%, transparent);
+  }
+  .stats-row .stat-item:not(:first-child) .stat-val { color: var(--sf-text-secondary); opacity: 0.88; }
+  .legend-dot-blue { background: linear-gradient(180deg, var(--sf-accent), var(--sf-accent-secondary, var(--sf-accent))); }
+  .legend-dot-purple { background: linear-gradient(180deg, var(--sf-accent-secondary, var(--sf-accent)), var(--sf-text-muted)); }
+  .page-num {
+    position: absolute; bottom: 56px; right: 120px;
+    font-size: 13px; color: var(--sf-page-num, var(--sf-text-muted));
+  }
 </style>
 </head>
 <body>
   <div class="title">{{TITLE}}</div>
   <div class="subtitle">{{SUBTITLE}}</div>
-
-  <div class="chart-area">
-{{CHART_BARS_HTML}}
-  </div>
-
-  <div class="legend">
-{{CHART_LEGEND_HTML}}
-  </div>
-
-  <div class="stats-row">
-{{CHART_STATS_HTML}}
-  </div>
-
+  <div class="chart-area">{{CHART_BARS_HTML}}</div>
+  <div class="legend">{{CHART_LEGEND_HTML}}</div>
+  <div class="stats-row">{{CHART_STATS_HTML}}</div>
   <span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
 </body>
 </html>

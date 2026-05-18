@@ -20,8 +20,22 @@ const HIGH_ENERGY_VARIANTS = new Set([
   'quote_context', 'panel_stat', 'number_bullets', 'funnel', 'architecture_stack'
 ]);
 
+/**
+ * Effective variant for deck rhythm checks (honors content_variant:"auto").
+ * @param {object} scene
+ * @returns {string|null}
+ */
+function effectiveContentVariant(scene) {
+  if (!scene || scene.type !== 'content') return null;
+  if (scene.content_variant === 'auto') {
+    return suggestContentVariant(scene) || 'text';
+  }
+  return scene.content_variant || null;
+}
+
 const QUALITY_HINTS = {
   QUALITY_PANEL_RUN: '连续多页 panel 会像模板堆砌：合并要点、或改用 number / quote / compare / stats_grid / process_flow 制造节奏',
+  QUALITY_VARIANT_RUN: '连续多页同一 content_variant 单调：交替 number / quote / compare / stats / timeline 等高能变体',
   QUALITY_PANEL_RATIO: '过半 content 页都是 panel：为「冲击页」加 visual_weight:"hero" + number/quote，为过渡页加 visual_weight:"breathing" + composition:"title-only"',
   QUALITY_NO_HIGH_ENERGY: 'deck 较长但缺少高能页：至少插入 1 页 number（单指标）、quote（金句）或 compare（对照）',
   QUALITY_TITLE_LONG: '标题过长会挤压版式：拆成 eyebrow + 短 title，或把细节放进 key_points/body',
@@ -32,6 +46,7 @@ const QUALITY_HINTS = {
   QUALITY_NAV_BAR_NO_LEDE: 'nav_bar 须填 subtitle（或 secondary/body[0]）或 key_points；仅有 title 且无 nav_items 时正文区会空。并列概念页请用 card_grid / icon_grid',
   QUALITY_NAV_BAR_LEDE_INFERRED: 'nav_bar 未写 subtitle/key_points；渲染已用 nav_items 生成标题下摘要。建议显式写 subtitle 或 key_points，顶栏 nav_items 保持短标签',
   QUALITY_VARIANT_MISMATCH: 'content_variant 与页面字段不匹配：渲染以你声明的变体为准，不会自动改。请按字段改 content_variant，或删掉错误字段。对照 SCENES_SCHEMA §0.2a',
+  QUALITY_VARIANT_AUTO: 'content_variant 为 auto：渲染将按字段解析为建议变体（见 resolved_content_variant）',
 };
 
 function attachQualityHints(items) {
@@ -81,7 +96,16 @@ function lintQuality(scenesData, ctx = {}) {
 
     if (scene.type === 'content' && scene.content_variant) {
       const suggested = suggestContentVariant(scene);
-      if (suggested && variantsMismatch(scene.content_variant, suggested)) {
+      if (scene.content_variant === 'auto') {
+        if (suggested) {
+          quality_warnings.push({
+            at: `${at}.content_variant`,
+            code: 'QUALITY_VARIANT_AUTO',
+            msg: `auto resolves to "${suggested}" at render time`,
+            resolved_content_variant: suggested
+          });
+        }
+      } else if (suggested && variantsMismatch(scene.content_variant, suggested)) {
         quality_warnings.push({
           at: `${at}.content_variant`,
           code: 'QUALITY_VARIANT_MISMATCH',
@@ -143,7 +167,7 @@ function lintQuality(scenesData, ctx = {}) {
   let run = 0;
   for (let k = 0; k < contentIndices.length; k++) {
     const scene = scenesData[contentIndices[k]];
-    if (scene.content_variant === 'panel') {
+    if (effectiveContentVariant(scene) === 'panel') {
       run++;
       if (run >= 3) {
         quality_warnings.push({
@@ -158,9 +182,31 @@ function lintQuality(scenesData, ctx = {}) {
     }
   }
 
+  // Consecutive same effective variant >= 3 (any variant)
+  let variantRun = 0;
+  let lastVariant = null;
+  for (let k = 0; k < contentIndices.length; k++) {
+    const scene = scenesData[contentIndices[k]];
+    const v = effectiveContentVariant(scene);
+    if (v && v === lastVariant) {
+      variantRun++;
+      if (variantRun >= 3) {
+        quality_warnings.push({
+          at: `[${contentIndices[k]}]`,
+          code: 'QUALITY_VARIANT_RUN',
+          msg: `3+ consecutive "${v}" pages ending here (variant monotony)`
+        });
+        variantRun = 0;
+      }
+    } else {
+      lastVariant = v;
+      variantRun = 1;
+    }
+  }
+
   const contentScenes = contentIndices.map(i => scenesData[i]);
   if (contentScenes.length >= 4) {
-    const panelCount = contentScenes.filter(s => s.content_variant === 'panel').length;
+    const panelCount = contentScenes.filter(s => effectiveContentVariant(s) === 'panel').length;
     if (panelCount / contentScenes.length > 0.7) {
       quality_warnings.push({
         at: '$',
@@ -171,7 +217,7 @@ function lintQuality(scenesData, ctx = {}) {
   }
 
   if (contentScenes.length >= 6) {
-    const hasHigh = contentScenes.some(s => HIGH_ENERGY_VARIANTS.has(s.content_variant));
+    const hasHigh = contentScenes.some(s => HIGH_ENERGY_VARIANTS.has(effectiveContentVariant(s)));
     if (!hasHigh) {
       quality_warnings.push({
         at: '$',
@@ -187,6 +233,7 @@ function lintQuality(scenesData, ctx = {}) {
 
 module.exports = {
   lintQuality,
+  effectiveContentVariant,
   VALID_VISUAL_WEIGHT,
   VALID_COMPOSITION,
   QUALITY_HINTS

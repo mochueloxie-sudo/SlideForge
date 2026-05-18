@@ -6,6 +6,108 @@
 
 ---
 
+## [4.2.10] — 2026-05-18 — 交付后补图（visual slots）+ 输出品质 wave6/7
+
+### 新增
+
+- **`utils/visual_slot_report.js`**：`critique` / `check:golden` 扫描 `split-visual` / `hero_image` / `diagram` / `brand_mark`，产出 `visual_slots_report.json`（仅有缺口时）与 `critique_report.md` 补图表（`gaps_for_user`）。
+- **文档**：`SKILL.md` §主视觉补图；`docs/SCENES_SCHEMA.md` §0.9 两轮协作；`docs/CRITIQUE.md` 产出表。
+
+### 变更（合并 wave6–4.2.9）
+
+- **`_core` wave6** + **`shared` wave7** DOM 抛光；**10 套金标**；13 主题 token 矩阵；`QUALITY_VARIANT_RUN`；`GOLDEN_MAX_CRITIQUE_WARNINGS=0`。
+- **`design`**：`panel` + `hero_image` / `diagram` / `brand_mark` 任一 → 自动 `composition: split-visual`。
+
+---
+
+## [4.2.9] — 2026-05-18 — wave7 shared + 换肤金标 + critique 门槛
+
+### 变更
+
+- **wave7**：`samples/shared/` 14 变体 DOM 抛光（3 Agent 按文件组；首项强调、空状态、compact）。
+- **金标 +3**：`ops_terminal`（terminal-green）、`pastel_product`（pastel-geometry）、`creative_pitch`（creative-voltage）。
+- **引擎**：`process_flow` ≥5 阶段自动 `layout_hint: compact`；`QUALITY_VARIANT_RUN`（连续 3 页同变体，strict 可拦）。
+- **CI**：`check:golden` 默认 `GOLDEN_MAX_CRITIQUE_WARNINGS=0`（可用环境变量放宽）。
+
+---
+
+## [4.2.8] — 2026-05-18 — _core DOM wave6（3 Agent · 8 页抛光）
+
+> **patch**：仅 `samples/_core/layouts/*.html`；13 主题 + 7 金标同步受益。
+
+### 变更
+
+- **深度 8 页 wave6**：封面空状态、呼吸页左条、panel 真图隐藏占位、stats/process/compare 首项层级等（见 `examples/golden/VISUAL_DIFF.md` § wave6）。
+- **docs/PARALLEL_AGENTS.md** 第六波分工与汇合清单。
+
+---
+
+## [4.2.7] — 2026-05-18 — 13 主题 token 全矩阵（3 Agent 并行）
+
+> **patch**：仅 `samples/themes/*/tokens.css`；DOM / scenes 不变。
+
+### 变更
+
+- **13/13 手写精调**：compare 右列 / stats-hero / panel 顶条 / cover 渐变 / 字体栈按主题气质区分（见 `docs/PARALLEL_AGENTS.md` 第五波）。
+- **`samples/_core/TOKENS.md`**：标明 matrix polish v4.2.7 全量覆盖。
+
+---
+
+## [4.2.6] — 2026-05-18 — P0–P3 金标对齐 · token 精修 · strict CI
+
+### 新增
+
+- **`examples/golden/AGENT_DEFAULTS.md`**：auto + 主视觉 + strict 三条约定与金标对照表。
+- **`variant_showcase`**：+ `nav_bar` / `chart` 回归锚点（12 页）。
+- **`check:golden`**：追加全套金标 **strict validate** 关。
+
+### 变更
+
+- **7 套金标 scenes**：多页改 `content_variant:"auto"`；`business_swiss` + split-visual 主视觉页。
+- **P1 token**：`electric-studio`（stats/compare/panel 顶条）、`dark-botanical`（Cormorant、quote/number 光晕）。
+- **VISUAL_DIFF**：`business_swiss` 样张表全部 ✅（`_core` + swiss token，无主题 HTML 覆盖）。
+
+---
+
+## [4.2.5] — 2026-05-18 — 输出品质三轨：Agent 清单 · 主题精修 · 引擎默认
+
+> **minor**：Agent 文档 + 引擎默认 + 主题 token 精修；`scenes.json` 契约扩展（`validate.strict`）。
+
+### 新增
+
+- **`validate` 严格模式**：`"strict": true` 将 `QUALITY_VARIANT_MISMATCH` / `QUALITY_PANEL_*` / `QUALITY_NO_HIGH_ENERGY` 升为 `errors[]`；`npm run check:strict`。
+- **SCENES_SCHEMA §0.10**：Agent 八项品质清单 + 严格校验说明。
+- **`design_params.page_directions`**：`resolved_content_variant` + `scene_content_variant`（与 `html` 解析一致）。
+
+### 变更
+
+- **`design` 默认 `typography_scale: "adapt"`**（传 `"static"` 恢复旧行为）。
+- **`quality_lint`**：panel 节奏统计对 `content_variant:"auto"` 使用解析后变体。
+- **主题 token 精修**：`notebook-tabs` / `pastel-geometry` / `creative-voltage` / `split-pastel` / `deep-tech-keynote` 字体与对比度；`refs/STYLE_PRESETS` 已链入 §0.10。
+- **SKILL.md**：四步工作流（含主视觉 + strict validate）。
+
+---
+
+## [4.2.4] — 2026-05-18 — Wave4：`auto` 变体 · shared 修复 · 第七金标
+
+> **minor**：`content_variant` 新增合法值 `"auto"`；金标 +1；样张修复。
+
+### 新增
+
+- **`content_variant: "auto"`**：`utils/resolve_content_variant.js`；`html` / `validate` / `design` / `quality_lint` 按字段解析变体；文档 §0.2c + SKILL 示例。
+- **第七金标 `tech_variants`**：`deep-tech-keynote` · compare / process_flow（含 auto 页）/ architecture_stack / funnel / code / chart。
+
+### 修复
+
+- **`samples/shared/14_nav_bar.html` / `15_chart_demo.html`**：去除残留 `TOKEN` 占位与错误标签；统一 `--sf-*` token。
+
+### 变更
+
+- **`refs/STYLE_PRESETS.md`**：SlideForge 13 主题气质 / 避免清单。
+- **`critique_baseline.json`**：补 `variant_showcase`、`tech_variants` 条目。
+
+---
+
 ## [4.2.3] — 2026-05-18 — Wave3：_core 回退 · shared 全量 · 13 主题 token
 
 > **patch**：样张与 token；`scenes.json` 不变。

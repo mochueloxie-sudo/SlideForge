@@ -1,125 +1,127 @@
-/* Q1-A — dark-botanical tokens (same keys as neon; values = warm botanical) */
+/* Q1-A — dark-botanical tokens (matrix polish v4.2.7 · humanities warm gold botanical) */
+/* Contract: samples/_core/TOKENS.md */
 :root {
-  --sf-font: 'Space Grotesk', 'PingFang SC', sans-serif;
-  --sf-body-bg: #191916;
-  --sf-body-gradient: linear-gradient(180deg, #191916 0%, #1e1c17 55%, #141310 100%);
+  --sf-font: 'Cormorant Garamond', 'IBM Plex Sans', 'PingFang SC', serif;
+  --sf-body-bg: #161412;
+  --sf-body-gradient: linear-gradient(180deg, #161412 0%, #1c1a16 52%, #12100e 100%);
   --sf-text-primary: #f5f0e8;
-  --sf-text-secondary: #a8a090;
+  --sf-text-secondary: #b0a898;
   --sf-text-muted: #787068;
+  --sf-text-subtitle: #d4ccc0;
   --sf-accent: #e8c9a0;
   --sf-accent-secondary: #d4a574;
-  --sf-accent-light: #e8c9a0;
+  --sf-accent-light: #f0d8b0;
   --sf-eyebrow: #e8c9a0;
-  --sf-eyebrow-ring: 1px solid rgba(232, 201, 160, 0.35);
-  --sf-subtitle-lede: #e0d8cc;
-  --sf-text-subtitle: #d0c8bc;
-  --sf-page-num: rgba(180, 170, 150, 0.5);
+  --sf-eyebrow-ring: 1px solid rgba(232, 201, 160, 0.38);
+  --sf-subtitle-lede: #e4dcd0;
+  --sf-page-num: rgba(180, 168, 148, 0.52);
 
-  --sf-panel-bg: rgba(25, 25, 22, 0.82);
-  --sf-panel-border: 1px solid rgba(212, 165, 116, 0.25);
-  --sf-panel-border-top: 1px solid rgba(232, 201, 160, 0.14);
-  --sf-panel-border-bottom: 1px solid rgba(0, 0, 0, 0.35);
-  --sf-panel-shadow: 0 20px 60px rgba(0, 0, 0, 0.45), 0 4px 12px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(232, 180, 168, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --sf-panel-bg: rgba(24, 22, 18, 0.86);
+  --sf-panel-border: 1px solid rgba(212, 165, 116, 0.28);
+  --sf-panel-border-bottom: 1px solid rgba(0, 0, 0, 0.38);
+  --sf-panel-shadow: 0 22px 64px rgba(0, 0, 0, 0.48), 0 4px 14px rgba(0, 0, 0, 0.36),
+    inset 0 1px 0 rgba(240, 200, 160, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.06);
   --sf-panel-radius: 20px;
 
-  --sf-hairline: rgba(212, 165, 116, 0.35);
-  --sf-hairline-gradient: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.45), rgba(232, 201, 160, 0.32), transparent);
+  --sf-hairline: rgba(212, 165, 116, 0.38);
+  --sf-hairline-gradient: linear-gradient(90deg, transparent, rgba(200, 150, 96, 0.48), rgba(240, 212, 168, 0.36), transparent);
 
   --sf-cover-bg:
-    radial-gradient(ellipse at 60% 45%, rgba(180, 130, 80, 0.2) 0%, transparent 52%),
-    radial-gradient(circle at 12% 88%, rgba(232, 201, 160, 0.1) 0%, transparent 38%),
-    radial-gradient(circle at 22% 12%, rgba(232, 201, 160, 0.08) 0%, transparent 32%),
-    linear-gradient(165deg, #161512 0%, #1e1c18 48%, #12100c 100%);
-  --sf-corner-accent: radial-gradient(circle at 100% 0%, rgba(180, 130, 80, 0.2) 0%, transparent 65%);
-  --sf-bottom-line-gradient: linear-gradient(90deg, transparent 0%, #d4a574 30%, #e8c9a0 60%, transparent 100%);
-  --sf-accent-bar-gradient: linear-gradient(90deg, #d4a574, #e8c9a0);
-  --sf-cover-title-glow: rgba(180, 130, 80, 0.16);
+    radial-gradient(ellipse at 60% 45%, rgba(180, 130, 80, 0.22) 0%, transparent 52%),
+    radial-gradient(circle at 12% 88%, rgba(240, 212, 168, 0.11) 0%, transparent 38%),
+    radial-gradient(circle at 22% 12%, rgba(232, 201, 160, 0.09) 0%, transparent 32%),
+    linear-gradient(165deg, #141210 0%, #1e1c18 48%, #100e0c 100%);
+  --sf-corner-accent: radial-gradient(circle at 100% 0%, rgba(180, 130, 80, 0.22) 0%, transparent 65%);
+  --sf-bottom-line-gradient: linear-gradient(90deg, transparent 0%, #c89860 28%, #f0d8b0 58%, transparent 100%);
+  --sf-accent-bar-gradient: linear-gradient(90deg, #d4a574, #f0d8b0);
+  --sf-cover-title-glow: rgba(200, 150, 96, 0.18);
 
   --sf-page-bg-text:
-    radial-gradient(circle at 22% 18%, rgba(232, 201, 160, 0.08) 0%, transparent 30%),
-    radial-gradient(circle at 78% 82%, rgba(180, 130, 80, 0.08) 0%, transparent 36%),
+    radial-gradient(circle at 22% 18%, rgba(240, 212, 168, 0.09) 0%, transparent 30%),
+    radial-gradient(circle at 78% 82%, rgba(180, 130, 80, 0.09) 0%, transparent 36%),
     var(--sf-body-gradient);
   --sf-page-bg-panel:
-    radial-gradient(circle at 20% 15%, rgba(232, 201, 160, 0.08) 0%, rgba(25, 25, 22, 0) 28%),
+    radial-gradient(circle at 20% 15%, rgba(240, 212, 168, 0.09) 0%, transparent 28%),
     var(--sf-body-gradient);
   --sf-page-bg-number:
-    radial-gradient(circle at 18% 20%, rgba(232, 201, 160, 0.12) 0%, transparent 32%),
-    radial-gradient(circle at 82% 70%, rgba(180, 130, 80, 0.1) 0%, transparent 38%),
-    linear-gradient(165deg, #161512 0%, #1c1a16 48%, #12100c 100%);
+    radial-gradient(circle at 18% 20%, rgba(240, 212, 168, 0.14) 0%, transparent 32%),
+    radial-gradient(circle at 82% 70%, rgba(200, 150, 96, 0.12) 0%, transparent 38%),
+    linear-gradient(165deg, #141210 0%, #1c1a16 48%, #100e0c 100%);
   --sf-page-bg-stats:
-    radial-gradient(circle at 20% 15%, rgba(232, 201, 160, 0.08) 0%, transparent 30%),
+    radial-gradient(circle at 20% 15%, rgba(240, 212, 168, 0.1) 0%, transparent 30%),
     var(--sf-body-gradient);
   --sf-page-bg-compare:
-    radial-gradient(circle at 12% 18%, rgba(180, 130, 80, 0.1) 0%, transparent 34%),
-    radial-gradient(circle at 88% 80%, rgba(232, 201, 160, 0.06) 0%, transparent 36%),
+    radial-gradient(circle at 12% 18%, rgba(200, 150, 96, 0.11) 0%, transparent 34%),
+    radial-gradient(circle at 88% 80%, rgba(240, 212, 168, 0.08) 0%, transparent 36%),
     var(--sf-body-gradient);
   --sf-page-bg-process:
-    radial-gradient(circle at 15% 20%, rgba(232, 201, 160, 0.08) 0%, transparent 32%),
+    radial-gradient(circle at 15% 20%, rgba(240, 212, 168, 0.09) 0%, transparent 32%),
     var(--sf-body-gradient);
   --sf-page-bg-quote:
-    radial-gradient(circle at 20% 15%, rgba(232, 201, 160, 0.08) 0%, rgba(0, 0, 0, 0) 28%),
+    radial-gradient(circle at 24% 18%, rgba(240, 212, 168, 0.12) 0%, transparent 32%),
+    radial-gradient(circle at 76% 78%, rgba(200, 150, 96, 0.08) 0%, transparent 34%),
     var(--sf-body-gradient);
 
-  --sf-kp-text: #c8c0b4;
-  --sf-kp-divider: rgba(180, 130, 80, 0.18);
-  --sf-kp-arrow-glow: 0 0 12px rgba(232, 201, 160, 0.55);
+  --sf-kp-text: #ccc4b8;
+  --sf-kp-divider: rgba(200, 150, 96, 0.2);
+  --sf-kp-arrow-glow: 0 0 12px rgba(240, 212, 168, 0.62);
   --sf-card-muted-border: rgba(255, 255, 255, 0.08);
   --sf-card-muted-bg: rgba(255, 255, 255, 0.03);
 
-  --sf-visual-slot-border: 1px solid rgba(232, 201, 160, 0.25);
+  --sf-visual-slot-border: 1px solid rgba(240, 212, 168, 0.28);
   --sf-visual-slot-bg:
-    radial-gradient(circle at 30% 25%, rgba(232, 201, 160, 0.1) 0%, transparent 45%),
-    radial-gradient(circle at 70% 75%, rgba(180, 130, 80, 0.12) 0%, transparent 50%),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.22));
-  --sf-visual-slot-shadow: 0 32px 80px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(232, 201, 160, 0.1);
-  --sf-visual-slot-grid-line-a: rgba(232, 201, 160, 0.04);
-  --sf-visual-slot-grid-line-b: rgba(180, 130, 80, 0.05);
-  --sf-visual-slot-bar: linear-gradient(135deg, rgba(232, 201, 160, 0.12), rgba(180, 130, 80, 0.16));
-  --sf-visual-slot-bar-shadow: 0 24px 48px rgba(0, 0, 0, 0.38);
-  --sf-visual-slot-frame-border: 1px solid rgba(232, 201, 160, 0.12);
-  --sf-visual-slot-label: rgba(232, 201, 160, 0.78);
+    radial-gradient(circle at 30% 25%, rgba(240, 212, 168, 0.11) 0%, transparent 45%),
+    radial-gradient(circle at 70% 75%, rgba(200, 150, 96, 0.13) 0%, transparent 50%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.24));
+  --sf-visual-slot-shadow: 0 32px 80px rgba(0, 0, 0, 0.46), inset 0 1px 0 rgba(240, 212, 168, 0.12);
+  --sf-visual-slot-grid-line-a: rgba(240, 212, 168, 0.05);
+  --sf-visual-slot-grid-line-b: rgba(200, 150, 96, 0.06);
+  --sf-visual-slot-bar: linear-gradient(135deg, rgba(240, 212, 168, 0.14), rgba(200, 150, 96, 0.18));
+  --sf-visual-slot-bar-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+  --sf-visual-slot-frame-border: 1px solid rgba(240, 212, 168, 0.14);
+  --sf-visual-slot-label: rgba(240, 212, 168, 0.82);
 
-  --sf-cta-pill-border: 1px solid rgba(232, 201, 160, 0.38);
-  --sf-cta-pill-bg: rgba(232, 201, 160, 0.08);
+  --sf-cta-pill-border: 1px solid rgba(240, 212, 168, 0.4);
+  --sf-cta-pill-bg: rgba(240, 212, 168, 0.09);
 
-  --sf-compare-col-bg: rgba(28, 26, 22, 0.88);
-  --sf-compare-col-border: 1px solid rgba(180, 130, 80, 0.22);
-  --sf-compare-col-border-top: 1px solid rgba(232, 201, 160, 0.1);
-  --sf-compare-col-shadow: 0 24px 64px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  --sf-compare-col-right-border: rgba(232, 201, 160, 0.32);
-  --sf-compare-col-right-shadow: 0 28px 72px rgba(232, 201, 160, 0.1), 0 24px 64px rgba(0, 0, 0, 0.45),
-    inset 0 0 0 1px rgba(232, 201, 160, 0.08);
-  --sf-compare-center-line: linear-gradient(180deg, transparent, rgba(180, 130, 80, 0.5) 20%, rgba(232, 201, 160, 0.72) 50%, rgba(180, 130, 80, 0.5) 80%, transparent);
-  --sf-compare-center-glow: 0 0 28px rgba(232, 201, 160, 0.28);
-  --sf-compare-title-border: rgba(180, 130, 80, 0.35);
-  --sf-compare-list-text: #dcd4c8;
-  --sf-compare-dot-right-glow: 0 0 12px rgba(232, 201, 160, 0.55);
-  --sf-compare-vs-border: 2px solid rgba(232, 201, 160, 0.35);
-  --sf-compare-vs-bg: rgba(232, 201, 160, 0.07);
-  --sf-compare-vs-shadow: 0 0 40px rgba(232, 201, 160, 0.12);
+  --sf-compare-col-bg: rgba(26, 24, 20, 0.9);
+  --sf-compare-col-border: 1px solid rgba(200, 150, 96, 0.24);
+  --sf-compare-col-border-top: 1px solid rgba(240, 212, 168, 0.12);
+  --sf-compare-col-shadow: 0 24px 64px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --sf-compare-col-right-border: rgba(240, 212, 168, 0.36);
+  --sf-compare-col-right-shadow: 0 28px 72px rgba(240, 212, 168, 0.12), 0 24px 64px rgba(0, 0, 0, 0.46),
+    inset 0 0 0 1px rgba(240, 212, 168, 0.1);
+  --sf-compare-center-line: linear-gradient(180deg, transparent, rgba(200, 150, 96, 0.52) 20%, rgba(240, 212, 168, 0.75) 50%, rgba(200, 150, 96, 0.52) 80%, transparent);
+  --sf-compare-center-glow: 0 0 28px rgba(240, 212, 168, 0.26);
+  --sf-compare-title-border: rgba(200, 150, 96, 0.38);
+  --sf-compare-list-text: #e0d8cc;
+  --sf-compare-dot-right-glow: 0 0 12px rgba(240, 212, 168, 0.62);
+  --sf-compare-vs-border: 2px solid rgba(240, 212, 168, 0.38);
+  --sf-compare-vs-bg: rgba(240, 212, 168, 0.08);
+  --sf-compare-vs-shadow: 0 0 40px rgba(240, 212, 168, 0.1);
 
-  --sf-process-rail-line: linear-gradient(90deg, transparent, rgba(180, 130, 80, 0.5), rgba(232, 201, 160, 0.58), transparent);
+  --sf-process-rail-line: linear-gradient(90deg, transparent, rgba(200, 150, 96, 0.52), rgba(240, 212, 168, 0.6), transparent);
   --sf-process-node-bg: #e8c9a0;
-  --sf-process-node-shadow: 0 0 20px rgba(232, 201, 160, 0.55), 0 0 40px rgba(232, 201, 160, 0.18);
-  --sf-process-card-bg: rgba(28, 26, 22, 0.9);
-  --sf-process-card-border: 1px solid rgba(180, 130, 80, 0.22);
-  --sf-process-card-border-top: 1px solid rgba(232, 201, 160, 0.12);
-  --sf-process-card-shadow: 0 20px 56px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --sf-process-node-shadow: 0 0 20px rgba(240, 212, 168, 0.58), 0 0 40px rgba(232, 201, 160, 0.18);
+  --sf-process-card-bg: rgba(26, 24, 20, 0.92);
+  --sf-process-card-border: 1px solid rgba(200, 150, 96, 0.24);
+  --sf-process-card-border-top: 1px solid rgba(240, 212, 168, 0.12);
+  --sf-process-card-shadow: 0 20px 56px rgba(0, 0, 0, 0.44), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 
-  --sf-stats-card-bg: rgba(28, 26, 22, 0.8);
-  --sf-stats-card-border: 1px solid rgba(180, 130, 80, 0.2);
-  --sf-stats-card-border-top: 1px solid rgba(232, 201, 160, 0.1);
-  --sf-stats-card-shadow: 0 20px 56px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  --sf-stats-number-shadow: 0 0 48px rgba(232, 201, 160, 0.2);
-  --sf-stats-label: #e0d8cc;
+  --sf-stats-card-bg: rgba(26, 24, 20, 0.82);
+  --sf-stats-card-border: 1px solid rgba(200, 150, 96, 0.22);
+  --sf-stats-card-border-top: 1px solid rgba(240, 212, 168, 0.12);
+  --sf-stats-card-shadow: 0 20px 56px rgba(0, 0, 0, 0.44), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --sf-stats-number-shadow: 0 0 52px rgba(240, 212, 168, 0.24);
+  --sf-stats-label: #e4dcd0;
   --sf-stats-desc: #8a8078;
-  --sf-stats-hero-border: rgba(232, 201, 160, 0.3);
-  --sf-stats-hero-shadow: 0 28px 80px rgba(232, 201, 160, 0.1), 0 20px 56px rgba(0, 0, 0, 0.45);
+  --sf-stats-hero-border: rgba(240, 212, 168, 0.42);
+  --sf-stats-hero-shadow: 0 32px 88px rgba(240, 212, 168, 0.18), 0 20px 56px rgba(0, 0, 0, 0.46);
+  --sf-panel-border-top: 3px solid #c89860;
 
-  --sf-quote-mark: rgba(180, 130, 80, 0.28);
-  --sf-number-glow: radial-gradient(circle, rgba(232, 201, 160, 0.22) 0%, transparent 68%);
-  --sf-number-glow-hero: radial-gradient(circle, rgba(232, 201, 160, 0.32) 0%, transparent 65%);
-  --sf-number-text-shadow: 0 0 100px rgba(232, 201, 160, 0.22), 0 0 24px rgba(232, 201, 160, 0.14);
-  --sf-stat-border-left: 3px solid rgba(180, 130, 80, 0.55);
+  --sf-quote-mark: rgba(240, 212, 168, 0.5);
+  --sf-number-glow: radial-gradient(circle, rgba(232, 190, 140, 0.32) 0%, rgba(200, 150, 96, 0.12) 42%, transparent 68%);
+  --sf-number-glow-hero: radial-gradient(circle, rgba(248, 220, 176, 0.48) 0%, rgba(212, 165, 116, 0.16) 45%, transparent 62%);
+  --sf-number-text-shadow: 0 0 100px rgba(240, 212, 168, 0.28), 0 0 28px rgba(212, 165, 116, 0.18);
+  --sf-stat-border-left: 3px solid rgba(200, 150, 96, 0.58);
 }

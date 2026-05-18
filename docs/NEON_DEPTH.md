@@ -23,8 +23,8 @@
 | `20_compare.html` | ✅ | **`_core/layouts/20_compare.html`** |
 | `21_process_flow.html` | ✅ | **`_core/layouts/21_process_flow.html`** |
 | `03_stats_grid.html` | ✅ | **`_core/layouts/03_stats_grid.html`** · hero-1 首卡 |
-| `02_panel.html` | ✅ | **`samples/_core/layouts/02_panel.html`** |
-| `05_quote.html` | ✅ | **`_core/layouts/05_quote.html`** |
+| `02_panel.html` | ✅ | **`_core/layouts/02_panel.html`** · wave6 split `:has(img)` / 首条 kp 强调 |
+| `05_quote.html` | ✅ | **`_core/layouts/05_quote.html`** · wave6 left-bar accent / hero quote |
 
 ## 管道（深度相关）
 

@@ -14,5 +14,11 @@
   },
   "business_swiss": {
     "allow": []
+  },
+  "variant_showcase": {
+    "allow": []
+  },
+  "tech_variants": {
+    "allow": []
   }
 }

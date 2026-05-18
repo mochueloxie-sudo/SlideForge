@@ -1,0 +1,88 @@
+[
+  {
+    "id": "pp-cover",
+    "type": "cover",
+    "eyebrow": "WELLNESS APP",
+    "title": "Lumen 呼吸",
+    "secondary": "pastel-geometry · 轻产品金标",
+    "visual_weight": "hero"
+  },
+  {
+    "id": "pp-number",
+    "type": "content",
+    "content_variant": "number",
+    "visual_weight": "hero",
+    "composition": "stat-hero",
+    "eyebrow": "留存",
+    "title": "30 日回访",
+    "big_number": "68%",
+    "body": "完成 7 日引导的用户；周活跃 +24%"
+  },
+  {
+    "id": "pp-icons",
+    "type": "content",
+    "content_variant": "icon_grid",
+    "title": "核心场景",
+    "icons": [
+      { "emoji": "🌬️", "label": "引导呼吸", "desc": "90 秒入门，降低放弃率" },
+      { "emoji": "📊", "label": "情绪日记", "desc": "趋势与触发因素可视化" },
+      { "emoji": "🔔", "label": "温柔提醒", "desc": "基于作息，不打扰深度工作" }
+    ]
+  },
+  {
+    "id": "pp-cards",
+    "type": "content",
+    "content_variant": "card_grid",
+    "layout_hint": "2x2",
+    "title": "本季实验",
+    "cards": [
+      { "title": "语音引导", "body": "通勤场景完课率 +19%" },
+      { "title": "伙伴共读", "body": "邀请链路 K 因子 0.31" },
+      { "title": "主题包", "body": "付费转化 +8pt" },
+      { "title": "无障碍", "body": "动态字体与对比度 AA" }
+    ]
+  },
+  {
+    "id": "pp-two-col",
+    "type": "content",
+    "content_variant": "two_col",
+    "title": "设计原则",
+    "left_body": "我们避免「打卡焦虑」：没有连续中断惩罚，只有温和的回归欢迎。",
+    "key_points": [
+      "默认短会话（≤5 分钟）",
+      "数据导出与删除一键可达",
+      "品牌色来自用户自选主题"
+    ]
+  },
+  {
+    "id": "pp-quote",
+    "type": "content",
+    "content_variant": "quote",
+    "visual_weight": "breathing",
+    "title": "用户声音",
+    "quote_body": "最好的心理健康产品，是让人愿意明天再来。",
+    "quote_source": "用户访谈 · N=42"
+  },
+  {
+    "id": "pp-breath",
+    "type": "content",
+    "content_variant": "text",
+    "visual_weight": "breathing",
+    "composition": "title-only",
+    "eyebrow": "北极星",
+    "title": "每周一次「真正放松」",
+    "body": "不是更多通知，而是更少内疚"
+  },
+  {
+    "id": "pp-close",
+    "type": "summary",
+    "visual_weight": "breathing",
+    "layout_hint": "cards",
+    "title": "下一步",
+    "key_points": [
+      "6 月公测邀请 5k",
+      "上架 App Store 健康分类",
+      "lumen.app/waitlist"
+    ]
+  }
+]

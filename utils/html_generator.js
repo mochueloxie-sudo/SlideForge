@@ -1666,46 +1666,13 @@ function generateHtml(scenes, designMode, outputDir, designParamsOrDirections) {
   for (let i = 0; i < scenes.length; i++) {
     const rawScene = scenes[i];
     const dir = pageDirs.find(d => d.id === rawScene.id) || {};
-    // Infer content_variant from scene data if not explicitly set
-    function inferVariant(s) {
-      if (s.content_variant) return s.content_variant;
-      if (dir.content_variant) return dir.content_variant;
-      if (Array.isArray(s.compare_left_points) && s.compare_left_points.length &&
-          Array.isArray(s.compare_right_points) && s.compare_right_points.length) return 'compare';
-      if (Array.isArray(s.process_stages) && s.process_stages.length >= 2) return 'process_flow';
-      if (Array.isArray(s.flow_lanes) && s.flow_lanes.length >= 1) return 'process_flow';
-      if (Array.isArray(s.layers) && s.layers.length >= 2) return 'architecture_stack';
-      if (Array.isArray(s.funnel_stages) && s.funnel_stages.length >= 2) return 'funnel';
-      if (Array.isArray(s.chart_data)  && s.chart_data.length)  return 'chart';
-      if (Array.isArray(s.stats)       && s.stats.length)       return 'stats_grid';
-      if (Array.isArray(s.steps)       && s.steps.length)       return 'timeline';
-      if (s.left_body != null)                                   return 'two_col';
-      if (Array.isArray(s.cards)       && s.cards.length)       return 'card_grid';
-      if (Array.isArray(s.icons)       && s.icons.length)       return 'icon_grid';
-      if (Array.isArray(s.nav_items)   && s.nav_items.length)   return 'nav_bar';
-      // hybrid variants: detect by unique field combinations first
-      if (s.stat_value != null && Array.isArray(s.key_points) && s.key_points.length && s.icons == null) return 'panel_stat';
-      if (s.stat_value != null && Array.isArray(s.key_points) && s.key_points.length && s.big_number == null) return 'number_bullets';
-      if (s.quote_body != null && s.context_body != null)        return 'quote_context';
-      if (s.body      != null && Array.isArray(s.icons) && s.icons.length && s.icons.length <= 4) return 'text_icons';
-      // standard variants
-      if (Array.isArray(s.chart_data)  && s.chart_data.length)  return 'chart';
-      if (Array.isArray(s.stats)       && s.stats.length)       return 'stats_grid';
-      if (Array.isArray(s.icons)       && s.icons.length)       return 'icon_grid';
-      if (Array.isArray(s.nav_items)   && s.nav_items.length)   return 'nav_bar';
-      if (s.table_headers != null)                               return 'table';
-      if (s.code_snippet  != null)                               return 'code';
-      if (s.quote_body    != null)                               return 'quote';
-      if (s.big_number    != null)                               return 'number';
-      if (Array.isArray(s.key_points)  && s.key_points.length)  return 'panel';
-      return 'text';
-    }
+    const { resolveContentVariant } = require('./resolve_content_variant');
     // layout_hint: scene (LLM) wins over dir (step2), dir wins over undefined
     const layoutHint = rawScene.layout_hint || dir.layout_hint || null;
     const art = resolveArtDirection(rawScene, dir);
     const scene = {
       ...rawScene,
-      content_variant: inferVariant(rawScene),
+      content_variant: resolveContentVariant(rawScene, dir),
       layout_hint: layoutHint,
       visual_weight: art.visual_weight,
       composition: art.composition,

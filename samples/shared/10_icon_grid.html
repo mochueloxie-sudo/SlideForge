@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=1920, height=1080">
 <title>Icon Grid</title>
 <style>
+  /* wave7 — icon grid DOM polish (--sf-* only) */
   @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Manrope:wght@400;500;800&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { width: 1920px; height: 1080px; overflow: hidden; }
@@ -24,6 +25,7 @@
     color: var(--sf-eyebrow); text-transform: uppercase; margin-bottom: 20px;
     flex-shrink: 0;
   }
+  .eyebrow:empty { display: none; }
   .title {
     font-size: var(--sf-title-size, 58px); font-weight: 800; line-height: 1.05;
     letter-spacing: -0.03em; color: var(--sf-text-primary);
@@ -82,8 +84,10 @@
   .grid > .icon-card:first-child .icon-label {
     font-size: calc({{ICON_LABEL_SIZE}}px + 2px);
     font-weight: 700;
-    color: var(--sf-text-primary);
+    color: var(--sf-accent);
   }
+  .grid > .icon-card:not(:first-child) { opacity: 0.9; }
+  .grid > .icon-card:not(:first-child)::after { opacity: 0.18; }
   .icon-emoji { font-size: {{ICON_EMOJI_SIZE}}px; line-height: 1; }
   .icon-label {
     font-size: {{ICON_LABEL_SIZE}}px; font-weight: 600;
@@ -105,6 +109,18 @@
     position: absolute; bottom: 56px; right: 120px;
     font-size: 13px; color: var(--sf-page-num);
   }
+
+  body.layout-compact .grid { gap: 14px; }
+  body.layout-compact .icon-card {
+    padding: 24px 18px 22px;
+    min-height: calc({{ICON_CARD_MIN_HEIGHT}}px - 24px);
+  }
+  body.layout-compact .grid > .icon-card:first-child {
+    padding: 32px 22px 28px;
+    min-height: calc({{ICON_CARD_MIN_HEIGHT}}px + 4px);
+  }
+  body.layout-compact .icon-label { font-size: calc({{ICON_LABEL_SIZE}}px - 1px); }
+  body.layout-compact .icon-desc { font-size: 15px; }
 
   @media (hover: hover) and (pointer: fine) {
     .grid .icon-card {

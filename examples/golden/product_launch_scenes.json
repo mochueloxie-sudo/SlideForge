@@ -50,7 +50,7 @@
   {
     "id": "pl-flow",
     "type": "content",
-    "content_variant": "process_flow",
+    "content_variant": "auto",
     "title": "一条链跑通",
     "process_stages": [
       { "label": "对齐", "desc": "需求、验收、依赖在同一视图冻结" },
@@ -61,7 +61,7 @@
   {
     "id": "pl-stats",
     "type": "content",
-    "content_variant": "stats_grid",
+    "content_variant": "auto",
     "composition": "stat-hero",
     "title": "早期客户",
     "stats": [

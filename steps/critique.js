@@ -9,6 +9,7 @@ const fs = require('fs');
 const path = require('path');
 const { writeResult } = require('./utils/step-utils');
 const { runCritique, critiqueReportMarkdown } = require('../utils/critique_static');
+const { buildVisualSlotReport, visualSlotsReportMarkdown } = require('../utils/visual_slot_report');
 
 let input = '';
 process.stdin.on('data', d => (input += d));
@@ -22,21 +23,51 @@ process.stdin.on('end', () => {
     const scenesPath = params.scenes ? path.resolve(params.scenes) : null;
     const outDir = path.resolve(html_dir);
 
+    let scenesMeta = null;
+    if (scenesPath && fs.existsSync(scenesPath)) {
+      try {
+        const parsed = JSON.parse(fs.readFileSync(scenesPath, 'utf8'));
+        scenesMeta = Array.isArray(parsed) ? parsed : parsed.scenes;
+      } catch (_) {
+        scenesMeta = null;
+      }
+    }
+
     const report = runCritique(outDir, { scenesPath });
+    const visualSlots = scenesMeta
+      ? buildVisualSlotReport(scenesMeta, { scenesPath, htmlDir: outDir })
+      : { slots: [], gaps_for_user: [], has_gaps: false };
+
     const jsonPath = path.join(outDir, 'critique.json');
     const mdPath = path.join(outDir, 'critique_report.md');
-    fs.writeFileSync(jsonPath, JSON.stringify(report, null, 2), 'utf8');
-    fs.writeFileSync(mdPath, critiqueReportMarkdown(report), 'utf8');
+    const visualSlotsPath = path.join(outDir, 'visual_slots_report.json');
+    const mdBody = critiqueReportMarkdown(report) + visualSlotsReportMarkdown(visualSlots);
+
+    fs.writeFileSync(jsonPath, JSON.stringify({ ...report, visual_slots: visualSlots }, null, 2), 'utf8');
+    if (visualSlots.has_gaps) {
+      fs.writeFileSync(visualSlotsPath, JSON.stringify(visualSlots, null, 2), 'utf8');
+    } else if (fs.existsSync(visualSlotsPath)) {
+      fs.unlinkSync(visualSlotsPath);
+    }
+    fs.writeFileSync(mdPath, mdBody, 'utf8');
+
+    const outputs = [jsonPath, mdPath];
+    if (visualSlots.has_gaps) outputs.push(visualSlotsPath);
 
     writeResult({
       success: true,
       step: 'critique',
-      outputs: [jsonPath, mdPath],
-      message: `Critique: ${report.summary.errors} errors, ${report.summary.warnings} warnings`,
+      outputs,
+      message: `Critique: ${report.summary.errors} errors, ${report.summary.warnings} warnings`
+        + (visualSlots.has_gaps ? `; ${visualSlots.gaps_for_user.length} visual slot(s) for user` : ''),
       metadata: {
         critique: report,
+        visual_slots: visualSlots,
         critique_json: path.relative(process.cwd(), jsonPath),
-        critique_report: path.relative(process.cwd(), mdPath)
+        critique_report: path.relative(process.cwd(), mdPath),
+        visual_slots_report: visualSlots.has_gaps
+          ? path.relative(process.cwd(), visualSlotsPath)
+          : null
       }
     });
   } catch (err) {

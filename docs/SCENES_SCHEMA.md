@@ -14,7 +14,7 @@
 
 1. **它是一个 JSON 数组**，每个元素是一页幻灯（cover / content / summary）
 2. **首页必须 `type:"cover"`**；末页通常 `type:"summary"`；中间页都是 `type:"content"`
-3. **每个 content 页要选一个 `content_variant`**（决定版式），并填该变体要求的字段
+3. **每个 content 页要声明 `content_variant`**（决定版式）。**推荐**专用字段齐全时写 **`"auto"`**，由引擎解析（§0.2c）；仅当本页**只有** `key_points[]` 时显式写 `"panel"`。
 
 ### 0.2 先字段、后变体（推荐工作流）
 
@@ -22,7 +22,30 @@
 2. **再写与之匹配的 `content_variant`**（「则用」列）
 3. **`validate`** → 若有 `QUALITY_VARIANT_MISMATCH`，按 `suggested_content_variant` 改声明
 
-> **渲染规则**：`html` 以 scenes 里的 `content_variant` 为准；填了 `stats[]` 却写 `panel` 不会自动变成 `stats_grid`。
+> **渲染规则**：`html` 以 scenes 里的 `content_variant` 为准；填了 `stats[]` 却写 `panel` 不会自动变成 `stats_grid`。若写 **`"auto"`**，则按本页字段解析为建议变体（与 `validate` 的 `suggested_content_variant` 同源）。
+
+### 0.2c `content_variant: "auto"`（v4.2.4+）
+
+1. **何时用**：已按 §0.2a 写好专用字段（如 `process_stages[]`、`stats[]`），不想手写变体名；或希望 `validate` / `html` 与字段推断保持一致。
+2. **解析顺序**：`html` / `validate` 调用 `utils/variant_suggest.js` → 得到 **effective** 变体；`design` 的 `page_directions` 在 `auto` 时走与未声明相同的字段链推断。
+3. **必填字段**：`validate` 按 **解析后的** 变体检查（错误信息会写 `resolves to <variant>`）。
+4. **quality_warnings**：`QUALITY_VARIANT_AUTO`（info，含 `resolved_content_variant`）；**不会**再报 `QUALITY_VARIANT_MISMATCH`（因未强行声明冲突变体）。
+5. **示例**（流程页，声明 `auto` 等价于 `process_flow`）：
+
+```json
+{
+  "type": "content",
+  "content_variant": "auto",
+  "title": "变更流水线",
+  "process_stages": [
+    { "label": "Plan", "desc": "变更单与回滚预案同源" },
+    { "label": "Apply", "desc": "多集群编排 + 契约测试" },
+    { "label": "Observe", "desc": "SLO 驱动放量" }
+  ]
+}
+```
+
+金标示例：`examples/golden/tech_variants_scenes.json`（`tv-flow-auto` 页）。全套约定见 [examples/golden/AGENT_DEFAULTS.md](../examples/golden/AGENT_DEFAULTS.md)。
 
 ### 0.2a 字段 → 变体（优先于决策树）
 
@@ -72,6 +95,31 @@
 ```
 
 **要作品感**：在 §0.2a 选对变体后，为关键页加 `visual_weight` / `composition`（§0.7），并避免连续多页 `panel`（见 §0.8）。
+
+### 0.10 Agent 品质清单（写完后自检 · v4.2.5+）
+
+按顺序过一遍，再 `validate` → `render`：
+
+| # | 检查项 | 怎么做 |
+|---|--------|--------|
+| 1 | **主题气质** | 对照 [refs/STYLE_PRESETS.md](../refs/STYLE_PRESETS.md) 13 主题表；或写 `project.json` → `recommended_design_mode` |
+| 2 | **变体** | 有专用字段 → `"content_variant":"auto"` 或显式匹配变体；**禁止** `stats[]` + `panel` |
+| 3 | **节奏** | 7–10 页 deck：≥1 页 `number`/`compare`/`quote`；≤1 段连续 `panel`；≥1 页 `text` + `composition:"title-only"` |
+| 4 | **艺术指导** | 封面 `visual_weight:"hero"`；冲击页 `hero` + `stat-hero`；收尾 `summary` + `breathing` |
+| 5 | **主视觉** | 至少 1 页 `panel` + `composition:"split-visual"` + `hero_image`（相对路径见 §0.9） |
+| 6 | **标题** | content 页 `title` ≤48 字；长说明进 `key_points` / `body` |
+| 7 | **严格校验** | 定稿前：`validate` + `"strict": true`（见下）；`valid:false` 必须改完 |
+| 8 | **金标对照** | 不确定时打开 `examples/golden/*_scenes.json` 同场景抄字段结构 |
+
+**严格模式**（把品质 warning 升为 error，适合定稿前）：
+
+```bash
+echo '{"command":"validate","scenes":"./project/scenes.json","strict":true}' | node executor.js
+```
+
+升格项：`QUALITY_VARIANT_MISMATCH`、`QUALITY_PANEL_RUN`、`QUALITY_PANEL_RATIO`、`QUALITY_NO_HIGH_ENERGY`。
+
+**引擎默认（v4.2.5+）**：`design` 默认 `typography_scale:"adapt"`（长标题自动缩小）；`design_params.page_directions[].resolved_content_variant` 记录解析结果，便于对照 HTML。
 
 ### 0.7 艺术指导（可选 · 抬品质）
 
@@ -141,6 +189,7 @@
 | `examples/golden/humanities_narrative_scenes.json` | 人文叙事 | `dark-botanical` |
 | `examples/golden/editorial_notes_scenes.json` | 编辑长文 | `paper-ink` |
 | `examples/golden/variant_showcase_scenes.json` | shared 变体陈列 | `paper-ink` |
+| `examples/golden/tech_variants_scenes.json` | 技术叙事 + `auto` | `deep-tech-keynote` |
 
 ### 0.9 主视觉资产（Q1-B · 可选）
 
@@ -154,6 +203,12 @@
 | `visual_alt` | 可选无障碍描述 |
 
 优先级：`hero_image` > `diagram` > `brand_mark`。`validate` 在路径不可达时报 `QUALITY_VISUAL_ASSET_MISSING`（warning，不阻塞）；`html` 步骤同样 stderr 告警，并把该槽换成 **SVG 占位**（带 `data-vp-placeholder="<field>"`、`data-vp-placeholder-src="<raw>"`），便于后期人工替换。
+
+**用户素材无图（推荐协作）**：
+
+1. Agent 全 deck **至多 1～2 页** `split-visual`；无实拍时优先 `diagram` + SVG，勿每页乱填不存在的 `hero_image`。
+2. 首轮 `render` 后跑 `critique`（须传 `scenes`）→ `visual_slots_report.json` 列出 `gaps_for_user`（页码、建议路径、字段说明）。
+3. 交付时**主动告知**用户可补哪几页；用户供图后只更新 `scenes.json` 路径并重跑 **`html` → `package`**。流程见 **[SKILL.md](../SKILL.md) §主视觉补图**。
 
 ```json
 {

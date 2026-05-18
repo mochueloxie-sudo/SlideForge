@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=1920, height=1080">
 <title>Funnel</title>
 <style>
+  /* wave7 — funnel DOM polish (--sf-* only) */
   @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Manrope:wght@400;500;800&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { width: 1920px; height: 1080px; overflow: hidden; }
@@ -24,6 +25,7 @@
     color: var(--sf-eyebrow); text-transform: uppercase; margin-bottom: 20px;
     flex-shrink: 0;
   }
+  .eyebrow:empty { display: none; }
   .title {
     font-size: var(--sf-title-size, 58px); font-weight: 800; line-height: 1.05;
     color: var(--sf-text-primary); margin-bottom: 36px; max-width: 1100px;
@@ -100,14 +102,30 @@
     border: var(--sf-panel-border);
     border-top: var(--sf-panel-border-top);
     border-bottom: var(--sf-panel-border-bottom);
-    box-shadow: var(--sf-panel-shadow-inner, var(--sf-panel-shadow));
+    box-shadow: var(--sf-panel-shadow-inner, var(--sf-panel-shadow)),
+      0 0 0 1px color-mix(in srgb, var(--sf-accent) 22%, transparent);
     padding-top: 28px;
     padding-bottom: 30px;
   }
-  .fn-tier:nth-child(1) .fn-label { font-size: 28px; }
-  .fn-tier:nth-child(2) { opacity: 0.96; }
-  .fn-tier:nth-child(3) { opacity: 0.9; }
-  .fn-tier:nth-child(n+4) { opacity: 0.84; }
+  .fn-tier:nth-child(1) .fn-label {
+    font-size: 28px;
+    color: var(--sf-accent);
+  }
+  .fn-tier:nth-child(1)::before {
+    color: var(--sf-accent);
+    text-shadow: 0 0 16px color-mix(in srgb, var(--sf-accent) 35%, transparent);
+  }
+  .fn-tier:not(:first-child) {
+    background: var(--sf-card-muted-bg, var(--sf-panel-bg));
+    border: var(--sf-card-muted-border, var(--sf-panel-border));
+    box-shadow: var(--sf-panel-shadow);
+  }
+  .fn-tier:not(:first-child) .fn-label { color: var(--sf-text-primary); }
+  .fn-tier:not(:first-child) .fn-desc { color: var(--sf-text-muted); }
+  .fn-tier:nth-child(2) { opacity: 0.94; }
+  .fn-tier:nth-child(3) { opacity: 0.88; }
+  .fn-tier:nth-child(4) { opacity: 0.82; }
+  .fn-tier:nth-child(n+5) { opacity: 0.76; }
   .fn-label {
     grid-column: 2;
     grid-row: 1;
@@ -136,8 +154,16 @@
   }
 
   body.layout-compact .fn-wrap { gap: 8px; }
+  body.layout-compact .fn-wrap::before { top: 6%; bottom: 6%; opacity: 0.5; }
   body.layout-compact .fn-tier { padding: 16px 24px 18px 20px; }
+  body.layout-compact .fn-tier:nth-child(1) {
+    padding-top: 20px;
+    padding-bottom: 22px;
+  }
   body.layout-compact .fn-tier:nth-child(1) .fn-label { font-size: 24px; }
+  body.layout-compact .fn-tier:not(:first-child) { opacity: 0.86; }
+  body.layout-compact .fn-tier:nth-child(3) { opacity: 0.8; }
+  body.layout-compact .fn-tier:nth-child(n+4) { opacity: 0.74; }
   body.layout-compact .fn-label { font-size: 20px; }
   body.layout-compact .fn-desc { font-size: 16px; }
 

@@ -22,6 +22,8 @@ test_preview_light_swiss/
 .check_run/
 output_golden/
 tmp_theme_probe/
+tmp_slot_test/
+tmp_q1_probe/
 
 # Test artifacts
 release_smoke_*/

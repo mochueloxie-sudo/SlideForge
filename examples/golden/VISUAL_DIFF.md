@@ -1,4 +1,30 @@
-# 金标视觉 diff — product_launch × neon-cyber
+# 金标视觉 diff
+
+## _core wave6（2026-05 · 全主题）
+
+8 个 `samples/_core/layouts/*.html` 单源 DOM 抛光；**不改** `tokens.css` 亦生效，换肤后结构一致。
+
+| 样张 | wave6 验收 |
+|------|------------|
+| `cover.html` | 无 subtitle 时不显示空 accent 条 |
+| `01_text_only.html` | `vp-vw-breathing` 标题左 accent + lede |
+| `02_panel.html` | `hero_image` 时无占位灰条；首条 kp 加重 |
+| `03_stats_grid.html` | hero-1 首卡突出、次卡略退 |
+| `04_number.html` | hero 标题/叙述层级；dense 弱光晕 |
+| `05_quote.html` | left-bar / hero / breathing 分档 |
+| `20_compare.html` | 左 muted、右 accent、VS 层级 |
+| `21_process_flow.html` | 首阶段高亮、后续略淡 |
+
+```bash
+npm run check:golden
+open output_golden/product_launch/page_003.html   # breathing
+open output_golden/business_swiss/page_005.html   # compare
+open output_golden/product_launch/page_005.html   # process
+```
+
+---
+
+## product_launch × neon-cyber
 
 对照 `examples/golden/product_launch_scenes.json` 反推的样张改动（Q0-A）。
 
@@ -103,18 +129,19 @@ open output_golden/editorial_notes/page_003.html   # split-visual + hero_image
 | text | `text` | `title-only` + `breathing` |
 | summary | — | 决议 CTA |
 
-### 样张 diff（待 A/B）
+### 样张 diff（`_core` + `swiss-modern/tokens.css`）
 
 | 样张 | 期望（金标反推） | 状态 |
 |------|------------------|------|
-| `cover.html` | 瑞士网格 / 高对比标题 | 待 diff |
-| `04_number.html` | 左大数右叙述，非 widget 仪表盘 | 待 diff |
-| `03_stats_grid.html` | `hero-1` 首卡放大 | 待 diff |
-| `16_panel_stat.html` | 主数字层级清晰 | 待 diff |
-| `20_compare.html` | 左右列对比度、VS 环 | 待 diff |
-| `01_text_only.html` | 呼吸页 `title-only` | 待 diff |
+| `cover.html` | 瑞士网格 / 高对比标题 / 直角 panel | ✅ `_core/cover` + swiss 红顶条 token |
+| `04_number.html` | 左大数右叙述，非 widget 仪表盘 | ✅ `_core/04_number` + `--sf-number-glow-hero` |
+| `03_stats_grid.html` | `layout-hero-1` 首卡放大 | ✅ `composition:stat-hero` → `hero-1` |
+| `16_panel_stat.html` | 主数字层级清晰 | ✅ shared `16_panel_stat` + `--sf-stat-border-left` |
+| `20_compare.html` | 左右列对比度、VS 环 | ✅ `--sf-compare-col-right-*` 红 accent |
+| `01_text_only.html` | 呼吸页 `title-only` | ✅ `bsw-breath` · `vp-comp-title-only` |
+| `02_panel.html` | split-visual 主图槽 | ✅ `bsw-visual` · `hero_image` |
 
-> 样张改动在 `samples/**` 由 A/B 负责；本套仅落 scenes + golden 管道。若渲染暴露样张缺陷，记 issue 给 A/B。
+> 无需 `samples/swiss-modern/` 深度 HTML 覆盖；差异由 **token** 驱动。P1 未改 `_core` DOM。
 
 ### 本地复现
 
@@ -123,5 +150,27 @@ npm run check:golden
 open output_golden/business_swiss/page_001.html   # cover
 open output_golden/business_swiss/page_002.html   # number
 open output_golden/business_swiss/page_005.html   # compare
+```
+
+---
+
+## deep-tech-keynote × tech_variants（第七金标 · G7）
+
+对照 `examples/golden/tech_variants_scenes.json`；主题 **`deep-tech-keynote`**（技术叙事 / 控制面）。
+
+| 页 | 变体 | 验收点 |
+|----|------|--------|
+| 001 | cover | 深空底 + 冰蓝 eyebrow |
+| 002 | compare | 右列高亮、VS 环（`--sf-compare-col-right-*`） |
+| 003 | `auto` → process_flow | 字段驱动变体；发光节点轨 |
+| 004 | architecture_stack | 首层 accent 渐变 |
+| 005 | funnel | 顶阶最宽、逐级收窄 |
+| 006 | code | 等宽块可读 |
+| 007 | chart | 柱形 + 底部 stat |
+| 008 | summary | CTA 卡片收尾 |
+
+```bash
+open output_golden/tech_variants/page_002.html
+open output_golden/tech_variants/page_003.html
 ```
 

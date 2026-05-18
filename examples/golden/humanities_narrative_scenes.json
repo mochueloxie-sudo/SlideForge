@@ -10,7 +10,7 @@
   {
     "id": "hn-open",
     "type": "content",
-    "content_variant": "quote_context",
+    "content_variant": "auto",
     "visual_weight": "hero",
     "title": "开幕词",
     "quote_body": "我们记住的不是展品，而是与谁一同停驻的那几分钟。",

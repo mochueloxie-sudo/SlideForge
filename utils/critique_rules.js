@@ -41,7 +41,7 @@ function hasValidHeroVisual($) {
  */
 function sceneExpectsHero(scene) {
   if (!scene || typeof scene !== 'object') return false;
-  if (scene.hero_image) return true;
+  if (scene.hero_image || scene.diagram || scene.brand_mark) return true;
   if (scene.composition === 'split-visual') return true;
   return false;
 }
