@@ -56,7 +56,7 @@
     "test:html": "echo '{\"command\":\"html\",\"scenes\":\"./examples/scenes_example.json\",\"design_params\":\"./test_design/design_params.json\",\"output_dir\":\"./test_design\"}' | node executor.js",
     "test:screenshot": "echo '{\"command\":\"screenshot\",\"html_dir\":\"./test_design\",\"output_dir\":\"./test_design/screenshots\",\"design_params\":\"./test_design/design_params.json\"}' | node executor.js",
     "preview:html": "node utils/preview_server.js",
-    "clean": "rm -rf output test_e2e test_design test_full test_output test_project test_themes debug_html preview preview_four_variants demo_html_out test_html_only test_preview_light_swiss tencent_html_demo test_tencent_html verify_notebook_shell"
+    "clean": "rm -rf output output_* pipeline_run_output release_smoke_* skill_walkthrough v4_* test_* demo_html_out tencent_html_demo verify_notebook_shell preview_four_variants debug_html preview project"
   },
   "directories": {
     "example": "examples"

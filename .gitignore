@@ -50,9 +50,11 @@ v4_*/
 # Optional vendored design reference (see refs/README.md)
 refs/frontend-slides/
 
-# Editors
+# Editors / AI tool metadata
 .vscode/
 .idea/
+.claude/
+.cursor/
 *.swp
 *.swo
 *~
