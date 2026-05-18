@@ -6,35 +6,25 @@
 
 ---
 
-## [4.2.2] — 2026-05-18 — nav_bar 空白页修复
+## [4.2.2] — 2026-05-18 — nav_bar 修复 · 变体字段优先
 
-> **patch**：`scenes.json` 契约不变；渲染与 validate 提示增强。
+> **patch**：`scenes.json` 契约不变；渲染兜底 + validate 提示 + Agent 文档。
 
 ### 修复
 
 - **`nav_bar`**：仅有 `title` + `nav_items`、无 `subtitle`/`key_points` 时，渲染自动用 `nav_items` 生成标题下摘要（`utils/nav_bar_helpers.js`），避免中间大块空白。
 - **`design` / `inferVariant`**：`cards` / `icons` 优先于 `nav_items`，减少误推断为 `nav_bar`。
 
-### 文档与校验
-
-- **SKILL.md** §第四步：`nav_bar` 易错说明与示例；**docs/SCENES_SCHEMA.md** §3.11 扩充。
-- **`validate`**：`QUALITY_NAV_BAR_LEDE_INFERRED` / `QUALITY_NAV_BAR_NO_LEDE`（不阻塞 render）。
-
----
-
-## [4.2.2] — 2026-05-18 — 变体选择：先字段后变体 + validate _MISMATCH
-
-> **patch**：文档与 `quality_warnings`；`scenes.json` 契约不变。
-
 ### 新增
 
 - **`QUALITY_VARIANT_MISMATCH`**：`validate` → `quality_warnings[]` 含 `suggested_content_variant`（字段与声明的 `content_variant` 不一致时）。
-- **`utils/variant_suggest.js`**：与 `html` 推断优先级对齐的字段→变体建议。
+- **`utils/variant_suggest.js`**：与 `html` 字段推断优先级对齐的变体建议。
 
 ### 变更
 
 - **SCENES_SCHEMA §0.2a**：字段→变体表；去掉「拿不准选 panel」；§0.2b 决策图作补充。
-- **SKILL.md**：「先字段、后变体」三步；链 `business_swiss` 等 6 套金标。
+- **SKILL.md**：`nav_bar` 易错说明；「先字段、后变体」三步；6 套金标链接。
+- **`validate`**：`QUALITY_NAV_BAR_LEDE_INFERRED` / `QUALITY_NAV_BAR_NO_LEDE`（不阻塞 render）。
 
 ---
 
