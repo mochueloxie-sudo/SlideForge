@@ -15,30 +15,14 @@
 - **Q2-A**：`scene.mode` + `design_params.render_mode`（`production` \| `art-directed`）；`scene.custom_css` / `scene.custom_css_file`；`utils/art_directed_css.js` 消毒注入 `<style id="sf-art-directed">`（位于 Q1-C `sf-typo-vars` 之后）。`design` 接受 `mode` / `render_mode`、`typography_scale`（`adapt` 写入 `design_params`，修正原 `design_params.typography` 对象与 string 冲突）。
 - **Q2-B**：`preview` 命令（executor 路由）；未传 `themes` 时内容推断 Top 3 主题；每主题仅渲染封面 + 首内容 2 页；输出根 `preview.html` 网格。
 - **Q2-C**：`critique` 命令；依赖 **cheerio**；`critique.json` + `critique_report.md`；**始终 exit 0**。
-- **Critique M1**：`utils/critique_rules.js` 规则注册表；P0 规则（token / readability baseline / placeholder / 外链 CSS / hero / sf-theme-tokens 等）；`docs/CRITIQUE.md`；`examples/golden/critique_baseline.json`；`check:golden` 渲染后跑 critique（仅 **error** 失败）。
+- **Critique M1 + C2**：`utils/critique_rules.js`；P0 规则 + **`CRIT_LOW_CONTRAST`** / **`CRIT_GENERIC_GRADIENT`** / **`CRIT_DECK_MONOTONY`**；`docs/CRITIQUE.md`；`critique_baseline.json`；`check:golden` 仅 **error** 失败。
 - **`utils/design_mode_infer.js`**：`inferContentType` / `autoSelectDesignMode` / `suggestPreviewThemes`（供 `design` / `preview` 共用）。
+- **金标 M1 + G2**：第四套 **`editorial_notes`** × **`paper-ink`**（9 scenes，含 stats/compare）；第五套 **`variant_showcase`**（shared 四变体）；`samples/paper-ink/03_stats_grid.html`、`20_compare.html`、`02_panel` split-visual。
 
 ### 文档
 
 - **docs/SCENES_SCHEMA.md** §0.11、`typography_scale` 表修正、§0.4 增补 `preview` / `critique` 示例。
-- **docs/ROADMAP_OUTPUT_QUALITY.md** Q2 标 ✅。
-
----
-
-## [Unreleased]
-
-### 金标 G2 + critique C2
-
-- **`samples/paper-ink/03_stats_grid.html`**、**`20_compare.html`**（neon 结构 → 浅色 crimson 气质）。
-- 第五套金标 **`variant_showcase`** × **paper-ink**（card_grid / icon_grid / funnel / architecture_stack）。
-- **`editorial_notes`** 增 stats_grid + compare 页（9 scenes）。
-- **Critique C2**：`CRIT_LOW_CONTRAST`、`CRIT_GENERIC_GRADIENT`、`CRIT_DECK_MONOTONY`（deck 级）；见 `docs/CRITIQUE.md`。
-
-### 金标 M1
-
-- 第四套金标 **`editorial_notes`** × **`paper-ink`**（`examples/golden/editorial_notes_scenes.json` → `output_golden/editorial_notes/`）。
-- `samples/paper-ink/02_panel.html`：split-visual + `.vp-visual-slot`；`01_text_only.html` 呼吸 / title-only。
-- `npm run check:golden` / `golden:render` 覆盖金标；README 变体覆盖矩阵。
+- **docs/ROADMAP_OUTPUT_QUALITY.md** Q2 标 ✅；**P0 video 录帧** 降为低优先级（主场景 PDF/HTML）。
 
 ---
 
