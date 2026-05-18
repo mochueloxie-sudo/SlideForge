@@ -1,8 +1,12 @@
 # SlideForge
 
+[![Latest Release](https://img.shields.io/github/v/release/mochueloxie-sudo/SlideForge?display_name=tag&color=blue&label=release)](https://github.com/mochueloxie-sudo/SlideForge/releases/latest)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Node](https://img.shields.io/badge/node-%E2%89%A518-brightgreen)](https://nodejs.org/)
+
 > **Agent-first** 演示生成 Skill — 宿主 Agent（Cursor / Claude Code / OpenClaw 等）自己读源材料、写 `scenes.json`，本 Skill 把它渲染成可上台讲的 **1920×1080** 演示（**video** / **pdf** / **html**，可多选），附大纲与逐字稿。**不依赖任何外部 LLM**。
 
-[English](README_en.md) · [SKILL.md](SKILL.md) · [SCENES_SCHEMA](docs/SCENES_SCHEMA.md) · [CLAUDE.md](CLAUDE.md) · [CHANGELOG](CHANGELOG.md) · [License: MIT](LICENSE)
+[English](README_en.md) · [SKILL.md](SKILL.md) · [SCENES_SCHEMA](docs/SCENES_SCHEMA.md) · [CLAUDE.md](CLAUDE.md) · [CHANGELOG](CHANGELOG.md)
 
 **[查看示例输出 →](examples/demo-output/)** 在浏览器打开 `presentation.html`（iframe 壳 + 同目录 `page_*.html`，支持 hover / 入场动画；**勿只拷贝单个 HTML**）；纯截图单文件轮播见 `presentation_static.html`。
 

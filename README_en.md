@@ -1,8 +1,12 @@
 # SlideForge
 
+[![Latest Release](https://img.shields.io/github/v/release/mochueloxie-sudo/SlideForge?display_name=tag&color=blue&label=release)](https://github.com/mochueloxie-sudo/SlideForge/releases/latest)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Node](https://img.shields.io/badge/node-%E2%89%A518-brightgreen)](https://nodejs.org/)
+
 > **Agent-first** slide generation skill — your host Agent (Cursor / Claude Code / OpenClaw, …) reads the source itself, writes `scenes.json`, and SlideForge renders it into a stage-ready **1920×1080** deck (**video** / **pdf** / **html**, multi-select), with outline & narration script. **No external LLM dependency.**
 
-[中文](README.md) · [SKILL.md](SKILL.md) · [SCENES_SCHEMA](docs/SCENES_SCHEMA.md) · [CLAUDE.md](CLAUDE.md) · [CHANGELOG](CHANGELOG.md) · [License: MIT](LICENSE)
+[中文](README.md) · [SKILL.md](SKILL.md) · [SCENES_SCHEMA](docs/SCENES_SCHEMA.md) · [CLAUDE.md](CLAUDE.md) · [CHANGELOG](CHANGELOG.md)
 
 **[View demo output →](examples/demo-output/)** Open `presentation.html` (iframe shell + co-located `page_*.html`; **never ship a single HTML alone**). For single-file sharing use `presentation_static.html`.
 
