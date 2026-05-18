@@ -64,3 +64,4 @@ refs/frontend-slides/
 # Logs
 *.log
 npm-debug.log*
+tmp_nav_*/
