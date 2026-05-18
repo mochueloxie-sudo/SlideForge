@@ -4,6 +4,156 @@
 > **作用**：SlideForge **不调任何外部 LLM**。Agent 在对话内读完源材料后，按本文档**自己写出** `scenes.json` 落盘，再交给 SlideForge 渲染。
 > **自检**：写完用 `command: "validate"` 跑一遍，按报错改，直到 `valid: true`。
 
+**两种读法**：第一次接触 → 看 §0（5 分钟跑通最小 deck）；要写复杂内容时 → 翻 §3 找具体变体字段表。
+
+---
+
+## 0. 五分钟速通版（首次必读）
+
+### 0.1 三句话理解 scenes.json
+
+1. **它是一个 JSON 数组**，每个元素是一页幻灯（cover / content / summary）
+2. **首页必须 `type:"cover"`**；末页通常 `type:"summary"`；中间页都是 `type:"content"`
+3. **每个 content 页要选一个 `content_variant`**（决定版式），并填该变体要求的字段
+
+### 0.2 按内容形态选变体（决策图）
+
+```
+你这页要表达什么？
+│
+├─ 列举 3-6 个要点 ─────────────────────────▶ panel        ← 90% 场景选它
+├─ 列举 4-6 张图文卡片 ─────────────────────▶ card_grid
+├─ 列举 4-9 个图标 + 标签 ─────────────────▶ icon_grid
+│
+├─ 一个核心数字（"3.4 万亿"、"+86%"） ─────▶ number
+├─ 2-4 个并列数字 ─────────────────────────▶ stats_grid
+│
+├─ 时间顺序的 3-5 个节点 ─────────────────▶ timeline
+├─ 业务流程 / 阶段链路 ───────────────────▶ process_flow
+├─ 系统分层（接入/服务/数据）───────────────▶ architecture_stack
+├─ 转化漏斗（曝光 → 成交） ────────────────▶ funnel
+│
+├─ A vs B 对照（before/after、方案对比） ──▶ compare
+│
+├─ 一段散文 + 右侧要点 ────────────────────▶ two_col
+├─ 整页散文段落 ───────────────────────────▶ text
+│
+├─ 一句金句引用 ───────────────────────────▶ quote
+├─ 引用 + 出处 + 上下文段 ─────────────────▶ quote_context
+│
+├─ 表格数据 ──────────────────────────────▶ table
+├─ 趋势 / 对比柱状图 ──────────────────────▶ chart
+├─ 代码片段 ──────────────────────────────▶ code
+└─ 章节封面 / 大纲页 ──────────────────────▶ nav_bar
+```
+
+> 拿不准时**选 `panel`**——通用兜底，几乎任何要点列表都能塞进去。
+
+### 0.3 三个最常用变体的最小骨架
+
+**panel — 列举要点（最常用）**
+
+```json
+{
+  "type": "content", "content_variant": "panel",
+  "title": "三个关键变化",
+  "eyebrow": "核心",
+  "key_points": ["要点一", "要点二", "要点三"],
+  "key_point_descs": ["一句解释一", "一句解释二", "一句解释三"],
+  "layout_hint": "grid-3"
+}
+```
+
+**stats_grid — 数据看板**
+
+```json
+{
+  "type": "content", "content_variant": "stats_grid",
+  "title": "本季度核心指标",
+  "stats": [
+    { "number": "+86%", "label": "同比增长", "desc": "覆盖国内一线城市" },
+    { "number": "1.2 亿", "label": "MAU", "desc": "数据来源：内部 BI" }
+  ]
+}
+```
+
+**quote_context — 金句 + 上下文（讲故事）**
+
+```json
+{
+  "type": "content", "content_variant": "quote_context",
+  "title": "权威观点",
+  "quote_body": "AI 不是替代人，而是放大杠杆。",
+  "quote_source": "Marc Andreessen",
+  "quote_role": "a16z 联合创始人",
+  "context_body": "这一观点在 2026 春季信中被反复论证。"
+}
+```
+
+### 0.4 一个能直接跑通的 4 页 deck（复制改即用）
+
+```json
+[
+  {
+    "id": 1, "type": "cover",
+    "title": "演示主标题",
+    "subtitle": "副标题 · 2026"
+  },
+  {
+    "id": 2, "type": "content", "content_variant": "panel",
+    "eyebrow": "本期重点",
+    "title": "三个关键变化",
+    "key_points": ["变化一", "变化二", "变化三"],
+    "key_point_descs": ["一句话解释一", "一句话解释二", "一句话解释三"],
+    "layout_hint": "grid-3"
+  },
+  {
+    "id": 3, "type": "content", "content_variant": "stats_grid",
+    "title": "关键数据",
+    "stats": [
+      { "number": "240%", "label": "ROI 增幅", "desc": "vs 去年同期" },
+      { "number": "8500", "label": "付费用户", "desc": "首月转化" }
+    ]
+  },
+  {
+    "id": 4, "type": "summary",
+    "title": "下一步",
+    "key_points": ["事情 A", "事情 B", "事情 C"]
+  }
+]
+```
+
+存到 `./project/scenes.json` 然后：
+
+```bash
+echo '{"command":"validate","scenes":"./project/scenes.json"}' | node executor.js
+echo '{"command":"render","scenes":"./project/scenes.json","output_dir":"./project","format":["html"]}' | node executor.js
+open ./project/presentation.html
+```
+
+### 0.5 五个最常见错误（写之前先扫一眼）
+
+| 错误 | validate 报什么 | 怎么改 |
+|------|----------------|--------|
+| 字段名拼错（`keypoints` / `keyPoints` / `key_point`） | `requires non-empty "key_points"` | 字段名是 **snake_case 复数** `key_points` |
+| content 页没写 `content_variant` | `content scene must declare content_variant` | 每个 `type:"content"` 都必须有 |
+| 多个 cover 或没有 cover | `expected exactly 1 cover scene` | 首页且只有一个 `type:"cover"` |
+| `stats_grid` 漏 `desc` | （warning）数据稀薄 | 每个 stat 都加一句 `desc`，否则页面很空 |
+| 连续两页同变体 | （warning）`consecutive same content_variant` | 节奏感差。考虑换变体或合并 |
+
+### 0.6 高频字段速记
+
+- **每页必填**：`type` + `title` + `content_variant`（仅 content）
+- **panel / card_grid**：`key_points[]`（建议同步给 `key_point_descs[]`）
+- **stats_grid**：`stats: [{number, label, desc}]`
+- **quote / quote_context**：`quote_body` + 可选 `quote_source` / `quote_role` / `context_body`
+- **timeline**：`steps: [{label, desc}]`
+- **要导出 video 时**：每页加 `script`（150-200 中文字 / 50-80 英文词）
+
+---
+
+> **以下是参考手册**——只在写到具体变体卡壳时翻；常规场景上面 §0 已够用。
+
 ---
 
 ## 1. 整体形状
