@@ -111,9 +111,12 @@ echo '{"command":"extract","source":"<URL或路径>","output_dir":"./project"}' 
 
 ```bash
 echo '{"command":"validate","scenes":"./project/scenes.json"}' | node executor.js
+
+# 人类开发者的快捷方式（与上面等价，少打字）：
+npm run check -- ./project/scenes.json
 ```
 
-输出 `valid: true|false` + `errors[]` + `warnings[]`。**`valid: false` 时按 `errors[]` 修订，再跑一次**，直到通过。`validate` 永远 exit 0，结果在 JSON 字段里。
+输出 `valid: true|false` + `errors[]` + `warnings[]`，每个错误自带 `hint` 字段直接告诉你怎么修。**`valid: false` 时按 `errors[]` 修订，再跑一次**，直到通过。`validate` 永远 exit 0，结果在 JSON 字段里。
 
 > 多源融合的处理已在 §1.3 与第三步说明；本步骤对单/多源**无差别**。
 
