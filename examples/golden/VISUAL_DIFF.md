@@ -85,3 +85,43 @@ open output_golden/editorial_notes/page_002.html   # breathing
 open output_golden/editorial_notes/page_003.html   # split-visual + hero_image
 ```
 
+---
+
+## swiss-modern × business_swiss（第六金标 · 商务浅色）
+
+对照 `examples/golden/business_swiss_scenes.json`；主题 **`swiss-modern`**（极简 / 瑞士风浅色）。内容自 `business_report_scenes.json` 抽取 7 页：`cover` → `number` → `stats_grid` → `panel_stat` → `compare` → 呼吸 `text` → `summary`。
+
+### 验收变体（scenes 侧）
+
+| 页 | content_variant | 要点 |
+|----|-----------------|------|
+| cover | — | 商务封面 + hero |
+| number | `number` | `stat-hero` 单一大数 |
+| stats_grid | `stats_grid` | `2x2` + `stat-hero` |
+| panel_stat | `panel_stat` | `stat-hero` 主数字 + 要点 |
+| compare | `compare` | 季环比对 |
+| text | `text` | `title-only` + `breathing` |
+| summary | — | 决议 CTA |
+
+### 样张 diff（待 A/B）
+
+| 样张 | 期望（金标反推） | 状态 |
+|------|------------------|------|
+| `cover.html` | 瑞士网格 / 高对比标题 | 待 diff |
+| `04_number.html` | 左大数右叙述，非 widget 仪表盘 | 待 diff |
+| `03_stats_grid.html` | `hero-1` 首卡放大 | 待 diff |
+| `16_panel_stat.html` | 主数字层级清晰 | 待 diff |
+| `20_compare.html` | 左右列对比度、VS 环 | 待 diff |
+| `01_text_only.html` | 呼吸页 `title-only` | 待 diff |
+
+> 样张改动在 `samples/**` 由 A/B 负责；本套仅落 scenes + golden 管道。若渲染暴露样张缺陷，记 issue 给 A/B。
+
+### 本地复现
+
+```bash
+npm run check:golden
+open output_golden/business_swiss/page_001.html   # cover
+open output_golden/business_swiss/page_002.html   # number
+open output_golden/business_swiss/page_005.html   # compare
+```
+

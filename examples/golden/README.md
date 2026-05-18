@@ -15,6 +15,7 @@
 | `humanities_narrative` | `humanities_narrative_scenes.json` | `dark-botanical` | 人文叙事 / 金句 |
 | `editorial_notes` | `editorial_notes_scenes.json` | `paper-ink` | 编辑手记 / 长文浅色 |
 | `variant_showcase` | `variant_showcase_scenes.json` | `paper-ink` | shared 变体陈列（G2） |
+| `business_swiss` | `business_swiss_scenes.json` | `swiss-modern` | 商务浅色 / 指标叙事（第六金标） |
 
 ## 变体覆盖矩阵
 
@@ -27,6 +28,7 @@
 | humanities_narrative | ✓ | ✓ | ✓ | — | ✓ | ✓ | — | — | — | ✓ | — | — | ✓ |
 | editorial_notes | ✓ | ✓ | ✓ | — | ✓ | — | ✓ | ✓ | — | — | — | — | ✓ |
 | variant_showcase | ✓ | — | — | — | — | — | — | — | — | — | — | — | ✓ |
+| business_swiss | ✓ | ✓ | — | ✓ | — | — | ✓ | ✓ | — | — | ✓ | — | ✓ |
 
 > **M1 / G2**：`editorial_notes` 验收 split-visual、stats、compare；`variant_showcase` 另含 **card_grid / icon_grid / funnel / architecture_stack**（见 `variant_showcase_scenes.json`）。见 [VISUAL_DIFF.md](./VISUAL_DIFF.md)。
 

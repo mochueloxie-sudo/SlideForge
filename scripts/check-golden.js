@@ -18,7 +18,8 @@ const GOLDEN_SCENES = [
   'examples/golden/business_report_scenes.json',
   'examples/golden/humanities_narrative_scenes.json',
   'examples/golden/editorial_notes_scenes.json',
-  'examples/golden/variant_showcase_scenes.json'
+  'examples/golden/variant_showcase_scenes.json',
+  'examples/golden/business_swiss_scenes.json'
 ];
 
 const GOLDEN_OUT = [
@@ -26,7 +27,8 @@ const GOLDEN_OUT = [
   'output_golden/business_report',
   'output_golden/humanities_narrative',
   'output_golden/editorial_notes',
-  'output_golden/variant_showcase'
+  'output_golden/variant_showcase',
+  'output_golden/business_swiss'
 ];
 
 /** @type {{ out: string, scenes: string }[]} */

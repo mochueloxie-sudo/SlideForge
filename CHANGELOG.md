@@ -6,6 +6,22 @@
 
 ---
 
+## [4.2.1] — 2026-05-18 — 第二波：shared 变体 · 主题 token · 第六金标
+
+> **patch**：视觉与金标回归；`scenes.json` 契约不变。
+
+### 新增
+
+- **第六套金标**：`business_swiss` × `swiss-modern`（7 页商务浅色）；`golden-render` / `check:golden` / `critique_baseline` 登记。
+- **主题 token（Q1-A 续）**：`samples/themes/electric-studio|swiss-modern|vintage-editorial/tokens.css`；`TOKENS.md` 六主题手写清单。
+
+### 变更
+
+- **shared 叙事变体**：`card_grid` / `icon_grid` / `funnel` / `architecture_stack` / `timeline` 改用 `--sf-*`、强化层级；`variant_showcase` 金标微调验收字段。
+- **docs/PARALLEL_AGENTS.md** 第二波并行分工与汇合清单。
+
+---
+
 ## [4.2.0] — 2026-05-18 — Q2 双模式、预览与 critique
 
 > **minor**：新增 executor 命令与可选 scenes / design 字段；默认 `production` 渲染与 4.1.x 一致。

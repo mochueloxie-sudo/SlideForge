@@ -2,9 +2,11 @@
 
 `html_generator` 在每页 `</head>` 前注入主题 tokens，顺序为：
 
-1. **`samples/themes/{design_mode}/tokens.css`**（若存在）— 手写精调（neon / bold / dark 等）  
+1. **`samples/themes/{design_mode}/tokens.css`**（若存在）— 手写精调  
 2. 否则 **`utils/depth_tokens_from_tpl.js`** — 由 `DESIGN_TEMPLATES` 行生成完整 `--sf-*`（其余主题默认）  
 3. 再否则最小 **`tplToCssVars`** 兜底  
+
+**已手写 `tokens.css`（Q1-A）**：`neon-cyber`、`bold-signal`、`dark-botanical`、`electric-studio`、`swiss-modern`、`vintage-editorial`。其余主题走自动生成，可按需补第 1 项覆盖。
 
 **深度布局**（`samples/_core/layouts/`）应使用 `var(--sf-*)`；换肤改 `tokens.css` 或改 `html_generator.js` 中对应 `DESIGN_TEMPLATES` 条目。
 

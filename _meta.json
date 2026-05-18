@@ -1,6 +1,6 @@
 {
   "name": "slide-forge",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "description": "Agent-first 演示生成 Skill：宿主 Agent 自己读源材料、按 docs/SCENES_SCHEMA.md 写出 scenes.json，本 Skill 负责把 scenes.json 渲染为 1920×1080 演示（HTML / PDF / video，可多选），13 套主题与 22+ 变体由样张驱动。v4.0 起完全移除外部 LLM 依赖（不再调用 MiniMax / OpenAI）；可选工具：extract（把飞书/本地/网页素材抽成 raw_content.txt 供 Agent 阅读）、validate（本地 schema 自检）。",
   "type": "agent",
   "metadata": {

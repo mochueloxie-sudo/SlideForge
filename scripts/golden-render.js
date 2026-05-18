@@ -15,7 +15,8 @@ const SETS = [
   { name: 'business_report', scenes: 'examples/golden/business_report_scenes.json', theme: 'bold-signal' },
   { name: 'humanities_narrative', scenes: 'examples/golden/humanities_narrative_scenes.json', theme: 'dark-botanical' },
   { name: 'editorial_notes', scenes: 'examples/golden/editorial_notes_scenes.json', theme: 'paper-ink' },
-  { name: 'variant_showcase', scenes: 'examples/golden/variant_showcase_scenes.json', theme: 'paper-ink' }
+  { name: 'variant_showcase', scenes: 'examples/golden/variant_showcase_scenes.json', theme: 'paper-ink' },
+  { name: 'business_swiss', scenes: 'examples/golden/business_swiss_scenes.json', theme: 'swiss-modern' }
 ];
 
 function run(cmd) {

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>Icon Grid</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Manrope:wght@400;500;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { width: 1920px; height: 1080px; overflow: hidden; }
+
+  body {
+    width: 1920px; height: 1080px;
+    background: var(--sf-page-bg-panel, var(--sf-body-gradient, var(--sf-body-bg)));
+    font-family: var(--sf-font);
+    color: var(--sf-text-primary);
+    padding: 80px 120px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .eyebrow {
+    font-size: 13px; font-weight: 800; letter-spacing: 0.2em;
+    color: var(--sf-eyebrow); text-transform: uppercase; margin-bottom: 20px;
+    flex-shrink: 0;
+  }
+  .title {
+    font-size: var(--sf-title-size, 58px); font-weight: 800; line-height: 1.05;
+    letter-spacing: -0.03em; color: var(--sf-text-primary);
+    margin-bottom: 44px; max-width: 1100px; flex-shrink: 0;
+  }
+  .grid {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    align-content: center;
+    grid-template-columns: repeat({{ICON_GRID_COLS}}, 1fr);
+    max-width: {{ICON_GRID_MAX_WIDTH}}px;
+    width: 100%;
+    margin: 0 auto;
+    gap: 20px;
+  }
+  .icon-card {
+    min-height: {{ICON_CARD_MIN_HEIGHT}}px;
+    padding: 32px 22px 28px;
+    background: var(--sf-card-muted-bg, var(--sf-panel-bg));
+    border: var(--sf-card-muted-border, var(--sf-panel-border));
+    border-radius: var(--sf-panel-radius, 20px);
+    box-shadow: var(--sf-panel-shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+  .icon-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--sf-accent), var(--sf-accent-light, var(--sf-accent-secondary)));
+    opacity: 0.25;
+  }
+  .grid > .icon-card:first-child {
+    background: var(--sf-panel-bg);
+    border: var(--sf-panel-border);
+    border-top: var(--sf-panel-border-top);
+    border-bottom: var(--sf-panel-border-bottom);
+    box-shadow: var(--sf-panel-shadow-inner, var(--sf-panel-shadow));
+    padding: 40px 28px 36px;
+    min-height: calc({{ICON_CARD_MIN_HEIGHT}}px + 24px);
+  }
+  .grid > .icon-card:first-child::after {
+    height: 5px;
+    opacity: 1;
+  }
+  .grid > .icon-card:first-child .icon-emoji {
+    font-size: calc({{ICON_EMOJI_SIZE}}px * 1.15);
+  }
+  .grid > .icon-card:first-child .icon-label {
+    font-size: calc({{ICON_LABEL_SIZE}}px + 2px);
+    font-weight: 700;
+    color: var(--sf-text-primary);
+  }
+  .icon-emoji { font-size: {{ICON_EMOJI_SIZE}}px; line-height: 1; }
+  .icon-label {
+    font-size: {{ICON_LABEL_SIZE}}px; font-weight: 600;
+    color: var(--sf-text-secondary);
+    text-align: center; line-height: 1.35; padding: 0 10px;
+  }
+  .icon-desc {
+    font-size: 17px; line-height: 1.55;
+    color: var(--sf-text-muted);
+    text-align: center;
+    padding: 0 8px;
+    margin-top: 2px;
+  }
+  .hairline {
+    position: absolute; bottom: 80px; left: 120px; right: 120px;
+    height: 1px; background: var(--sf-hairline-gradient, var(--sf-hairline));
+  }
+  .page-num {
+    position: absolute; bottom: 56px; right: 120px;
+    font-size: 13px; color: var(--sf-page-num);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .grid .icon-card {
+      transition: outline-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      outline: 2px solid transparent;
+      outline-offset: 3px;
+    }
+    .grid .icon-card:hover {
+      outline-color: color-mix(in srgb, var(--sf-accent) 40%, transparent);
+      box-shadow: var(--sf-panel-shadow-inner, var(--sf-panel-shadow));
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="eyebrow">{{EYEBROW}}</div>
+  <h1 class="title">{{TITLE}}</h1>
+  <div class="grid">{{ICONS_HTML}}</div>
+  <div class="hairline"></div>
+  <span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
+</body>
+</html>

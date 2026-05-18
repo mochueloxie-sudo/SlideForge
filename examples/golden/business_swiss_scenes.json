@@ -1,0 +1,91 @@
+[
+  {
+    "id": "bsw-cover",
+    "type": "cover",
+    "eyebrow": "Q1 BUSINESS REVIEW",
+    "title": "增长与效率",
+    "secondary": "董事会简报 · swiss-modern · 2026 Q1",
+    "visual_weight": "hero"
+  },
+  {
+    "id": "bsw-number",
+    "type": "content",
+    "content_variant": "number",
+    "visual_weight": "hero",
+    "composition": "stat-hero",
+    "eyebrow": "北极星",
+    "title": "季度经常性收入",
+    "big_number": "¥ 4.6 亿",
+    "body": "同比 +22%；净收入留存 118%，大客户占比 41%"
+  },
+  {
+    "id": "bsw-grid",
+    "type": "content",
+    "content_variant": "stats_grid",
+    "layout_hint": "2x2",
+    "composition": "stat-hero",
+    "title": "运营仪表盘",
+    "stats": [
+      { "number": "+22%", "label": "新签", "desc": "同比；渠道贡献提升" },
+      { "number": "-14%", "label": "CAC", "desc": "产品主导获客占比提高" },
+      { "number": "96%", "label": "续约", "desc": "Top 50 客户全部续约" },
+      { "number": "31d", "label": "回款", "desc": "DSO 较上季缩短 4 天" }
+    ]
+  },
+  {
+    "id": "bsw-hero-stat",
+    "type": "content",
+    "content_variant": "panel_stat",
+    "visual_weight": "hero",
+    "composition": "stat-hero",
+    "title": "收入质量",
+    "stat_value": "+3.2pt",
+    "stat_label": "毛利率改善",
+    "key_points": [
+      "净收入留存 118%",
+      "大客户占比 41%",
+      "单位经济未因扩张稀释"
+    ]
+  },
+  {
+    "id": "bsw-compare",
+    "type": "content",
+    "content_variant": "compare",
+    "visual_weight": "hero",
+    "title": "效率投资兑现",
+    "compare_left_title": "2025 Q4",
+    "compare_right_title": "2026 Q1",
+    "compare_left_points": [
+      "5 个系统切换对齐口径",
+      "CAC 高位、回款 35d",
+      "异常靠人肉归因"
+    ],
+    "compare_right_points": [
+      "新签 / 续约 / NRR 同屏",
+      "CAC -14%、DSO 31d",
+      "监控自动归因到负责人"
+    ]
+  },
+  {
+    "id": "bsw-breath",
+    "type": "content",
+    "content_variant": "text",
+    "visual_weight": "breathing",
+    "composition": "title-only",
+    "eyebrow": "风险",
+    "title": "海外合规节奏需与扩张同步",
+    "body": "已启动区域化控制面与数据驻留评估"
+  },
+  {
+    "id": "bsw-close",
+    "type": "summary",
+    "visual_weight": "breathing",
+    "layout_hint": "cards",
+    "title": "决议请求",
+    "key_points": [
+      "批准亚太区编制 +12",
+      "追加 ¥ 800 万 研发资本化",
+      "下次复盘：2026-08-15"
+    ]
+  }
+]

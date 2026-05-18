@@ -118,3 +118,122 @@
 ## 完成后删除？
 
 本文件为并行协作备忘，发版后可保留作运维说明，或合并进 `CLAUDE.md` 一节。
+
+---
+
+# 第二波 — shared 变体 × 主题 token × 商务金标（2026-05）
+
+> **协调窗口**：本 Cursor 会话 — 合并分支、`npm run check:golden`、CHANGELOG、冲突仲裁。  
+> **实现窗口**：三个 Agent 各贴下方 Prompt A / B / C。
+
+## 冲突面（第二波）
+
+| 路径 | Agent A | Agent B | Agent C |
+|------|---------|---------|---------|
+| `samples/shared/**` | ✅ | ❌ | ❌ |
+| `examples/golden/variant_showcase_scenes.json` | ✅ 仅微调 | ❌ | ❌ |
+| `samples/themes/**` | ❌ | ✅ | ❌ |
+| `samples/_core/TOKENS.md` | ❌ | ✅ 文档 | ❌ |
+| `examples/golden/*`（新金标 JSON） | ❌ | ❌ | ✅ |
+| `scripts/golden-render.js` | ❌ | ❌ | ✅ |
+| `scripts/check-golden.js` | ❌ | ❌ | ✅ **唯一** |
+| `samples/_core/layouts/**` | ❌ 默认不碰 | ❌ | ❌ |
+
+**合并规则**：`check-golden.js` 只接受 C 的 diff；样张 DOM 问题退回 A/B，不让 C 改 `samples/**`。
+
+---
+
+## Prompt A — shared 变体（第二波）
+
+```markdown
+你在 slide-forge 做 **shared 叙事变体升级**。主交付 PDF/HTML。
+
+### 范围
+- `samples/shared/13_card_grid.html`（card_grid）
+- `samples/shared/10_icon_grid.html`
+- `samples/shared/23_funnel.html`
+- `samples/shared/22_architecture_stack.html`
+- 可选：`samples/shared/07_timeline.html`
+- `examples/golden/variant_showcase_scenes.json`（仅微调验收字段）
+
+### 禁止
+- `samples/themes/**`、`samples/_core/layouts/**`
+- `scripts/check-golden.js`、`scripts/golden-render.js`
+- 新建金标（除 variant_showcase 微调）
+- critique 实现
+
+### 目标
+1. 用 `var(--sf-*)` 替代硬编码色；层级清晰
+2. funnel / architecture_stack 减少「等宽灰条」模板感
+3. 保持 1920×1080 与现有 `{{TOKEN}}` 契约
+
+### 验收
+- variant_showcase validate 通过
+- 协调窗口会跑全量 check:golden
+```
+
+---
+
+## Prompt B — 主题 token（第二波）
+
+```markdown
+你在 slide-forge 做 **主题设计系统扩面（Q1-A 续）**。
+
+### 范围
+- 新增 `samples/themes/swiss-modern/tokens.css`
+- 新增 `samples/themes/electric-studio/tokens.css`
+- 新增 `samples/themes/vintage-editorial/tokens.css`
+- 更新 `samples/_core/TOKENS.md`
+
+### 禁止
+- `samples/shared/**`、金标 JSON、`scripts/*`
+- 13 主题 × 8 layout 复制
+
+### 目标
+TOKENS.md 必填键齐全；浅色对比度可读；关掉 enhancement full 仍可辨认主题。
+
+### 验收
+生成 HTML 含非空 `--sf-accent` 等（任一金标 render 目测）
+```
+
+---
+
+## Prompt C — 第六套金标（第二波）
+
+```markdown
+你在 slide-forge 做 **第六套金标（商务浅色）**。
+
+### 已定
+- 金标 id 建议：`swiss_brief`（或 `business_swiss`）
+- 主题：`swiss-modern`
+- 6–8 页：自 business_report 抽 cover / stats / panel+hero / compare / number / summary
+
+### 范围
+- `examples/golden/{id}_scenes.json`
+- `scripts/golden-render.js` SETS
+- `scripts/check-golden.js`（**仅此脚本**）
+- `examples/golden/VISUAL_DIFF.md`、`examples/golden/README.md`
+
+### 禁止
+- `samples/**`（样张 bug 记给 A/B）
+
+### 验收
+- `npm run check:golden` 全绿（6 套）
+```
+
+---
+
+## 汇合清单（第二波 · 协调窗口勾选）
+
+- [x] A：`samples/shared` 四变体 + `timeline`；`variant_showcase` validate 通过  
+- [x] B：`electric-studio` / `swiss-modern` / `vintage-editorial` `tokens.css` + `TOKENS.md`  
+- [x] C：`business_swiss` 金标 + `golden-render` / `check-golden` 第六项  
+- [x] 协调：无越界（C 未改 `samples/**`）  
+- [x] 协调：`npm run check:golden` 全绿（2026-05-18）  
+- [x] 协调：`CHANGELOG.md` **4.2.1**
+
+```bash
+# 协调窗口合并后
+npm run check:golden
+git diff --stat
+```

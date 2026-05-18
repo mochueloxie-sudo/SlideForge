@@ -11,18 +11,18 @@
     "id": "vs-cards",
     "type": "content",
     "content_variant": "card_grid",
-    "title": "卡片网格",
+    "title": "卡片网格 · 主卡突出",
     "cards": [
-      { "title": "结构", "body": "每张卡片有 title + body，适合 3–4 个并列概念" },
-      { "title": "节奏", "body": "与 panel 错开使用，避免连续堆砌" },
-      { "title": "浅色", "body": "paper-ink 边框在 #faf9f7 上可见" }
+      { "title": "主叙事卡", "body": "首张使用 panel 级强调；其余为 muted 辅卡，避免三等分灰块。" },
+      { "title": "并列要点", "body": "与 panel 错开使用，控制每页 3–4 张为宜" },
+      { "title": "浅色主题", "body": "paper-ink 下边框与 accent 条仍可读" }
     ]
   },
   {
     "id": "vs-icons",
     "type": "content",
     "content_variant": "icon_grid",
-    "title": "图标矩阵",
+    "title": "图标矩阵 · 首格强调",
     "icons": [
       { "emoji": "📐", "label": "版式", "desc": "固定 1920×1080" },
       { "emoji": "🖋", "label": "衬线", "desc": "长文气质" },
@@ -34,18 +34,19 @@
     "id": "vs-funnel",
     "type": "content",
     "content_variant": "funnel",
-    "title": "转化漏斗",
+    "title": "转化漏斗 · 递进收窄",
     "funnel_stages": [
-      { "label": "曝光", "desc": "首屏标题 + 封面气质一致" },
-      { "label": "阅读", "desc": "呼吸页与引用打断 panel 链" },
-      { "label": "留存", "desc": "PDF 可批注、可离线" }
+      { "label": "曝光", "desc": "顶阶 accent 渐变，非等宽灰条" },
+      { "label": "阅读", "desc": "中段略透明，保留序号轨" },
+      { "label": "留存", "desc": "PDF 可批注、可离线" },
+      { "label": "签约", "desc": "末阶最窄，形成漏斗剪影" }
     ]
   },
   {
     "id": "vs-stack",
     "type": "content",
     "content_variant": "architecture_stack",
-    "title": "分层架构",
+    "title": "分层架构 · 上宽下窄",
     "layers": [
       { "title": "宿主 Agent", "desc": "scenes.json + 主题选择" },
       { "title": "slide-forge", "desc": "design → html → package" },

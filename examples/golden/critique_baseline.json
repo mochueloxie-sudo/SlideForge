@@ -11,5 +11,8 @@
   },
   "editorial_notes": {
     "allow": ["CRIT_PLACEHOLDER_IMAGE"]
+  },
+  "business_swiss": {
+    "allow": []
   }
 }
