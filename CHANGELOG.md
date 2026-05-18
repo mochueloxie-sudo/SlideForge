@@ -6,6 +6,22 @@
 
 ---
 
+## [4.2.2] — 2026-05-18 — nav_bar 空白页修复
+
+> **patch**：`scenes.json` 契约不变；渲染与 validate 提示增强。
+
+### 修复
+
+- **`nav_bar`**：仅有 `title` + `nav_items`、无 `subtitle`/`key_points` 时，渲染自动用 `nav_items` 生成标题下摘要（`utils/nav_bar_helpers.js`），避免中间大块空白。
+- **`design` / `inferVariant`**：`cards` / `icons` 优先于 `nav_items`，减少误推断为 `nav_bar`。
+
+### 文档与校验
+
+- **SKILL.md** §第四步：`nav_bar` 易错说明与示例；**docs/SCENES_SCHEMA.md** §3.11 扩充。
+- **`validate`**：`QUALITY_NAV_BAR_LEDE_INFERRED` / `QUALITY_NAV_BAR_NO_LEDE`（不阻塞 render）。
+
+---
+
 ## [4.2.1] — 2026-05-18 — 第二波：shared 变体 · 主题 token · 第六金标
 
 > **patch**：视觉与金标回归；`scenes.json` 契约不变。
