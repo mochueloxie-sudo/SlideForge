@@ -55,6 +55,23 @@
     "body": "已启动区域化控制面与数据驻留评估"
   },
   {
+    "id": "br-dashboard",
+    "type": "content",
+    "content_variant": "panel",
+    "composition": "split-visual",
+    "layout_hint": "sidebar-left",
+    "diagram": "examples/assets/board-dashboard.svg",
+    "visual_alt": "Q1 运营仪表盘趋势图",
+    "eyebrow": "运营观测",
+    "title": "趋势图：从看板到议程",
+    "panel_title": "本季监控口径",
+    "key_points": [
+      "新签 / 续约 / NRR 同屏",
+      "CAC 与回款天数对齐",
+      "异常自动归因到负责人"
+    ]
+  },
+  {
     "id": "br-actions",
     "type": "content",
     "content_variant": "timeline",

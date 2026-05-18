@@ -1,0 +1,66 @@
+[
+  {
+    "id": "vs-cover",
+    "type": "cover",
+    "eyebrow": "G2 · 陈列",
+    "title": "Shared 变体一览",
+    "secondary": "paper-ink · card / icon / funnel / stack",
+    "visual_weight": "hero"
+  },
+  {
+    "id": "vs-cards",
+    "type": "content",
+    "content_variant": "card_grid",
+    "title": "卡片网格",
+    "cards": [
+      { "title": "结构", "body": "每张卡片有 title + body，适合 3–4 个并列概念" },
+      { "title": "节奏", "body": "与 panel 错开使用，避免连续堆砌" },
+      { "title": "浅色", "body": "paper-ink 边框在 #faf9f7 上可见" }
+    ]
+  },
+  {
+    "id": "vs-icons",
+    "type": "content",
+    "content_variant": "icon_grid",
+    "title": "图标矩阵",
+    "icons": [
+      { "emoji": "📐", "label": "版式", "desc": "固定 1920×1080" },
+      { "emoji": "🖋", "label": "衬线", "desc": "长文气质" },
+      { "emoji": "📎", "label": "资产", "desc": "hero / diagram" },
+      { "emoji": "✓", "label": "校验", "desc": "validate + critique" }
+    ]
+  },
+  {
+    "id": "vs-funnel",
+    "type": "content",
+    "content_variant": "funnel",
+    "title": "转化漏斗",
+    "funnel_stages": [
+      { "label": "曝光", "desc": "首屏标题 + 封面气质一致" },
+      { "label": "阅读", "desc": "呼吸页与引用打断 panel 链" },
+      { "label": "留存", "desc": "PDF 可批注、可离线" }
+    ]
+  },
+  {
+    "id": "vs-stack",
+    "type": "content",
+    "content_variant": "architecture_stack",
+    "title": "分层架构",
+    "layers": [
+      { "title": "宿主 Agent", "desc": "scenes.json + 主题选择" },
+      { "title": "slide-forge", "desc": "design → html → package" },
+      { "title": "交付", "desc": "PDF / HTML · 1920×1080" }
+    ]
+  },
+  {
+    "id": "vs-close",
+    "type": "summary",
+    "layout_hint": "cards",
+    "title": "回归入口",
+    "key_points": [
+      "npm run check:golden",
+      "critique 仅 error 挡 CI",
+      "shared 变体走 samples/shared/"
+    ]
+  }
+]

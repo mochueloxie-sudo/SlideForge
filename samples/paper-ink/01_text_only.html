@@ -7,6 +7,8 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { width: 1920px; height: 1080px; overflow: hidden; }
+
   body {
     width: 1920px; height: 1080px;
     background: #faf9f7;
@@ -17,14 +19,18 @@
   }
   .crimson-bar { width: 100%; height: 5px; background: #c41e3a; flex-shrink: 0; }
   .main {
-    flex: 1; padding: 64px 160px 64px 140px;
-    display: flex; flex-direction: column; justify-content: flex-start;
+    flex: 1;
+    padding: 64px 160px 64px 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
   }
   .eyebrow {
     font-size: 12px; letter-spacing: 0.28em;
     color: #c41e3a; text-transform: uppercase;
     font-variant: small-caps; margin-bottom: 12px;
   }
+  .eyebrow:empty { display: none; }
   .rule-thin { width: 80px; height: 1px; background: #d8d2c8; margin-bottom: 36px; }
   .title {
     font-family: 'Cormorant Garamond', Georgia, serif;
@@ -36,16 +42,48 @@
     font-size: 22px; font-weight: 400; line-height: 1.85;
     color: #3a3530; max-width: 1000px; margin-bottom: 24px;
   }
+  .body-text:empty { display: none; margin: 0; }
   .secondary {
     font-size: 20px; font-weight: 300; font-style: italic;
     line-height: 1.75; color: #8a837c; max-width: 900px;
   }
-  .bottom-rule { height: 1px; background: #d8d2c8; position: absolute; bottom: 60px; left: 140px; right: 80px; }
+  .secondary:empty { display: none; }
+  .bottom-rule {
+    height: 1px; background: #d8d2c8;
+    position: absolute; bottom: 60px; left: 140px; right: 80px;
+  }
   .page-num {
     position: absolute; bottom: 36px;
     left: 50%; transform: translateX(-50%);
-    font-size: 12px; color: #b0aa9e; letter-spacing: 0.12em;
+    font-size: 12px; color: #8a837c; letter-spacing: 0.12em;
   }
+
+  body.vp-vw-breathing,
+  body.vp-comp-title-only {
+    justify-content: center;
+  }
+  body.vp-vw-breathing .main,
+  body.vp-comp-title-only .main {
+    justify-content: center;
+    padding-top: 96px;
+    padding-bottom: 96px;
+  }
+  body.vp-vw-breathing .title,
+  body.vp-comp-title-only .title {
+    font-size: clamp(72px, 5.2vw, 96px);
+    line-height: 1.06;
+    max-width: 1200px;
+    margin-bottom: 0;
+  }
+  body.vp-comp-title-only .body-text { display: none !important; }
+  body.vp-comp-title-only .secondary {
+    font-size: clamp(26px, 2vw, 34px);
+    line-height: 1.55;
+    color: #c41e3a;
+    margin-top: 40px;
+    max-width: 960px;
+  }
+  body.vp-vw-breathing .eyebrow { margin-bottom: 28px; }
 </style>
 </head>
 <body>

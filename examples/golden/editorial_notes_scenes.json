@@ -1,0 +1,115 @@
+[
+  {
+    "id": "en-cover",
+    "type": "cover",
+    "eyebrow": "编辑手记",
+    "title": "纸面与留白",
+    "secondary": "长文演示 · 浅色编辑气质 · paper-ink",
+    "visual_weight": "hero"
+  },
+  {
+    "id": "en-breath",
+    "type": "content",
+    "content_variant": "text",
+    "visual_weight": "breathing",
+    "composition": "title-only",
+    "eyebrow": "开篇",
+    "title": "好文章先让人敢慢下来",
+    "body": "版式把节奏交给留白，而不是把每一屏塞满要点"
+  },
+  {
+    "id": "en-split",
+    "type": "content",
+    "content_variant": "panel",
+    "composition": "split-visual",
+    "layout_hint": "sidebar-left",
+    "hero_image": "examples/assets/board-dashboard.svg",
+    "visual_alt": "编辑台示意：分栏笔记与批注轨道",
+    "eyebrow": "工作流",
+    "title": "从草稿到定稿",
+    "panel_title": "你会保留",
+    "key_points": [
+      "左侧叙事线不断句",
+      "右侧主视觉承接数据或示意",
+      "浅底上边框与衬线层级可读"
+    ]
+  },
+  {
+    "id": "en-quote",
+    "type": "content",
+    "content_variant": "quote",
+    "visual_weight": "breathing",
+    "layout_hint": "left-bar",
+    "title": "摘录",
+    "quote_body": "排版不是装饰，而是让读者在正确的地方停一下。",
+    "quote_source": "《版式节奏》节选"
+  },
+  {
+    "id": "en-stats",
+    "type": "content",
+    "content_variant": "stats_grid",
+    "composition": "stat-hero",
+    "eyebrow": "指标",
+    "title": "浅色纸面上的数据块",
+    "stats": [
+      { "number": "4.8", "label": "可读性评分", "desc": "内测读者自评（5 分制）" },
+      { "number": "62%", "label": "完读率", "desc": "较传统 PPT 导出 PDF 提升" },
+      { "number": "12min", "label": "中位阅读", "desc": "单份 7 页金标 deck" }
+    ]
+  },
+  {
+    "id": "en-compare",
+    "type": "content",
+    "content_variant": "compare",
+    "visual_weight": "hero",
+    "title": "导出形态对照",
+    "compare_left_title": "幻灯截图式",
+    "compare_right_title": "编辑型 PDF",
+    "compare_left_points": [
+      "满屏要点、边框发虚",
+      "主题个性被磨平",
+      "难以批注长文"
+    ],
+    "compare_right_points": [
+      "衬线层级 + 留白节奏",
+      "paper-ink 边框可见",
+      "适合打印与批注"
+    ]
+  },
+  {
+    "id": "en-notes",
+    "type": "content",
+    "content_variant": "panel",
+    "visual_weight": "dense",
+    "layout_hint": "numbered",
+    "eyebrow": "方法论",
+    "title": "长文页面的三条纪律",
+    "panel_title": "编辑台检查单",
+    "key_points": [
+      "标题区与正文区对比度 ≥ 4.5:1",
+      "panel 边框在 #faf9f7 上可见，不靠阴影硬撑",
+      "每 2–3 页至少一次呼吸或引用，打断 panel 链"
+    ]
+  },
+  {
+    "id": "en-context",
+    "type": "content",
+    "content_variant": "quote",
+    "visual_weight": "hero",
+    "title": "读者反馈",
+    "quote_body": "终于有一份 PDF 像杂志，而不是像幻灯片截图。",
+    "quote_source": "内测读者 · 2026 Q1"
+  },
+  {
+    "id": "en-close",
+    "type": "summary",
+    "visual_weight": "breathing",
+    "layout_hint": "cards",
+    "title": "继续阅读",
+    "key_points": [
+      "下载 PDF 离线批注",
+      "订阅周刊获取排版样张更新",
+      "paper-ink · slide-forge 金标"
+    ]
+  }
+]

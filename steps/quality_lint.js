@@ -7,8 +7,11 @@
  * Used by steps/validate.js. Does not replace schema validation.
  */
 
+const { resolveVisualAsset } = require('../utils/visual_assets');
+
 const VALID_VISUAL_WEIGHT = new Set(['hero', 'normal', 'dense', 'breathing']);
 const VALID_COMPOSITION = new Set(['default', 'title-only', 'stat-hero', 'split-visual']);
+const VISUAL_ASSET_FIELDS = ['hero_image', 'diagram', 'brand_mark'];
 
 const HIGH_ENERGY_VARIANTS = new Set([
   'number', 'quote', 'compare', 'stats_grid', 'process_flow',
@@ -23,6 +26,7 @@ const QUALITY_HINTS = {
   QUALITY_TOO_MANY_KP: '单页要点过多：拆成两页，或改用 card_grid / timeline',
   QUALITY_INVALID_VW: '合法 visual_weight：hero | normal | dense | breathing',
   QUALITY_INVALID_COMP: '合法 composition：default | title-only | stat-hero | split-visual',
+  QUALITY_VISUAL_ASSET_MISSING: 'scene 声明了 hero_image / diagram / brand_mark 但路径解析不到文件；渲染时会回退到 SVG 占位（带 data-vp-placeholder）',
 };
 
 function attachQualityHints(items) {
@@ -33,9 +37,10 @@ function attachQualityHints(items) {
 
 /**
  * @param {object[]} scenesData
+ * @param {{ scenesPath?: string, outputDir?: string }} [ctx]
  * @returns {{ quality_warnings: object[] }}
  */
-function lintQuality(scenesData) {
+function lintQuality(scenesData, ctx = {}) {
   const quality_warnings = [];
 
   if (!Array.isArray(scenesData) || scenesData.length === 0) {
@@ -75,6 +80,24 @@ function lintQuality(scenesData) {
         code: 'QUALITY_TOO_MANY_KP',
         msg: `panel has ${scene.key_points.length} key_points (recommended max 5)`
       });
+    }
+
+    // Q1-B: visual asset reachability (hero_image / diagram / brand_mark).
+    // Only check when ctx provides a resolution root (scenesPath); otherwise skip
+    // to keep `validate` callable without filesystem context.
+    if (ctx && (ctx.scenesPath || ctx.outputDir)) {
+      for (const field of VISUAL_ASSET_FIELDS) {
+        const raw = scene[field];
+        if (!raw || typeof raw !== 'string' || !raw.trim()) continue;
+        const { url } = resolveVisualAsset(raw, ctx);
+        if (!url) {
+          quality_warnings.push({
+            at: `${at}.${field}`,
+            code: 'QUALITY_VISUAL_ASSET_MISSING',
+            msg: `${field} path not resolved: "${raw}"`
+          });
+        }
+      }
     }
   });
 

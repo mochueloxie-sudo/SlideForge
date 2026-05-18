@@ -8,6 +8,7 @@
 const { spawnSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const { runCritique } = require('../utils/critique_static');
 
 const ROOT = path.resolve(__dirname, '..');
 const EXECUTOR = path.join(ROOT, 'executor.js');
@@ -15,14 +16,24 @@ const EXECUTOR = path.join(ROOT, 'executor.js');
 const GOLDEN_SCENES = [
   'examples/golden/product_launch_scenes.json',
   'examples/golden/business_report_scenes.json',
-  'examples/golden/humanities_narrative_scenes.json'
+  'examples/golden/humanities_narrative_scenes.json',
+  'examples/golden/editorial_notes_scenes.json',
+  'examples/golden/variant_showcase_scenes.json'
 ];
 
 const GOLDEN_OUT = [
   'output_golden/product_launch',
   'output_golden/business_report',
-  'output_golden/humanities_narrative'
+  'output_golden/humanities_narrative',
+  'output_golden/editorial_notes',
+  'output_golden/variant_showcase'
 ];
+
+/** @type {{ out: string, scenes: string }[]} */
+const GOLDEN_CRITIQUE = GOLDEN_OUT.map((out, i) => ({
+  out,
+  scenes: GOLDEN_SCENES[i]
+}));
 
 const TOKEN_RE = /\{\{[A-Z][A-Z0-9_]*\}\}/g;
 
@@ -86,6 +97,48 @@ for (const outDir of GOLDEN_OUT) {
     failed = 1;
   }
   if (tokens > 0) failed = 1;
+}
+
+console.error('\n── critique (HTML static) ──');
+for (const { out, scenes } of GOLDEN_CRITIQUE) {
+  const abs = path.join(ROOT, out);
+  if (!fs.existsSync(abs)) {
+    console.error(`⏭ skip critique (missing dir): ${out}`);
+    continue;
+  }
+  const scenesPath = scenes ? path.join(ROOT, scenes) : null;
+  const report = runCritique(abs, {
+    scenesPath,
+    deckName: path.basename(out),
+    applyBaseline: true
+  });
+  const critPath = path.join(abs, 'critique.json');
+  fs.writeFileSync(critPath, JSON.stringify(report, null, 2), 'utf8');
+
+  for (const f of report.findings) {
+    if (f.level === 'warning' || f.level === 'info') {
+      const loc = f.file ? `${out}/${f.file}` : out;
+      console.error(`⚠ ${loc}: [${f.code}] ${f.message}`);
+    }
+  }
+  if (report.suppressed?.length) {
+    console.error(
+      `ℹ ${out}: ${report.suppressed.length} finding(s) suppressed via critique_baseline.json`
+    );
+  }
+  if (!report.ok) {
+    for (const f of report.findings) {
+      if (f.level === 'error') {
+        const loc = f.file ? `${out}/${f.file}` : out;
+        console.error(`❌ ${loc}: [${f.code}] ${f.message}`);
+      }
+    }
+    failed = 1;
+  } else {
+    console.error(
+      `✅ ${out}: critique ok (${report.summary.warnings} warnings, ${report.summary.info} info)`
+    );
+  }
 }
 
 if (failed) {

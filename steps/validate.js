@@ -140,6 +140,10 @@ function attachHints(items) {
 }
 
 function validate(scenesData, opts = {}) {
+  const lintCtx = {
+    scenesPath: opts.scenesPath,
+    outputDir: opts.outputDir
+  };
   const errors = [];
   const warnings = [];
 
@@ -174,6 +178,30 @@ function validate(scenesData, opts = {}) {
 
     if (!scene.title || typeof scene.title !== 'string' || !scene.title.trim()) {
       errors.push({ at: `${at}.title`, msg: 'missing or empty required field: title' });
+    }
+
+    if (scene.mode != null && scene.mode !== '') {
+      if (scene.mode !== 'production' && scene.mode !== 'art-directed') {
+        errors.push({
+          at: `${at}.mode`,
+          msg: `invalid mode "${scene.mode}", must be "production" or "art-directed"`
+        });
+      } else if (scene.mode === 'art-directed') {
+        const hasCss = (scene.custom_css && String(scene.custom_css).trim()) ||
+          (scene.custom_css_file && String(scene.custom_css_file).trim());
+        if (!hasCss) {
+          warnings.push({
+            at: `${at}.mode`,
+            msg: 'mode "art-directed" but no custom_css / custom_css_file — art pass will be empty'
+          });
+        }
+      }
+    }
+    if (scene.custom_css && String(scene.custom_css).length > 120000) {
+      warnings.push({
+        at: `${at}.custom_css`,
+        msg: `custom_css very long (${String(scene.custom_css).length} chars); may bloat HTML`
+      });
     }
 
     if (scene.type === 'content') {
@@ -242,7 +270,7 @@ function validate(scenesData, opts = {}) {
   attachHints(errors);
   attachHints(warnings);
 
-  const { quality_warnings } = lintQuality(scenesData);
+  const { quality_warnings } = lintQuality(scenesData, lintCtx);
 
   return { valid: errors.length === 0, errors, warnings, quality_warnings };
 }
@@ -257,9 +285,11 @@ process.stdin.on('end', () => {
     if (!scenes) throw new Error('validate: missing required field "scenes"');
 
     let scenesData = scenes;
+    let scenesPath = null;
     if (typeof scenesData === 'string') {
       const abs = path.resolve(scenesData);
       if (!fs.existsSync(abs)) throw new Error(`validate: file not found: ${abs}`);
+      scenesPath = abs;
       scenesData = JSON.parse(fs.readFileSync(abs, 'utf8'));
     }
     if (scenesData && !Array.isArray(scenesData) && Array.isArray(scenesData.scenes)) {
@@ -273,7 +303,9 @@ process.stdin.on('end', () => {
     }
 
     const result = validate(scenesData, {
-      recommended_design_mode: projectData && projectData.recommended_design_mode
+      recommended_design_mode: projectData && projectData.recommended_design_mode,
+      scenesPath,
+      outputDir: params.output_dir
     });
 
     const output = {

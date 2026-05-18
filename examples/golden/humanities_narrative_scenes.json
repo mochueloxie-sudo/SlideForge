@@ -41,6 +41,23 @@
     ]
   },
   {
+    "id": "hn-room",
+    "type": "content",
+    "content_variant": "panel",
+    "composition": "split-visual",
+    "layout_hint": "sidebar-left",
+    "hero_image": "examples/assets/gallery-room.svg",
+    "visual_alt": "策展厅示意：暖色光地面与两幅展品",
+    "eyebrow": "现场",
+    "title": "第二间的暖色地面",
+    "panel_title": "你会看到",
+    "key_points": [
+      "射灯打在木地板的反光带",
+      "墙面留白让作品自己呼吸",
+      "走道宽度刻意慢下来"
+    ]
+  },
+  {
     "id": "hn-quote",
     "type": "content",
     "content_variant": "quote",

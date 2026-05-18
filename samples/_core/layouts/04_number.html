@@ -51,7 +51,7 @@
     max-width: 1680px;
   }
   .number {
-    font-size: clamp(160px, 14vw, 240px);
+    font-size: var(--sf-stat-number-size, clamp(160px, 14vw, 240px));
     font-weight: 700; line-height: 0.92;
     letter-spacing: -0.05em;
     color: var(--sf-accent);
@@ -88,7 +88,7 @@
   }
 
   body.vp-comp-stat-hero .number {
-    font-size: clamp(200px, 16vw, 280px);
+    font-size: var(--sf-stat-number-size, clamp(200px, 16vw, 280px));
   }
   body.vp-vw-hero .glow {
     width: 900px; height: 900px;

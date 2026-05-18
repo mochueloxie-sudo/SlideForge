@@ -339,7 +339,7 @@ v4 起 `project.json` 不再由内置命令自动生成，全部由宿主 Agent 
 
 **当前产品主轴（2026-05）**：**输出品质** — 从「好看模板」到「设计作品」。完整规格见 **[docs/ROADMAP_OUTPUT_QUALITY.md](docs/ROADMAP_OUTPUT_QUALITY.md)**（Q0 / Q1 / Q2）。下列 **Q 系列**与动效 / 导入 **并行**，但资源上 **Q 优先于加主题**。
 
-**当前工程侧优先保证的交付形态**：`format` 为 `**html`** / `**pdf`**（或二者组合）时，design → package 链路在具备 Node + Puppeteer/Chrome 的环境下可完整跑通；`**video`** 另依赖 FFmpeg、TTS。发版前 smoke 可用 `examples/four_new_variants_scenes.json` + 显式 `design_mode` 跑 design → screenshot → package（详见 `.gitignore` 中的 `release_smoke_*` 约定）。
+**当前工程侧优先保证的交付形态**：主场景为 **`pdf`** / **`html`**（或二者组合）；design → package 在 Node + Puppeteer/Chrome 下完整跑通。**`video`** 仍支持（FFmpeg + TTS），但排期与 smoke **低于 PDF/HTML**；见下方 P0 阶段 2。发版前 smoke 可用 `examples/four_new_variants_scenes.json` + 显式 `design_mode` 跑 design → screenshot → package（`format` 建议 `pdf` 或 `html`，详见 `.gitignore` 中的 `release_smoke_*` 约定）。
 
 #### Q0 — 输出品质（当前执行）
 
@@ -356,32 +356,28 @@ v4 起 `project.json` 不再由内置命令自动生成，全部由宿主 Agent 
 
 见 [docs/ROADMAP_OUTPUT_QUALITY.md](docs/ROADMAP_OUTPUT_QUALITY.md)（设计系统、主视觉管线、双模式、风格预览）。
 
-#### P0 — HTML 动画支持（呈现层，与 Q 系列正交）
+#### P0 — HTML 页内动画（呈现层，与 Q 系列正交）
 
-当前截图是静态 1920×1080 PNG，交互式 HTML 演示也是图片轮播。下一步让 HTML 页面本身具备动画能力；`format=html` 时直接播放动画，`format=video` 长期可用 Puppeteer 录制动效帧。
+**产品优先级**：绝大多数交付为 **PDF / HTML**；页内 CSS 动效在浏览器里播放即可（阶段 0–1 已满足）。**P0 阶段 2（video 录制动效帧）刻意降优先级**——`format=video` 当前仍是「静态截图 + FFmpeg + TTS」轮播，与 HTML 里的 stagger 不对齐也可接受；仅当 video 需求明显增多再投入。
 
 **参考**：[frontend.slides](https://github.com/nicolo-ribaudo/frontend-slides) 的 CSS Animation +（后续）Intersection Observer。
 
 **分阶段（执行顺序）**
 
 
-| 阶段    | 内容                                                                                                                                               | 状态      |
-| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------- |
-| **0** | `design_params.page_animations`（`design` 命令默认 `true`）+ `utils/page_animations.js` 注入 CSS + boot 脚本；`screenshot.js` 在开启动画时等待 `data-vp-anim-ready` | **已落地** |
-| **1** | `html_generator` 为列表/卡片/时间线等块加 `data-vp-animate` + 行内 stagger；`page_animation_preset`: `none` / `fade` / `stagger`；`html` 命令传入完整 `design_params` | **已落地** |
-| **2** | `format=video`：Puppeteer 录制动效帧；与 `presentation.html`（iframe 单页）动效策略对齐                                                                            | 待做      |
+| 阶段    | 内容                                                                                                                                               | 状态        |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------ | --------- |
+| **0** | `design_params.page_animations`（`design` 命令默认 `true`）+ `utils/page_animations.js` 注入 CSS + boot 脚本；`screenshot.js` 在开启动画时等待 `data-vp-anim-ready` | **已落地**   |
+| **1** | `html_generator` 为列表/卡片/时间线等块加 `data-vp-animate` + 行内 stagger；`page_animation_preset`: `none` / `fade` / `stagger`；`html` 命令传入完整 `design_params` | **已落地**   |
+| **2** | `format=video`：Puppeteer 录制动效帧；与 `presentation.html` 动效策略对齐                                                                                      | **低优先级 / 暂缓** |
 
 
 **与现有文件分工**
 
-- `**utils/page_animations.js`**：单页 HTML 的 CSS + 极短启动脚本（P0）。
+- `**utils/page_animations.js`**：单页 HTML 的 CSS + 极短启动脚本（P0 阶段 0–1）。
 - `**steps/animations/animation-strategies.js`**：FFmpeg 滤镜策略；语义与页内 CSS 动画分离，勿混用。
 
-**后续实现思路（阶段 1+）**
-
-1. 在重点变体样张或 `html_generator` 内联块上增加 `data-vp-animate` + stagger delay
-2. `html` 按 `page_animation_preset` 选择 CSS 包
-3. `screenshot` / `package`：无动画分支保持短延迟；有动画分支已等待关键帧后再截图（视频路径后续扩展 `screencast` 或逐帧）
+**阶段 2 若将来要做**（非当前排期）：`screencast` 或逐帧录制 → 与 `page_animations` 对齐；在此之前 video 路径保持现状即可。
 
 #### P1 — 样张丰富度 + 用户自定义主题
 

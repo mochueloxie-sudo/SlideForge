@@ -1,6 +1,6 @@
 {
   "name": "slide-forge",
-  "version": "4.1.1",
+  "version": "4.2.0",
   "description": "Agent-first slide generation skill: turns a host Agent's structured scenes.json into a 1920×1080 deck (HTML / PDF / video) using 13 themes and 22+ content variants. Zero LLM dependency — the host Agent reads sources and writes scenes.json itself; SlideForge only renders.",
   "main": "executor.js",
   "type": "commonjs",
@@ -68,6 +68,7 @@
     "example": "examples"
   },
   "dependencies": {
+    "cheerio": "^1.2.0",
     "mammoth": "^1.12.0",
     "marked": "^18.0.0",
     "pdf-parse": "^2.4.5",

@@ -53,3 +53,35 @@ npm run golden:render
 open output_golden/product_launch/page_005.html   # process_flow
 ```
 
+---
+
+## paper-ink × editorial_notes（M1 · 第四金标）
+
+对照 `examples/golden/editorial_notes_scenes.json`；主题 **`paper-ink`**（浅色编辑 / 长文）。
+
+### 已改 / 验收样张（paper-ink 主题目录）
+
+| 样张 | 状态 | 说明 |
+|------|------|------|
+| `02_panel.html` | ✅ M1 | 与 `_core` 同构：`.slide-split` + `.vp-visual-slot`；浅底边框 `#c8c0b4`；非 split 时单栏 panel |
+| `01_text_only.html` | ✅ M1 | `vp-vw-breathing` / `title-only`；lede 用 crimson accent |
+| `cover.html` | ✅ 既有 | 衬线封面 + 顶栏 crimson，对比度自查 |
+| `05_quote.html` | ✅ 既有 | 金标引用页 |
+
+### G2 已同步（paper-ink 主题目录）
+
+| 样张 | 状态 | 说明 |
+|------|------|------|
+| `03_stats_grid.html` | ✅ | 衬线 + crimson 首卡 `layout-hero-1` / `stat-hero` |
+| `20_compare.html` | ✅ | 左 muted / 右 crimson 高亮 + 圆环 VS |
+| `editorial_notes` 金标 | ✅ | 增 `stats_grid` + `compare` 页验收上述样张 |
+| `variant_showcase` 金标 | ✅ | `card_grid` / `icon_grid` / `funnel` / `architecture_stack`（shared 变体） |
+
+### 本地复现
+
+```bash
+npm run check:golden
+open output_golden/editorial_notes/page_002.html   # breathing
+open output_golden/editorial_notes/page_003.html   # split-visual + hero_image
+```
+

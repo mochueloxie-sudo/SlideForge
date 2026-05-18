@@ -2,7 +2,7 @@
 
 > **定位**：SlideForge 是视觉内容生产工具。13 主题 × 22 变体解决的是「能稳定出片」；本路线解决「从好看模板 → 设计作品」。
 > **优先级**：**高于**新增主题数量、高于 PPT 导入（Q 系列与导入正交，可并行但资源上 Q 优先）。
-> **与动效 P0 的关系**：原 Roadmap **P0 — HTML 动画**（`page_animations`）阶段 0–1 已落地；**品质 Q0** 为 2026-05 起的产品主轴，二者并行不冲突。
+> **与动效 P0 的关系**：**P0 阶段 0–1**（`page_animations`、HTML 内 stagger）已落地，服务 **PDF/HTML** 主场景（截图等关键帧、浏览器内播放）。**P0 阶段 2**（video 录制动效帧）**低优先级 / 暂缓**——多数用户只要 PDF，video 仍可用静态帧合成。品质 **Q 系列**为 2026-05 起的产品主轴。
 
 ---
 
@@ -69,29 +69,29 @@ CI 的 `validate` 保证 **能渲染**；`quality_warnings` 指向 **品质**（
 
 ---
 
-## Q1 — 视觉生产层（1–2 月）
+## Q1 — 视觉生产层（**全 4 阶段完成**，2026-05-18）
 
 
 | ID       | 项      | 状态 | 说明                                                          |
 | -------- | ------ | ---- | ----------------------------------------------------------- |
-| **Q1-A** | 主题设计系统 | ✅ | `TOKENS.md`；neon/bold/dark 手写 `tokens.css`；其余主题 **`depth_tokens_from_tpl`** 从 `DESIGN_TEMPLATES` 生成 `--sf-*` |
-| **Q1-B** | 主视觉管线  | 🔄 起步 | `hero_image` / `diagram` / `brand_mark` → `utils/visual_assets.js`；金标 `pl-split` 示例 |
-| **Q1-C** | 内容感知排版 | 🔄 起步 | `utils/typography.js`（`kpScale` 已接入）；标题自适应 CSS 待样张迁移 |
-| **Q1-D** | 样张构图升级 | ✅ | 深度 8 页 **`_core/layouts/`**；全主题统一回退链；`notebook-tabs/cover.html` 唯一主题内封面覆盖 |
+| **Q1-A** | 主题设计系统 | ✅ | `TOKENS.md`；neon/bold/dark 手写 `tokens.css`；其余主题 **`utils/depth_tokens_from_tpl.js`** 从 `DESIGN_TEMPLATES` 生成 `--sf-*`（含亮/暗判定、文色对比修正） |
+| **Q1-B** | 主视觉管线  | ✅ | `hero_image` / `diagram` / `brand_mark` + `visual_alt` → `utils/visual_assets.js`；`validate` 报 `QUALITY_VISUAL_ASSET_MISSING`；缺图 → SVG 占位（`data-vp-placeholder`）；3 套金标各 1 张演示 |
+| **Q1-C** | 内容感知排版 | ✅ | `utils/typography.js`：`kpScale` / `titleScale` / `statNumberScale`；`scene.typography:"adapt"` / `design_params.typography_scale:"adapt"` / `enhancement:"full"` 任一开启即注入 `--sf-title-size` / `--sf-cover-title-size` / `--sf-stat-number-size`，深度 8 页通过 `var(--sf-…, fallback)` 消费 |
+| **Q1-D** | 样张构图升级 | ✅ | 深度 8 页 **`samples/_core/layouts/`**；全主题统一回退链；仅 `notebook-tabs/cover.html` 保留主题内封面覆盖 |
 
 **入口**：`samples/_core/README.md` · `npm run check:golden`
 
 
 ---
 
-## Q2 — 产品形态
+## Q2 — 产品形态（**首批已落地**，2026-05-18）
 
 
-| ID       | 项             | 说明                                                |
-| -------- | ------------- | ------------------------------------------------- |
-| **Q2-A** | 双模式           | Production（快） vs Art-directed（单页 `custom_css` 受控） |
-| **Q2-B** | 风格预览闭环        | 3 页金标预览 → 选主题 → 全量 render                         |
-| **Q2-C** | `critique` 命令 | 可选独立品质报告（或扩展 validate）                            |
+| ID       | 项             | 状态 | 说明                                                |
+| -------- | ------------- | ---- | ------------------------------------------------- |
+| **Q2-A** | 双模式           | ✅ | `scene.mode` / `design_params.render_mode`；`custom_css` + `custom_css_file`；`utils/art_directed_css.js` 消毒后注入 `<style id="sf-art-directed">`（在 Q1-C typography 之后） |
+| **Q2-B** | 风格预览         | ✅ | `preview` 命令：封面 + 首内容 2 页 × N 主题；未传 `themes` 时 `suggestPreviewThemes` Top 3；根目录 `preview.html` 并排 iframe |
+| **Q2-C** | `critique` 命令 | ✅ | `critique` 命令：`html_dir` 必填；`cheerio` 静态扫描 → `critique.json` + `critique_report.md`；进程 **始终 exit 0** |
 
 
 ---
@@ -101,7 +101,7 @@ CI 的 `validate` 保证 **能渲染**；`quality_warnings` 指向 **品质**（
 
 | 原项                   | 建议                                   |
 | -------------------- | ------------------------------------ |
-| P0 动效 阶段 2（video 录帧） | 保留，品质 Q0 不替代                         |
+| P0 动效 阶段 2（video 录帧） | **低优先级 / 暂缓**；PDF/HTML 不依赖；video 继续静态截图合成即可 |
 | P1 更多主题/变体           | **边际递减**；Q0-D 后再加，且须带新构图             |
 | P1 PPT 导入            | Q1 后或与 Q1-B 对齐                       |
 | Anti-AI-Slop（备忘）     | 并入 Q0 金标 + `refs/STYLE_PRESETS` 气质清单 |
@@ -112,8 +112,9 @@ CI 的 `validate` 保证 **能渲染**；`quality_warnings` 指向 **品质**（
 ## 执行顺序（固定）
 
 ```
-Q0-C 品质 lint → Q0-B art direction → Q0-A 金标 deck → Q0-D 缩减全局 CSS
-→ Q1 设计系统 + 主视觉 → Q2 双模式 / 预览
+✅ Q0-C 品质 lint → ✅ Q0-B art direction → ✅ Q0-A 金标 deck → ✅ Q0-D 缩减全局 CSS
+→ ✅ Q1-A 设计系统 → ✅ Q1-D 单源布局 → ✅ Q1-B 主视觉 → ✅ Q1-C 自适应排版
+→ ✅ Q2-A 双模式 / ✅ Q2-B 风格预览 / ✅ Q2-C critique
 ```
 
-实现追踪：见 [CHANGELOG.md](../CHANGELOG.md) 未发版条目；代码入口 `steps/quality_lint.js`、`utils/art_direction.js`。
+实现追踪：见 [CHANGELOG.md](../CHANGELOG.md)；代码入口 `steps/quality_lint.js`、`utils/art_direction.js`、`utils/typography.js`、`utils/visual_assets.js`。

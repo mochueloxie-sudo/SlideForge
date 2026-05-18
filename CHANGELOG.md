@@ -6,6 +6,42 @@
 
 ---
 
+## [4.2.0] — 2026-05-18 — Q2 双模式、预览与 critique
+
+> **minor**：新增 executor 命令与可选 scenes / design 字段；默认 `production` 渲染与 4.1.x 一致。
+
+### 新增
+
+- **Q2-A**：`scene.mode` + `design_params.render_mode`（`production` \| `art-directed`）；`scene.custom_css` / `scene.custom_css_file`；`utils/art_directed_css.js` 消毒注入 `<style id="sf-art-directed">`（位于 Q1-C `sf-typo-vars` 之后）。`design` 接受 `mode` / `render_mode`、`typography_scale`（`adapt` 写入 `design_params`，修正原 `design_params.typography` 对象与 string 冲突）。
+- **Q2-B**：`preview` 命令（executor 路由）；未传 `themes` 时内容推断 Top 3 主题；每主题仅渲染封面 + 首内容 2 页；输出根 `preview.html` 网格。
+- **Q2-C**：`critique` 命令；依赖 **cheerio**；`critique.json` + `critique_report.md`；**始终 exit 0**。
+- **Critique M1**：`utils/critique_rules.js` 规则注册表；P0 规则（token / readability baseline / placeholder / 外链 CSS / hero / sf-theme-tokens 等）；`docs/CRITIQUE.md`；`examples/golden/critique_baseline.json`；`check:golden` 渲染后跑 critique（仅 **error** 失败）。
+- **`utils/design_mode_infer.js`**：`inferContentType` / `autoSelectDesignMode` / `suggestPreviewThemes`（供 `design` / `preview` 共用）。
+
+### 文档
+
+- **docs/SCENES_SCHEMA.md** §0.11、`typography_scale` 表修正、§0.4 增补 `preview` / `critique` 示例。
+- **docs/ROADMAP_OUTPUT_QUALITY.md** Q2 标 ✅。
+
+---
+
+## [Unreleased]
+
+### 金标 G2 + critique C2
+
+- **`samples/paper-ink/03_stats_grid.html`**、**`20_compare.html`**（neon 结构 → 浅色 crimson 气质）。
+- 第五套金标 **`variant_showcase`** × **paper-ink**（card_grid / icon_grid / funnel / architecture_stack）。
+- **`editorial_notes`** 增 stats_grid + compare 页（9 scenes）。
+- **Critique C2**：`CRIT_LOW_CONTRAST`、`CRIT_GENERIC_GRADIENT`、`CRIT_DECK_MONOTONY`（deck 级）；见 `docs/CRITIQUE.md`。
+
+### 金标 M1
+
+- 第四套金标 **`editorial_notes`** × **`paper-ink`**（`examples/golden/editorial_notes_scenes.json` → `output_golden/editorial_notes/`）。
+- `samples/paper-ink/02_panel.html`：split-visual + `.vp-visual-slot`；`01_text_only.html` 呼吸 / title-only。
+- `npm run check:golden` / `golden:render` 覆盖金标；README 变体覆盖矩阵。
+
+---
+
 ## [4.1.1] — 2026-05-18 — 飞书 deliver 支持 PDF（优先）
 
 > **patch**：`scenes.json` 契约不变；仅扩展 `deliver` / `render` 与文档。
@@ -18,21 +54,22 @@
 
 ---
 
-## [4.1.0] — 2026-05-18 — Q1 视觉生产层（起步）
+## [4.1.0] — 2026-05-18 — Q1 视觉生产层（全 4 阶段完成）
 
-> **minor**：新增可选 scenes 字段与生成器能力；默认渲染行为不变（未写 `hero_image` 的 deck 与 4.0.x 一致）。
+> **minor**：新增可选 scenes 字段与生成器能力；默认渲染行为不变（未写 `hero_image` / `typography` 的 deck 与 4.0.x 一致）。
 
 ### 新增（Q1）
 
-- **Q1-A 主题 tokens（阶段 1）**：`samples/_core/TOKENS.md`；neon / bold / dark 三套扩展 `tokens.css`；**深度 8 页** 已 `var(--sf-*)`，HTML 单源 **`samples/_core/layouts/`**（见 Q1-D）。
-- **Q1-B 主视觉**：`hero_image` / `diagram` / `brand_mark` + `visual_alt`；`utils/visual_assets.js` 解析路径并填充 `.vp-visual-slot`；金标 `product_launch` 演示页示例 `examples/assets/orbit-demo.svg`。
-- **Q1-C 排版**：`utils/typography.js`（`kpScale` 等）；`html_generator` 改用统一 kp 字号逻辑。
+- **Q1-A 主题 tokens**：`samples/_core/TOKENS.md`；neon / bold / dark 手写 `tokens.css`；其余主题由 **`utils/depth_tokens_from_tpl.js`** 从 `DESIGN_TEMPLATES` 自动生成完整 `--sf-*`（含亮/暗判定、文色对比修正）。
+- **Q1-B 主视觉**：`hero_image` / `diagram` / `brand_mark` + `visual_alt` → `utils/visual_assets.js`，`html_generator` 在 `generateContent` 调用 `applyVisualSlot`；`validate` 增加 `QUALITY_VISUAL_ASSET_MISSING` warning；**缺图 → SVG 占位**（带 `data-vp-placeholder` / `data-vp-placeholder-src`，便于人工替换）；金标 `business_report` / `humanities_narrative` 各加 1 张演示（`examples/assets/board-dashboard.svg`、`gallery-room.svg`）。
+- **Q1-C 排版**：`utils/typography.js` 暴露 `kpScale` / `titleScale` / `statNumberScale` / `buildTypographyVarsCss` / `shouldApplyTypographyAdapt`；开启条件：`scene.typography:"adapt"` / `design_params.typography_scale:"adapt"`（由 `design` 写入）/ `enhancement:"full"` 任一。开启后向 `<head>` 注入 `<style id="sf-typo-vars">` 包含 `--sf-title-size` / `--sf-cover-title-size` / `--sf-stat-number-size`。深度 8 页通过 `var(--sf-…, fallback)` 消费，默认行为不变。
 - **`design`**：`hero_image` + `panel` 时自动推断 `composition: split-visual`（可被 scene 覆盖）。
-- **Q1-D（阶段 2）**：深度 **8** 布局单源 **`samples/_core/layouts/`**；**全部 13 主题** 删除主题内重复 HTML（**保留** `notebook-tabs/cover.html` 定制封面）；`loadTemplateWithSource`：**主题 → `_core` → `shared/`**；无 `tokens.css` 时 **`utils/depth_tokens_from_tpl.js`** 从 `DESIGN_TEMPLATES` 生成完整 `--sf-*`；`sync:depth-themes` 为 **no-op**。
+- **Q1-D 样张构图**：深度 **8** 布局单源 **`samples/_core/layouts/`**；**全部 13 主题** 删除主题内重复 HTML（**保留** `notebook-tabs/cover.html` 定制封面）；`loadTemplateWithSource`：**主题 → `_core` → `shared/`**；`sync:depth-themes` 为 **no-op**。
 
 ### 文档
 
-- **samples/_core/TOKENS.md**、**NEON_DEPTH**、**ROADMAP**（Q1-A / Q1-D）。
+- **samples/_core/TOKENS.md**、**NEON_DEPTH**、**ROADMAP**（Q1-A/B/C/D ✅）。
+- **docs/SCENES_SCHEMA.md** §0.9 增补 SVG 占位 / `validate` warning 说明；新增 §0.10 排版自适应字段表。
 
 ---
 

@@ -17,8 +17,37 @@ const {
   shouldInjectDensity
 } = require('./enhancement');
 const { getThemeTokensCSS } = require('./theme_tokens');
-const { kpScale } = require('./typography');
+const { kpScale, buildTypographyVarsCss, shouldApplyTypographyAdapt } = require('./typography');
 const { applyVisualSlot, loadVisualSlotCSS } = require('./visual_assets');
+const { sanitizeArtDirectedCss, readCustomCssFile } = require('./art_directed_css');
+
+function effectiveRenderMode(scene, designParams) {
+  const s = scene && scene.mode;
+  if (s === 'art-directed' || s === 'production') return s;
+  const d = designParams && designParams.render_mode;
+  if (d === 'art-directed' || d === 'production') return d;
+  return 'production';
+}
+
+function buildArtDirectedInject(scene, designParams) {
+  const warnings = [];
+  if (effectiveRenderMode(scene, designParams) !== 'art-directed') {
+    return { block: '', warnings };
+  }
+  let combined = String(scene.custom_css || '').trim();
+  if (scene.custom_css_file) {
+    const r = readCustomCssFile(scene.custom_css_file, {
+      scenesPath: designParams && designParams.scenes_path,
+      cwd: designParams && designParams.output_dir
+    });
+    if (r.warning) warnings.push(r.warning);
+    if (r.content) combined += (combined ? '\n' : '') + r.content;
+  }
+  const { css, warnings: sw } = sanitizeArtDirectedCss(combined, { sceneId: scene.id });
+  warnings.push(...sw);
+  if (!css) return { block: '', warnings };
+  return { block: `<style id="sf-art-directed">\n${css}\n</style>\n`, warnings };
+}
 
 function buildQ1HeadInject(designMode, tpl) {
   const tokenCss = getThemeTokensCSS(designMode, tpl);
@@ -869,8 +898,15 @@ function generateCover(scene, tpl, designMode, pageNum, totalPages, designParams
     getArtDirectionCSS
   });
   html = injectQ1Head(html, designMode || 'electric-studio', tpl);
+  const typoCss = shouldApplyTypographyAdapt(scene, designParams)
+    ? buildTypographyVarsCss(scene, { pageType: 'cover' })
+    : '';
+  const typoBlock = typoCss ? `<style id="sf-typo-vars">\n${typoCss}</style>\n` : '';
+  const artInj = buildArtDirectedInject(scene, designParams);
+  (artInj.warnings || []).forEach(w => console.error(`   ⚠️  ${w}`));
+  const artBlock = artInj.block || '';
   html = html.replace('</head>',
-    `<style>${style.readCSS}${style.densityCSS}${style.glassCSS}${style.artCSS}${style.titleCSS}\n  </style>\n</head>`);
+    `<style>${style.readCSS}${style.densityCSS}${style.glassCSS}${style.artCSS}${style.titleCSS}\n  </style>\n${typoBlock}${artBlock}</head>`);
   const footnoteText = scene.footnote || scene.annotation || '';
   if (footnoteText) {
     html = html.replace('</body>',
@@ -1474,8 +1510,15 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages, designPara
 `);
     const hoverStyle = getVariantInteractiveHoverStyleBlock(variant);
     html = injectQ1Head(html, designModeResolved, tpl);
+    const typoCss = shouldApplyTypographyAdapt(scene, designParams)
+      ? buildTypographyVarsCss(scene, { pageType: 'content', variant })
+      : '';
+    const typoBlock = typoCss ? `<style id="sf-typo-vars">\n${typoCss}</style>\n` : '';
+    const artInj = buildArtDirectedInject(scene, designParams);
+    (artInj.warnings || []).forEach(w => console.error(`   ⚠️  ${w}`));
+    const artBlock = artInj.block || '';
     html = html.replace('</head>',
-      `<style>${style.readCSS}${style.densityCSS}${style.glassCSS}${style.artCSS}${style.titleCSS}${cardCenterCSS}\n  </style>\n${hoverStyle || ''}</head>`);
+      `<style>${style.readCSS}${style.densityCSS}${style.glassCSS}${style.artCSS}${style.titleCSS}${cardCenterCSS}\n  </style>\n${typoBlock}${artBlock}${hoverStyle || ''}</head>`);
   }
 
   const assetCtx = assetContextFrom(designParams, outputDir);

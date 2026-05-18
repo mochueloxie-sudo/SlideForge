@@ -26,7 +26,7 @@
   }
   .eyebrow:empty { display: none; }
   .title {
-    font-size: 58px; font-weight: 700; line-height: 1.05;
+    font-size: var(--sf-title-size, 58px); font-weight: 700; line-height: 1.05;
     letter-spacing: -0.03em; margin-bottom: 52px; max-width: 1200px;
   }
   .compare-grid {
@@ -112,7 +112,7 @@
   }
   body.layout-wide-left .compare-grid { grid-template-columns: 1.22fr auto 0.88fr; }
   body.layout-wide-right .compare-grid { grid-template-columns: 0.88fr auto 1.22fr; }
-  body.vp-vw-hero .title { font-size: 68px; margin-bottom: 56px; }
+  body.vp-vw-hero .title { font-size: var(--sf-title-size, 68px); margin-bottom: 56px; }
 </style>
 </head>
 <body>

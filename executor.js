@@ -15,6 +15,8 @@
  *   tts      → 文字转语音
  *   package  → 打包成 video / pdf / html
  *   deliver  → 交付到 local / feishu
+ *   preview  → 多主题 HTML 预览（封面 + 首内容页切片）
+ *   critique → 对已生成 HTML 做静态质量点评（JSON + Markdown）
  *   render   → 一把跑完 design → deliver
  *
  * v4.0 移除：step0_analyze / step1_script / minimax_utils / llm_client
@@ -71,6 +73,12 @@ async function dispatch(params) {
       break;
     case 'deliver':
       result = await deliver(params);
+      break;
+    case 'preview':
+      result = await preview(params);
+      break;
+    case 'critique':
+      result = await critique(params);
       break;
     case 'render':
     case 'all':
@@ -166,6 +174,8 @@ async function screenshot(params) { return runStepScript('screenshot.js', normal
 async function tts(params)        { return runStepScript('tts.js',        normalizeParams(params)); }
 async function pkg(params)        { return runStepScript('package.js',    normalizeParams(params)); }
 async function deliver(params)    { return runStepScript('deliver.js',    normalizeParams(params)); }
+async function preview(params)    { return runStepScript('preview.js',    normalizeParams(params)); }
+async function critique(params)   { return runStepScript('critique.js',   normalizeParams(params)); }
 
 // ============================================
 // render（原 "all"）：从 scenes.json 起，跑 design → deliver

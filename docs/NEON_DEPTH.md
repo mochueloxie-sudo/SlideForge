@@ -32,6 +32,8 @@
 |------|------|
 | `minimal` 不注入 density 覆盖 | `utils/enhancement.js` |
 | **Q1-A** 深度样张用 `var(--sf-*)` + 主题 tokens | `samples/_core/TOKENS.md`，HTML 单源 **`samples/_core/layouts/`**；无手写 `tokens.css` 时 **`depth_tokens_from_tpl`** |
+| **Q1-B** `hero_image` / `diagram` / `brand_mark` → `.vp-visual-slot` | `utils/visual_assets.js`；缺图 → SVG 占位 (`data-vp-placeholder`) |
+| **Q1-C** `scene.typography:"adapt"` 注入 `--sf-title-size` / `--sf-stat-number-size` | `utils/typography.js`；深度 8 页 `font-size: var(--sf-…, fallback)` |
 | summary → `layout-cards` + `vp-closing` | `design.js`, `html_generator.js`；CTA 样式在 `_core/layouts/02_panel`（或主题内覆盖） |
 | cover → `vp-cover`，不套 content 用 hero 字号 | `art_direction.js` |
 

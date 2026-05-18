@@ -40,11 +40,11 @@
     border-radius: 100px; padding: 7px 22px; margin-bottom: 40px;
   }
   .title {
-    font-size: clamp(88px, 6.5vw, 112px); font-weight: 700; line-height: 0.98;
+    font-size: var(--sf-cover-title-size, clamp(88px, 6.5vw, 112px)); font-weight: 700; line-height: 0.98;
     letter-spacing: -0.045em; color: var(--sf-text-primary); margin-bottom: 36px;
   }
   body.vp-cover.vp-vw-hero .title {
-    font-size: clamp(96px, 7vw, 120px);
+    font-size: var(--sf-cover-title-size, clamp(96px, 7vw, 120px));
     text-shadow: 0 0 80px var(--sf-cover-title-glow);
   }
   body.vp-cover .subtitle {

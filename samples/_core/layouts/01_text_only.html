@@ -26,7 +26,7 @@
   }
   .section-num:empty { display: none; }
   .title {
-    font-size: 58px; font-weight: 700; line-height: 1.06;
+    font-size: var(--sf-title-size, 58px); font-weight: 700; line-height: 1.06;
     letter-spacing: -0.03em; color: var(--sf-text-primary);
     margin-bottom: 32px; max-width: 1400px;
   }
@@ -59,7 +59,7 @@
   }
   body.vp-vw-breathing .title,
   body.vp-comp-title-only .title {
-    font-size: clamp(64px, 5vw, 92px);
+    font-size: var(--sf-title-size, clamp(64px, 5vw, 92px));
     line-height: 1.04;
     letter-spacing: -0.035em;
     max-width: 1500px;

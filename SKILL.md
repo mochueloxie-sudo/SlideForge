@@ -45,7 +45,7 @@ description: "Agent-first 演示生成 Skill：你（宿主 Agent）自己读源
 | # | 问什么 | 写入 JSON |
 |---|--------|-----------|
 | 1 | 内容从哪来？ | `source`：飞书 URL / 本地 `.md`/`.txt`/`.docx`/`.pdf` / 网页 URL |
-| 2 | 要哪些交付物？ | `format`：`pdf` / `html` / `video`，可数组。**默认建议先 `html`**——video 耗时且要 FFmpeg+TTS |
+| 2 | 要哪些交付物？ | `format`：`pdf` / `html` / `video`，可数组。**默认建议 `pdf` 或 `html`**（主场景）；`video` 可选，耗时长且要 FFmpeg+TTS，页内动效不会进成片（录制动效帧未排期） |
 | 3 | 输出去哪？ | `output_dir`（默认 `./output`）；`channel`：`local`（默认）/ `feishu` |
 | 4 | 视觉主题？ | 用人话介绍 13 套（深色 7 / 浅色 6，id 见 [README](README.md) 主题节）；用户说「自动」时 JSON 省略 `design_mode` |
 | 5 | 页内动效 | **不主动问**；用默认（开 + stagger）；用户明说才改 |
@@ -182,6 +182,8 @@ echo '{"command":"render","scenes":"./project/scenes.json","output_dir":"./proje
 - **加/换口播稿**：补 `script` 字段 → `tts` → `package`（`format` 含 `video`）
 - **只重出 PDF / HTML**：已有 `screenshots/` + `html_dir/`，跑 `package`
 - **换源文档**：新 `output_dir`，从第三步重新走
+- **多主题快速看版**（不跑全 deck）：`{"command":"preview","scenes":"./project/scenes.json","output_dir":"./project/preview"}` → 打开 `preview.html`；选定主题后写 `recommended_design_mode` 或传 `design_mode` 再 `render`
+- **HTML 静态点评**：`{"command":"critique","html_dir":"./project","scenes":"./project/scenes.json"}` → `critique.json` + `critique_report.md`（进程 exit 0）
 
 ---
 

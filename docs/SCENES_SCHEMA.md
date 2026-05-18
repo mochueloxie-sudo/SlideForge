@@ -126,7 +126,7 @@
 | `brand_mark` | Logo / 标识，`object-fit: contain` |
 | `visual_alt` | 可选无障碍描述 |
 
-优先级：`hero_image` > `diagram` > `brand_mark`。未找到文件时 `html` 步骤 stderr 告警，槽位保持占位样式。
+优先级：`hero_image` > `diagram` > `brand_mark`。`validate` 在路径不可达时报 `QUALITY_VISUAL_ASSET_MISSING`（warning，不阻塞）；`html` 步骤同样 stderr 告警，并把该槽换成 **SVG 占位**（带 `data-vp-placeholder="<field>"`、`data-vp-placeholder-src="<raw>"`），便于后期人工替换。
 
 ```json
 {
@@ -139,7 +139,30 @@
 }
 ```
 
-主题色板见 `samples/themes/{design_mode}/tokens.css`（Q1-A）。
+### 0.10 排版自适应（Q1-C · 可选）
+
+默认走样张固定字号；写 `"typography": "adapt"` 时，`html_generator` 注入 `--sf-title-size` / `--sf-cover-title-size` / `--sf-stat-number-size`，深度布局通过 `var(--sf-…, fallback)` 消费。
+
+| 触发 | 范围 |
+|------|------|
+| `scene.typography: "adapt"` | 单页 |
+| `design_params.typography_scale: "adapt"`（`design` 命令写入） | 全 deck |
+| `design_params.enhancement: "full"` | 全 deck（含 Q0-D 老 enhancement） |
+
+适配规则：标题字数（CJK ≈ 2 单位）越多 → `clamp()` 越收紧；`big_number` 数字越长 → 字号越收紧。**只对深度 8 页生效**（`samples/_core/layouts/`），其它样张照常使用自身字号。
+
+主题色板见 `samples/themes/{design_mode}/tokens.css`（Q1-A） / 缺时由 `utils/depth_tokens_from_tpl.js` 从 `DESIGN_TEMPLATES` 生成。
+
+### 0.11 双模式与自定义 CSS（Q2-A · 可选）
+
+| 字段 | 说明 |
+|------|------|
+| `scene.mode` | `"production"`（默认）或 `"art-directed"`；**覆盖** `design_params.render_mode`。 |
+| `design_params.render_mode` | `design` 写入：`"production"` \| `"art-directed"`；可由 JSON 传 `mode` 或 `render_mode: "art-directed"`。 |
+| `scene.custom_css` | 字符串；仅在有效模式为 `art-directed` 时注入 `<style id="sf-art-directed">`（在排版 vars 之后，可覆盖）。 |
+| `scene.custom_css_file` | 相对 **scenes.json 所在目录**（或 `output_dir` / cwd）的 CSS 文件路径；与 `custom_css` 合并后再消毒。 |
+
+消毒策略（非阻塞 warning）：移除 `@import`、`@font-face`、`@media`、外链 `url(http…)` 及对 `html`/`body` 的危险宽高与 `position:fixed|sticky`；超大 `font-size` 做上限钳制。
 
 ### 0.3 三个最常用变体的最小骨架
 
@@ -223,6 +246,22 @@ echo '{"command":"render","scenes":"./project/scenes.json","output_dir":"./proje
 open ./project/presentation.html
 ```
 
+**风格预览（Q2-B）**：不写 `themes` 时自动选 Top 3 主题，只渲染「封面 + 首内容页」切片：
+
+```bash
+echo '{"command":"preview","scenes":"./project/scenes.json","output_dir":"./project/preview"}' | node executor.js
+open ./project/preview/preview.html
+```
+
+选定主题后，在 `project.json` 写 `recommended_design_mode` 或直接在 `render` 传 `design_mode` 即可。
+
+**HTML 静态点评（Q2-C）**：
+
+```bash
+echo '{"command":"critique","html_dir":"./project","scenes":"./project/scenes.json"}' | node executor.js
+# → project/critique.json + critique_report.md（进程始终 exit 0）
+```
+
 > **Tip**：每个 `validate` 错误都自带 `hint` 字段，直接告诉你怎么修。不用回查本文档每次。
 
 ### 0.5 五个最常见错误（写之前先扫一眼）
@@ -297,6 +336,9 @@ open ./project/presentation.html
 | `script_hint`            | string                                | 一句话提示「这页该怎么讲」；不写口播稿时给个 hint 也好                          |
 | `footnote`               | string                                | 页脚一行注脚，可用于数据来源                                          |
 | `layout_hint`            | string                                | 同变体下的子布局微调（见 §4）                                        |
+| `mode`                   | `"production"` \| `"art-directed"`    | 可选；见 §0.11。默认 production                               |
+| `custom_css`             | string                                | 可选；`art-directed` 时注入（§0.11）                              |
+| `custom_css_file`        | string                                | 可选；相对 scenes.json 目录的 CSS 文件（§0.11）                      |
 
 
 `type: "content"` **额外必填**：`content_variant`。

@@ -70,9 +70,63 @@ function getTypographyOverrideCSS(scene, opts = {}) {
   }`;
 }
 
+/**
+ * Q1-C — content-aware typography vars.
+ *
+ * Returns a `:root { --sf-* }` block that depth layouts in `_core/layouts/`
+ * pick up via `font-size: var(--sf-title-size, <fallback>)`.
+ * Empty when nothing to override (caller may skip injection entirely).
+ *
+ * @param {object} scene
+ * @param {{ pageType?: 'cover'|'content', variant?: string }} [opts]
+ * @returns {string}
+ */
+function buildTypographyVarsCss(scene, opts = {}) {
+  if (!scene) return '';
+  const pageType = opts.pageType || 'content';
+  const variant = opts.variant || scene.content_variant || null;
+  const lines = [];
+
+  if (scene.title) {
+    const { clamp } = titleScale(scene.title, { pageType });
+    if (pageType === 'cover') {
+      lines.push(`  --sf-cover-title-size: ${clamp};`);
+    } else {
+      lines.push(`  --sf-title-size: ${clamp};`);
+    }
+  }
+
+  if ((pageType === 'content') && (variant === 'number' || scene.big_number)) {
+    const big = scene.big_number;
+    if (big) {
+      lines.push(`  --sf-stat-number-size: ${statNumberScale(big)};`);
+    }
+  }
+
+  if (!lines.length) return '';
+  return `:root {\n${lines.join('\n')}\n}\n`;
+}
+
+/**
+ * Q1-C — activation gate. Honoured by html_generator.
+ *
+ *   scene.typography === 'adapt'                     ← per-page opt-in
+ *   designParams.typography_scale === 'adapt'        ← deck-level (design command)
+ *   normalizeEnhancement(designParams) === 'full'    ← global enhanced mode
+ */
+function shouldApplyTypographyAdapt(scene, designParams) {
+  if (scene && scene.typography === 'adapt') return true;
+  if (designParams && designParams.typography_scale === 'adapt') return true;
+  const enh = designParams && (designParams.enhancement || designParams.enhancement_mode);
+  if (enh === 'full') return true;
+  return false;
+}
+
 module.exports = {
   kpScale,
   titleScale,
   statNumberScale,
-  getTypographyOverrideCSS
+  getTypographyOverrideCSS,
+  buildTypographyVarsCss,
+  shouldApplyTypographyAdapt
 };

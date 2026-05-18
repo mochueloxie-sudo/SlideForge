@@ -1,0 +1,15 @@
+{
+  "_comment": "Per-deck allowlist for known critique warnings (CI / check:golden). Errors are never suppressed.",
+  "product_launch": {
+    "allow": []
+  },
+  "business_report": {
+    "allow": []
+  },
+  "humanities_narrative": {
+    "allow": []
+  },
+  "editorial_notes": {
+    "allow": ["CRIT_PLACEHOLDER_IMAGE"]
+  }
+}
