@@ -6,6 +6,30 @@
 
 ---
 
+## [4.0.2] — 2026-05-18 — CI + validate hint + 开发者校验脚本
+
+> **patch 级**：无破坏性 API 变更。侧重宿主 Agent / 贡献者的校验体验与仓库卫生。
+
+### 新增
+
+- **GitHub Actions CI**（`.github/workflows/ci.yml`）：push/PR 到 `main` 时自动 `validate` 全部 `examples/*scenes*.json`，并对 `four_new_variants_scenes.json` 跑 `design` + `html` 冒烟；拒绝遗留 `stepN` 命令。`PUPPETEER_SKIP_DOWNLOAD=true` 以跳过 Chromium 下载（CI 不跑截图）。
+- **`validate` 可执行 hint**：每条 `errors[]` / `warnings[]` 附带 `hint` 字段（`FIELD_HINTS` + `MSG_PATTERN_HINTS`），直接指引如何改 schema 违规。
+- **`npm run check` / `check:all`**（`scripts/check-scenes.js`）：人类友好的 `validate` 包装；`check:all` 白名单覆盖 4 个示例 scenes。
+
+### 修复 / 清理
+
+- **示例 fixtures 升级到 v4 schema**：`tencent_intro_scenes_fixture.json`、`verify_notebook_shell_scenes.json` 补全 `content_variant` 与字段形态，CI 可通过。
+- **仓库卫生**：删除死代码 `utils/html_builder.js`、历史 `patches/*.diff`；`.gitignore` 扩展临时输出目录；停止跟踪 `.claude/launch.json`。
+- **README 徽章**：CI / latest-release / license / Node 版本徽章。
+
+### 升级
+
+```bash
+git pull && npm install   # 无新运行时依赖；建议拉取以获 CI 与 hint
+```
+
+---
+
 ## [4.0.1] — 2026-05-18 — 文档密度优化
 
 > **本次无功能/无 API 变更**，纯文档迭代。目的：把 v4.0.0 发布后首次接触本 Skill 的宿主 Agent 的「学习曲线」尽可能压低，同时清理 v4.0 ship 时还留下的版本叙事噪音。
