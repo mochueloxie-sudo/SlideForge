@@ -60,16 +60,10 @@
   .kp-list { list-style: none; display: flex; flex-direction: column; gap: 18px; }
   .kp-item {
     display: flex; align-items: flex-start; gap: 14px;
-    font-size: 21px; color: var(--sf-text-primary); line-height: 1.45;
+    font-size: 21px; color: var(--sf-text-secondary); line-height: 1.45;
+    opacity: 1;
   }
   .kp-arrow { color: var(--sf-accent); flex-shrink: 0; font-size: 18px; padding-top: 2px; }
-  .kp-item:first-child { color: var(--sf-text-primary); font-weight: 600; }
-  .kp-item:first-child .kp-arrow { font-weight: 700; }
-  .kp-item:not(:first-child) { opacity: 0.9; }
-  .kp-item:not(:first-child) .kp-arrow {
-    color: var(--sf-text-muted);
-    opacity: 0.8;
-  }
   .hairline {
     position: absolute; bottom: 80px; left: 120px; right: 120px;
     height: 1px; background: var(--sf-hairline-gradient, var(--sf-hairline));

@@ -51,13 +51,15 @@
     gap: 0 24px;
     align-items: stretch;
     width: 100%;
-    background: var(--sf-card-muted-bg, var(--sf-panel-bg));
-    border: var(--sf-card-muted-border, var(--sf-panel-border));
+    background: var(--sf-panel-bg);
+    border: var(--sf-panel-border);
+    border-top: var(--sf-panel-border-top);
     border-radius: var(--sf-panel-radius, 18px);
-    box-shadow: var(--sf-panel-shadow);
+    box-shadow: var(--sf-panel-shadow-inner, var(--sf-panel-shadow));
     overflow: hidden;
     min-height: 88px;
     position: relative;
+    opacity: 1;
   }
   .arch-layer::before {
     content: counter(arch-layer, decimal-leading-zero);
@@ -88,38 +90,12 @@
     grid-row: 1;
     padding: 22px 32px 24px 0;
   }
-  .arch-layer:nth-child(1) {
-    width: 100%;
-    min-height: 112px;
-    background: linear-gradient(
-      95deg,
-      color-mix(in srgb, var(--sf-accent) 22%, var(--sf-panel-bg)) 0%,
-      var(--sf-panel-bg) 55%
-    );
-    border: var(--sf-panel-border);
-    border-top: var(--sf-panel-border-top);
-    border-bottom: var(--sf-panel-border-bottom);
-    box-shadow: var(--sf-panel-shadow-inner, var(--sf-panel-shadow)),
-      0 0 0 1px color-mix(in srgb, var(--sf-accent) 22%, transparent);
-  }
-  .arch-layer:nth-child(1) .arch-accent { opacity: 1; width: 8px; }
-  .arch-layer:nth-child(1) .arch-layer-title {
-    font-size: 30px;
-    color: var(--sf-accent);
-  }
-  .arch-layer:nth-child(1)::before {
-    background: color-mix(in srgb, var(--sf-accent) 20%, transparent);
-    color: var(--sf-accent);
-  }
-  .arch-layer:not(:first-child) { opacity: 0.92; }
-  .arch-layer:not(:first-child) .arch-layer-title { color: var(--sf-text-primary); }
-  .arch-layer:not(:first-child) .arch-layer-desc { color: var(--sf-text-muted); }
-  .arch-layer:not(:first-child) .arch-accent { opacity: 0.65; }
+  .arch-layer .arch-accent { opacity: 0.75; }
   .arch-layer:nth-child(2) { width: 94%; }
-  .arch-layer:nth-child(3) { width: 88%; opacity: 0.9; }
-  .arch-layer:nth-child(4) { width: 82%; opacity: 0.86; }
-  .arch-layer:nth-child(5) { width: 76%; opacity: 0.82; }
-  .arch-layer:nth-child(n+6) { width: 72%; opacity: 0.78; }
+  .arch-layer:nth-child(3) { width: 88%; }
+  .arch-layer:nth-child(4) { width: 82%; }
+  .arch-layer:nth-child(5) { width: 76%; }
+  .arch-layer:nth-child(n+6) { width: 72%; }
   .arch-layer-title {
     font-size: 26px;
     font-weight: 700;

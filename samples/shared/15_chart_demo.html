@@ -57,22 +57,10 @@
     display: flex; align-items: center; gap: 10px;
     font-size: 14px; color: var(--sf-text-secondary);
   }
-  .legend-item:not(:first-child) { opacity: 0.82; }
-  .legend-item:first-child {
-    color: var(--sf-accent);
-    font-weight: 600;
-  }
-  .legend-item:first-child .legend-dot {
-    box-shadow: 0 0 12px color-mix(in srgb, var(--sf-accent) 40%, transparent);
-  }
+  .legend-item { opacity: 1; }
   .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
-  .bar-group:first-child .bar-val { color: var(--sf-accent); font-size: 15px; }
-  .bar-group:not(:first-child) .bar-val { color: var(--sf-text-muted); opacity: 0.9; }
-  .stats-row .stat-item:first-child .stat-val {
-    color: var(--sf-accent);
-    text-shadow: 0 0 32px color-mix(in srgb, var(--sf-accent) 30%, transparent);
-  }
-  .stats-row .stat-item:not(:first-child) .stat-val { color: var(--sf-text-secondary); opacity: 0.88; }
+  .bar-group .bar-val { color: var(--sf-text-secondary); opacity: 1; }
+  .stats-row .stat-item .stat-val { color: var(--sf-accent); opacity: 1; }
   .legend-dot-blue { background: linear-gradient(180deg, var(--sf-accent), var(--sf-accent-secondary, var(--sf-accent))); }
   .legend-dot-purple { background: linear-gradient(180deg, var(--sf-accent-secondary, var(--sf-accent)), var(--sf-text-muted)); }
   .page-num {

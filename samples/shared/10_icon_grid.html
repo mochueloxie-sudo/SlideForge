@@ -45,10 +45,12 @@
   .icon-card {
     min-height: {{ICON_CARD_MIN_HEIGHT}}px;
     padding: 32px 22px 28px;
-    background: var(--sf-card-muted-bg, var(--sf-panel-bg));
-    border: var(--sf-card-muted-border, var(--sf-panel-border));
+    background: var(--sf-panel-bg);
+    border: var(--sf-panel-border);
+    border-top: var(--sf-panel-border-top);
+    border-bottom: var(--sf-panel-border-bottom);
     border-radius: var(--sf-panel-radius, 20px);
-    box-shadow: var(--sf-panel-shadow);
+    box-shadow: var(--sf-panel-shadow-inner, var(--sf-panel-shadow));
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -56,38 +58,16 @@
     gap: 10px;
     position: relative;
     overflow: hidden;
+    opacity: 1;
   }
   .icon-card::after {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
-    height: 3px;
+    height: 4px;
     background: linear-gradient(90deg, var(--sf-accent), var(--sf-accent-light, var(--sf-accent-secondary)));
-    opacity: 0.25;
+    opacity: 0.35;
   }
-  .grid > .icon-card:first-child {
-    background: var(--sf-panel-bg);
-    border: var(--sf-panel-border);
-    border-top: var(--sf-panel-border-top);
-    border-bottom: var(--sf-panel-border-bottom);
-    box-shadow: var(--sf-panel-shadow-inner, var(--sf-panel-shadow));
-    padding: 40px 28px 36px;
-    min-height: calc({{ICON_CARD_MIN_HEIGHT}}px + 24px);
-  }
-  .grid > .icon-card:first-child::after {
-    height: 5px;
-    opacity: 1;
-  }
-  .grid > .icon-card:first-child .icon-emoji {
-    font-size: calc({{ICON_EMOJI_SIZE}}px * 1.15);
-  }
-  .grid > .icon-card:first-child .icon-label {
-    font-size: calc({{ICON_LABEL_SIZE}}px + 2px);
-    font-weight: 700;
-    color: var(--sf-accent);
-  }
-  .grid > .icon-card:not(:first-child) { opacity: 0.9; }
-  .grid > .icon-card:not(:first-child)::after { opacity: 0.18; }
   .icon-emoji { font-size: {{ICON_EMOJI_SIZE}}px; line-height: 1; }
   .icon-label {
     font-size: {{ICON_LABEL_SIZE}}px; font-weight: 600;
@@ -114,10 +94,6 @@
   body.layout-compact .icon-card {
     padding: 24px 18px 22px;
     min-height: calc({{ICON_CARD_MIN_HEIGHT}}px - 24px);
-  }
-  body.layout-compact .grid > .icon-card:first-child {
-    padding: 32px 22px 28px;
-    min-height: calc({{ICON_CARD_MIN_HEIGHT}}px + 4px);
   }
   body.layout-compact .icon-label { font-size: calc({{ICON_LABEL_SIZE}}px - 1px); }
   body.layout-compact .icon-desc { font-size: 15px; }

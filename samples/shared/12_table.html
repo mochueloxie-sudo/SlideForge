@@ -51,28 +51,19 @@
     text-transform: uppercase;
     border-bottom: 1px solid color-mix(in srgb, var(--sf-accent) 28%, var(--sf-hairline));
   }
-  thead th:first-child { color: var(--sf-accent); }
   tbody { flex: 1; display: flex; flex-direction: column; }
   tbody tr { flex: 1; display: flex; }
   tbody tr:nth-child(odd) { background: var(--sf-panel-bg); }
   tbody tr:nth-child(even) {
     background: color-mix(in srgb, var(--sf-accent) 5%, var(--sf-panel-bg));
   }
-  tbody tr:first-child td {
-    color: var(--sf-text-primary);
-    font-weight: 500;
-  }
-  tbody tr:not(:first-child) { opacity: 0.92; }
   tbody td {
     flex: 1; padding: 0 32px;
     font-size: {{TABLE_FONT_SIZE}}px; color: var(--sf-text-secondary);
     border-bottom: 1px solid var(--sf-hairline);
     display: flex; align-items: center;
   }
-  tbody td:first-child {
-    font-weight: 600;
-    color: var(--sf-text-primary);
-  }
+  tbody td:first-child { font-weight: 600; }
   tbody tr:last-child td { border-bottom: none; }
   .hairline {
     position: absolute; bottom: 80px; left: 120px; right: 120px;

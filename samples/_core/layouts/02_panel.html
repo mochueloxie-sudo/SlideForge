@@ -100,8 +100,8 @@
     border: 1px solid var(--sf-card-muted-border); border-bottom: 1px solid var(--sf-card-muted-border);
     background: var(--sf-card-muted-bg);
   }
-  body.layout-cards .kp-item:first-child {
-    border-top: 2px solid color-mix(in srgb, var(--sf-accent) 55%, transparent);
+  body.layout-cards .kp-item {
+    border-top: 2px solid color-mix(in srgb, var(--sf-accent) 35%, transparent);
   }
   body.layout-numbered .kp-list { counter-reset: kp-item; }
   body.layout-numbered .kp-item { counter-increment: kp-item; }
@@ -180,15 +180,6 @@
   .kp-desc    { font-size: 0.72em; opacity: 0.65; line-height: 1.55; }
   body.layout-grid-3  .kp-item { align-items: flex-start; }
   body.layout-cards   .kp-item { align-items: flex-start; }
-
-  body:not(.layout-cards):not(.layout-grid-3):not(.layout-numbered) .kp-item:first-child .kp-title {
-    font-weight: 700;
-    color: var(--sf-text-primary);
-  }
-  body:not(.layout-cards):not(.layout-grid-3):not(.layout-numbered) .kp-item:first-child .kp-arrow {
-    transform: scale(1.12);
-    box-shadow: var(--sf-kp-arrow-glow), 0 0 0 3px color-mix(in srgb, var(--sf-accent) 22%, transparent);
-  }
 
   body.vp-closing {
     justify-content: center;

@@ -41,16 +41,19 @@
     max-width: 1680px;
   }
   .card {
-    background: var(--sf-card-muted-bg, var(--sf-panel-bg));
-    border: var(--sf-card-muted-border, var(--sf-panel-border));
+    background: var(--sf-panel-bg);
+    border: var(--sf-panel-border);
+    border-top: var(--sf-panel-border-top);
+    border-bottom: var(--sf-panel-border-bottom);
     border-radius: var(--sf-panel-radius, 20px);
-    box-shadow: var(--sf-panel-shadow);
+    box-shadow: var(--sf-panel-shadow-inner, var(--sf-panel-shadow));
     padding: 32px 30px 34px;
     display: flex;
     flex-direction: column;
     min-height: 200px;
     position: relative;
     overflow: hidden;
+    opacity: 1;
   }
   .card::before {
     content: '';
@@ -61,30 +64,6 @@
     opacity: 0.35;
     border-radius: var(--sf-panel-radius, 20px) 0 0 var(--sf-panel-radius, 20px);
   }
-  .grid > .card:first-child {
-    background: var(--sf-panel-bg);
-    border: var(--sf-panel-border);
-    border-top: var(--sf-panel-border-top);
-    border-bottom: var(--sf-panel-border-bottom);
-    box-shadow: var(--sf-panel-shadow-inner, var(--sf-panel-shadow));
-    padding: 40px 36px 42px;
-    min-height: 240px;
-  }
-  .grid > .card:first-child::before {
-    width: 6px;
-    opacity: 1;
-  }
-  .grid > .card:first-child .card-title {
-    font-size: 28px;
-    letter-spacing: -0.02em;
-  }
-  .grid > .card:first-child .card-body {
-    font-size: 19px;
-    color: var(--sf-text-secondary);
-  }
-  .grid > .card:first-child .card-title { color: var(--sf-accent); }
-  .grid > .card:not(:first-child) { opacity: 0.9; }
-  .grid > .card:not(:first-child)::before { opacity: 0.22; }
   .card-num {
     font-size: 42px; font-weight: 800; line-height: 1;
     color: var(--sf-accent);
@@ -120,10 +99,6 @@
     max-width: 1520px;
     gap: 24px;
   }
-  body.layout-2x2 .grid > .card:first-child {
-    grid-column: 1 / -1;
-    min-height: 200px;
-  }
   body.layout-2x2 .card { padding: 36px 32px; min-height: 180px; }
   body.layout-2x2 .card-title { font-size: 26px; }
   body.layout-2x2 .card-body { font-size: 18px; }
@@ -132,10 +107,6 @@
   body.layout-compact .card { padding: 24px 22px 26px; min-height: 160px; }
   body.layout-compact .card-title { font-size: 20px; }
   body.layout-compact .card-body { font-size: 15px; }
-  body.layout-compact .grid > .card:first-child {
-    min-height: 200px;
-    padding: 32px 28px 34px;
-  }
   body.layout-compact .grid > .card:first-child .card-title { font-size: 24px; }
 
   .hairline {

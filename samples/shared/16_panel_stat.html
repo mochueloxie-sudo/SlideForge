@@ -50,20 +50,11 @@
     border-bottom: 1px solid var(--sf-hairline);
   }
   .kp-item:last-child { border-bottom: none; }
-  .panel .kp-item:first-child {
-    color: var(--sf-text-primary);
-    font-weight: 600;
-  }
-  .panel .kp-item:not(:first-child) { opacity: 0.9; }
+  .kp-item { color: var(--sf-text-secondary); opacity: 1; }
   .kp-dot {
     flex-shrink: 0; width: 8px; height: 8px;
     background: var(--sf-accent); border-radius: 50%;
   }
-  .panel .kp-item:first-child .kp-dot {
-    width: 10px; height: 10px;
-    box-shadow: 0 0 12px color-mix(in srgb, var(--sf-accent) 50%, transparent);
-  }
-  .panel .kp-item:not(:first-child) .kp-dot { background: var(--sf-text-muted); }
   .right {
     flex: 1;
     display: flex; flex-direction: column;

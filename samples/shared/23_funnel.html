@@ -75,10 +75,12 @@
     align-items: start;
     padding: 22px 32px 24px 24px;
     border-radius: var(--sf-panel-radius, 18px);
-    background: var(--sf-card-muted-bg, var(--sf-panel-bg));
-    border: var(--sf-card-muted-border, var(--sf-panel-border));
-    box-shadow: var(--sf-panel-shadow);
+    background: var(--sf-panel-bg);
+    border: var(--sf-panel-border);
+    border-top: var(--sf-panel-border-top);
+    box-shadow: var(--sf-panel-shadow-inner, var(--sf-panel-shadow));
     clip-path: polygon(2.5% 0, 97.5% 0, 100% 100%, 0 100%);
+    opacity: 1;
   }
   .fn-tier::before {
     content: counter(fn-stage, decimal-leading-zero);
@@ -93,39 +95,6 @@
     align-self: start;
     padding-top: 4px;
   }
-  .fn-tier:nth-child(1) {
-    background: linear-gradient(
-      105deg,
-      color-mix(in srgb, var(--sf-accent) 28%, var(--sf-panel-bg)) 0%,
-      var(--sf-panel-bg) 58%
-    );
-    border: var(--sf-panel-border);
-    border-top: var(--sf-panel-border-top);
-    border-bottom: var(--sf-panel-border-bottom);
-    box-shadow: var(--sf-panel-shadow-inner, var(--sf-panel-shadow)),
-      0 0 0 1px color-mix(in srgb, var(--sf-accent) 22%, transparent);
-    padding-top: 28px;
-    padding-bottom: 30px;
-  }
-  .fn-tier:nth-child(1) .fn-label {
-    font-size: 28px;
-    color: var(--sf-accent);
-  }
-  .fn-tier:nth-child(1)::before {
-    color: var(--sf-accent);
-    text-shadow: 0 0 16px color-mix(in srgb, var(--sf-accent) 35%, transparent);
-  }
-  .fn-tier:not(:first-child) {
-    background: var(--sf-card-muted-bg, var(--sf-panel-bg));
-    border: var(--sf-card-muted-border, var(--sf-panel-border));
-    box-shadow: var(--sf-panel-shadow);
-  }
-  .fn-tier:not(:first-child) .fn-label { color: var(--sf-text-primary); }
-  .fn-tier:not(:first-child) .fn-desc { color: var(--sf-text-muted); }
-  .fn-tier:nth-child(2) { opacity: 0.94; }
-  .fn-tier:nth-child(3) { opacity: 0.88; }
-  .fn-tier:nth-child(4) { opacity: 0.82; }
-  .fn-tier:nth-child(n+5) { opacity: 0.76; }
   .fn-label {
     grid-column: 2;
     grid-row: 1;
