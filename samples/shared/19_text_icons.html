@@ -10,9 +10,9 @@
   html { width: 1920px; height: 1080px; overflow: hidden; }
   body {
     width: 1920px; height: 1080px;
-    background: {{BODY_BG}};
-    font-family: '{{FONT}}', 'PingFang SC', sans-serif;
-    color: {{TEXT_PRIMARY}};
+    background: var(--sf-page-bg-panel, var(--sf-body-gradient, var(--sf-body-bg)));
+    font-family: var(--sf-font, 'PingFang SC', sans-serif;
+    color: var(--sf-text-primary);
     display: flex; flex-direction: row; align-items: stretch;
     position: relative; overflow: hidden;
   }
@@ -21,19 +21,19 @@
     flex: 0 0 960px;
     padding: 80px 80px 100px 120px;
     display: flex; flex-direction: column; justify-content: center;
-    border-right: 1px solid {{HAIRLINE_COLOR}};
+    border-color: var(--sf-hairline);
   }
   .eyebrow {
     font-size: 13px; font-weight: 800; letter-spacing: 0.2em;
-    color: {{EYEBROW_COLOR}}; text-transform: uppercase; margin-bottom: 18px;
+    color: var(--sf-eyebrow); text-transform: uppercase; margin-bottom: 18px;
   }
   .title {
     font-size: 56px; font-weight: 800; line-height: 1.05;
-    color: {{TEXT_PRIMARY}}; margin-bottom: 32px;
+    color: var(--sf-text-primary); margin-bottom: 32px;
   }
   .body-text {
     font-size: 22px; line-height: 1.65;
-    color: {{TEXT_SECONDARY}};
+    color: var(--sf-text-secondary);
   }
   /* ── Right: icon grid ───────────────────────────────────── */
   .right {
@@ -49,13 +49,13 @@
     align-content: center;
   }
   .icon-card {
-    background: {{PANEL_BG}};
-    border: {{PANEL_BORDER}};
-    border-top: {{PANEL_BORDER_TOP}};
-    box-shadow: {{PANEL_SHADOW}};
-    border-radius: {{PANEL_RADIUS}};
-    backdrop-filter: blur({{PANEL_BLUR}});
-    -webkit-backdrop-filter: blur({{PANEL_BLUR}});
+    background: var(--sf-panel-bg);
+    border: var(--sf-panel-border);
+    border-top: var(--sf-panel-border-top);
+    box-shadow: var(--sf-panel-shadow);
+    border-radius: var(--sf-panel-radius, 20px);
+    backdrop-filter: blur(12px;
+    -webkit-backdrop-filter: blur(12px;
     padding: 28px 20px;
     display: flex; flex-direction: column;
     align-items: center; gap: 12px;
@@ -64,16 +64,16 @@
   .icon-emoji { font-size: 52px; line-height: 1; }
   .icon-label {
     font-size: 17px; font-weight: 500;
-    color: {{TEXT_SECONDARY}}; line-height: 1.4;
+    color: var(--sf-text-secondary); line-height: 1.4;
   }
   /* ── Footer ─────────────────────────────────────────────── */
   .hairline {
     position: absolute; bottom: 80px; left: 120px; right: 120px;
-    height: 1px; background: {{HAIRLINE_COLOR}};
+    height: 1px; background: var(--sf-hairline);
   }
   .page-num {
     position: absolute; bottom: 56px; right: 120px;
-    font-size: 13px; color: {{TEXT_MUTED}};
+    font-size: 13px; color: var(--sf-text-muted);
   }
 
   /* ── hover: 与入场动画并存（不用 transform）──────────────────────────── */
@@ -93,7 +93,7 @@
   body.layout-wide-left .left { flex: 0 0 1120px; }
   body.layout-wide-left .icon-grid { grid-template-columns: 1fr; }
   body.layout-vertical { flex-direction: column; }
-  body.layout-vertical .left { flex: 0 0 auto; border-right: none; border-bottom: 1px solid {{HAIRLINE_COLOR}}; padding: 60px 120px 40px; }
+  body.layout-vertical .left { flex: 0 0 auto; border-right: none; border-color: var(--sf-hairline); padding: 60px 120px 40px; }
   body.layout-vertical .right { padding: 40px 120px 80px; }
   body.layout-vertical .icon-grid { grid-template-columns: repeat(4, 1fr); }
 </style>

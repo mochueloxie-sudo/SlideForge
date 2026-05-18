@@ -11,84 +11,68 @@
 
   body {
     width: 1920px; height: 1080px;
-    background: {{BODY_BG}};
-    font-family: '{{FONT}}', 'PingFang SC', sans-serif;
-    color: {{TEXT_PRIMARY}};
+    background: var(--sf-page-bg-panel, var(--sf-body-gradient, var(--sf-body-bg)));
+    font-family: var(--sf-font);
+    color: var(--sf-text-primary);
     padding: 80px 120px;
     position: relative;
+    display: flex;
+    flex-direction: column;
   }
   .eyebrow {
     font-size: 13px; font-weight: 800; letter-spacing: 0.2em;
-    color: {{EYEBROW_COLOR}}; text-transform: uppercase; margin-bottom: 20px;
+    color: var(--sf-eyebrow); text-transform: uppercase; margin-bottom: 20px;
+    flex-shrink: 0;
   }
   .title {
-    font-size: 58px; font-weight: 800; line-height: 1.05;
-    color: {{TEXT_PRIMARY}}; margin-bottom: 52px; max-width: 1100px;
+    font-size: var(--sf-title-size, 58px); font-weight: 800; line-height: 1.05;
+    letter-spacing: -0.03em; color: var(--sf-text-primary);
+    margin-bottom: 44px; max-width: 1100px; flex-shrink: 0;
   }
   .cols {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 80px;
+    gap: 64px;
+    flex: 1;
+    min-height: 0;
     align-items: start;
   }
-  /* Left column — flowing prose */
   .col-left .body-text {
     font-size: 24px; font-weight: 400;
-    color: {{TEXT_SECONDARY}};
+    color: var(--sf-text-secondary);
     line-height: 1.7;
-    margin-bottom: 20px;
   }
-  /* Right column — glass panel with key points */
   .col-right {
-    background: {{PANEL_BG}};
-    border: {{PANEL_BORDER}};
-    border-top: {{PANEL_BORDER_TOP}};
-    border-bottom: {{PANEL_BORDER_BOTTOM}};
-    box-shadow: {{PANEL_SHADOW}};
-    border-radius: {{PANEL_RADIUS}};
-    backdrop-filter: blur({{PANEL_BLUR}});
-    -webkit-backdrop-filter: blur({{PANEL_BLUR}});
+    background: var(--sf-panel-bg);
+    border: var(--sf-panel-border);
+    border-top: var(--sf-panel-border-top);
+    border-bottom: var(--sf-panel-border-bottom);
+    box-shadow: var(--sf-panel-shadow);
+    border-radius: var(--sf-panel-radius, 20px);
     padding: 40px 48px;
   }
   .col-right-label {
     font-size: 13px; font-weight: 800; letter-spacing: 0.15em;
-    color: {{ACCENT}}; text-transform: uppercase; margin-bottom: 24px;
+    color: var(--sf-accent); text-transform: uppercase; margin-bottom: 24px;
   }
-  .kp-list { list-style: none; display: flex; flex-direction: column; gap: 20px; }
+  .kp-list { list-style: none; display: flex; flex-direction: column; gap: 18px; }
   .kp-item {
     display: flex; align-items: flex-start; gap: 14px;
-    font-size: 21px; color: {{TEXT_PRIMARY}}; line-height: 1.45;
+    font-size: 21px; color: var(--sf-text-primary); line-height: 1.45;
   }
-  .kp-arrow { color: {{ACCENT}}; flex-shrink: 0; font-size: 18px; padding-top: 2px; }
+  .kp-arrow { color: var(--sf-accent); flex-shrink: 0; font-size: 18px; padding-top: 2px; }
   .hairline {
     position: absolute; bottom: 80px; left: 120px; right: 120px;
-    height: 1px; background: {{HAIRLINE_COLOR}};
+    height: 1px; background: var(--sf-hairline);
+    flex-shrink: 0;
   }
   .page-num {
     position: absolute; bottom: 56px; right: 120px;
-    font-size: 13px; color: {{TEXT_MUTED}};
+    font-size: 13px; color: var(--sf-text-muted);
   }
-
-  /* ── hover: 与入场动画并存（不用 transform）──────────────────────────── */
-  @media (hover: hover) and (pointer: fine) {
-    .col-right .kp-list .kp-item {
-      transition: outline-color 0.2s ease, background-color 0.2s ease;
-      outline: 2px solid transparent;
-      outline-offset: 2px;
-      border-radius: 8px;
-    }
-    .col-right .kp-list .kp-item:hover {
-      outline-color: rgba(255,255,255,0.26);
-      background-color: rgba(255,255,255,0.06);
-    }
-  }
-
-  /* ── layout hints ─────────────────────────────────────────────────────── */
-  /* wide-left: 60/40 */
-  body.layout-wide-left  .cols { grid-template-columns: 1.5fr 1fr; }
-  /* wide-right: 40/60 */
-  body.layout-wide-right .cols { grid-template-columns: 1fr 1.5fr; }
-  </style>
+  body.layout-wide-left .cols { grid-template-columns: 1.55fr 1fr; }
+  body.layout-wide-right .cols { grid-template-columns: 1fr 1.55fr; }
+</style>
 </head>
 <body>
   <div class="eyebrow">{{EYEBROW}}</div>

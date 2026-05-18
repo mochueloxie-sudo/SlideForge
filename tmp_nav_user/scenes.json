@@ -1,0 +1,22 @@
+[
+  {
+    "type": "cover",
+    "title": "Deck"
+  },
+  {
+    "id": 2,
+    "type": "content",
+    "content_variant": "nav_bar",
+    "title": "今日看点",
+    "subtitle": "语音界面 · Agent 未来 · 专家差距 · 月报素材四条线",
+    "nav_items": [
+      "🎧 ElevenLabs：语音即界面",
+      "🐦 GPT-5.5 & Agent 未来",
+      "🐦 专家 vs 新手",
+      "📊 CEO 月报素材"
+    ],
+    "nav_active": 0,
+    "section_label": "SECTION 02 · 10",
+    "visual_weight": "breathing"
+  }
+]

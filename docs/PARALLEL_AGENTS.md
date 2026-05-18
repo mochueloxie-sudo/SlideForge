@@ -237,3 +237,58 @@ TOKENS.md 必填键齐全；浅色对比度可读；关掉 enhancement full 仍�
 npm run check:golden
 git diff --stat
 ```
+
+---
+
+# 第三波 — 深度回退 _core · shared 全量 · 13 主题 token（2026-05）
+
+> **目标**：清掉盖住 `_core` 的旧样张；shared 叙事 + code/table/nav/chart 单源；13 主题均有 `tokens.css`；金标扩面。
+
+## 冲突面（第三波）
+
+| 路径 | Agent A | Agent B | Agent C |
+|------|---------|---------|---------|
+| 删主题内 `01`–`05`/`cover` 等（**保留** `paper-ink/**`、`notebook-tabs/cover.html`） | ✅ | ❌ | ❌ |
+| `scripts/prune-theme-*.js` | ✅ | ❌ | ❌ |
+| `samples/_core/layouts/**` | ❌ | ❌ | ❌ |
+| `samples/shared/**`（含 `11`–`15` 新建） | ❌ | ✅ | ❌ |
+| 删 `samples/shared/03,20,21` 重复 | ❌ | ✅ | ❌ |
+| `scripts/prune-theme-utility-templates.js` | ❌ | ✅ 执行 | ❌ |
+| `samples/themes/**/tokens.css` | ❌ | ❌ | ✅ |
+| `examples/golden/variant_showcase_scenes.json` | ❌ | ❌ | ✅ |
+| `TOKENS.md` / `VISUAL_DIFF` / `golden/README` | ❌ | ❌ | ✅ |
+| `check-golden.js` | ❌ | ❌ | ❌（本波不增金标套数） |
+
+## Prompt A — 深度回退 _core
+
+```markdown
+运行并提交：
+- node scripts/prune-theme-depth-overrides.js
+- 确认 neon/bold/dark 无 01–05 主题副本；paper-ink 定制保留
+- 勿动 shared/
+```
+
+## Prompt B — shared 全量 + 工具变体单源
+
+```markdown
+- 升级 shared：08,16,17,18,19（--sf-*）
+- 新建 shared：11_code_block, 12_table, 14_nav_bar, 15_chart_demo
+- 删除 shared/03_stats_grid, 20_compare, 21_process_flow
+- node scripts/prune-theme-utility-templates.js
+- node scripts/wave3-finish.js（若 17–19/11 未完工）
+```
+
+## Prompt C — token + 金标扩面
+
+```markdown
+- 7 主题 tokens.css（paper-ink 等）
+- variant_showcase +4 页：two_col, panel_stat, code, table
+- TOKENS.md / VISUAL_DIFF / golden README
+```
+
+## 汇合清单（第三波）
+
+- [x] A：47+ 主题深度文件已删，paper-ink 保留
+- [x] B：shared 无 03/20/21 重复；11–15 存在；utility 主题副本已删（79）
+- [x] C：13 主题 tokens；variant_showcase 10 页
+- [x] `npm run check:golden` 全绿（2026-05-18）

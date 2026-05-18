@@ -6,6 +6,19 @@
 
 ---
 
+## [4.2.3] — 2026-05-18 — Wave3：_core 回退 · shared 全量 · 13 主题 token
+
+> **patch**：样张与 token；`scenes.json` 不变。
+
+### 变更
+
+- **深度页回退 `_core`**：删除 10 主题内 legacy `01`–`05`/`cover` 等覆盖（保留 `paper-ink` 定制、`notebook-tabs/cover`）；`scripts/prune-theme-depth-overrides.js`。
+- **shared 全量**：升级 `08/16/17/18/19`；新增 `11_code_block` / `12_table` / `14_nav_bar` / `15_chart_demo`；移除与 `_core` 重复的 `03/20/21`；`scripts/prune-theme-utility-templates.js` 删除 79 个主题内 utility 副本。
+- **13/13 `tokens.css`**：补 `paper-ink` 等 7 主题（`depth_tokens_from_tpl` 生成）。
+- **金标**：`variant_showcase` 扩至 10 页（+ two_col / panel_stat / code / table）。
+
+---
+
 ## [4.2.2] — 2026-05-18 — nav_bar 修复 · 变体字段优先
 
 > **patch**：`scenes.json` 契约不变；渲染兜底 + validate 提示 + Agent 文档。

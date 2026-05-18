@@ -1,0 +1,162 @@
+{
+  "colorScheme": {
+    "background": "#0a0a0a",
+    "backgroundGradient": null,
+    "textPrimary": "#ffffff",
+    "textSecondary": "#aaaaaa",
+    "primary": "#6366f1",
+    "accent": "#6366f1",
+    "accentLight": "#6366ff",
+    "accentDark": "#000000"
+  },
+  "typography": {
+    "title": {
+      "font": "Orbitron",
+      "coverSize": 78,
+      "sectionSize": 58,
+      "weight": 700,
+      "letterSpacing": "-0.03em",
+      "lineHeight": 1.08
+    },
+    "body": {
+      "font": "JetBrains Mono",
+      "size": 22,
+      "lineHeight": 1.55,
+      "weight": 400
+    },
+    "code": {
+      "font": "JetBrains Mono",
+      "size": 18,
+      "background": "rgba(99,102,241,0.10)",
+      "border": "1px solid rgba(99,102,241,0.22)",
+      "borderRadius": "10px"
+    }
+  },
+  "decoration": {
+    "glow": {
+      "count": 1,
+      "color": "#6366f1",
+      "size": "600px",
+      "blur": 150,
+      "opacity": 0.15,
+      "position": {
+        "top": "-160px",
+        "right": "-120px"
+      }
+    },
+    "shapes": [
+      "neon-glow",
+      "grid-lines",
+      "cyber-shapes"
+    ],
+    "panel": {
+      "enabled": true,
+      "background": "rgba(15,15,20,0.85)",
+      "border": "1px solid rgba(139,92,246,0.30)",
+      "borderTop": "1px solid rgba(0,245,212,0.12)",
+      "borderBottom": "1px solid rgba(0,0,0,0.35)",
+      "shadow": "0 20px 60px rgba(0,0,0,0.50), 0 4px 12px rgba(139,92,246,0.20), 0 0 30px rgba(0,245,212,0.05)",
+      "innerGlow": "inset 0 1px 0 rgba(0,245,212,0.10)",
+      "radius": "12px",
+      "blur": "6px"
+    },
+    "hairline": {
+      "enabled": true,
+      "color": "rgba(99,102,241,0.35)"
+    },
+    "accentBar": {
+      "enabled": false
+    }
+  },
+  "specialElements": {
+    "numbers": {
+      "size": "56-72px",
+      "color": "#6366ff",
+      "weight": 700,
+      "font": "Orbitron"
+    },
+    "code": {
+      "style": "glass-panel-inline"
+    },
+    "quotes": {
+      "borderLeft": "none",
+      "paddingLeft": "0",
+      "font": "PingFang SC",
+      "fontStyle": "normal",
+      "fontWeight": 500,
+      "fontSize": "28px",
+      "color": "#ffffff"
+    },
+    "keyPoints": {
+      "background": "rgba(15,15,20,0.85)",
+      "border": "1px solid rgba(139,92,246,0.30)",
+      "borderTop": "1px solid rgba(0,245,212,0.12)",
+      "borderBottom": "1px solid rgba(0,0,0,0.35)",
+      "borderRadius": "20px",
+      "padding": "28px 32px",
+      "textAlign": "left",
+      "titleColor": "#6366ff"
+    }
+  },
+  "layout_hint": "center_focus",
+  "design_mode": "neon-cyber",
+  "preset_name": "Neon Cyber",
+  "source": "frontend-presets-fallback",
+  "page_directions": [
+    {
+      "page_intent": "hero",
+      "alignment": "center",
+      "density": "low",
+      "hero_element": "none",
+      "content_variant": "text",
+      "layout_hint": null,
+      "decoration_policy": "subtle_glow",
+      "negative_space": "large",
+      "visual_priority": [
+        "title",
+        "subtitle"
+      ],
+      "avoid_elements": [
+        "icons",
+        "mixed-focus",
+        "multi-box"
+      ],
+      "visual_weight": "normal",
+      "composition": "default",
+      "max_body_lines": 2,
+      "max_key_points": 3
+    },
+    {
+      "page_intent": "structure",
+      "alignment": "left",
+      "density": "low",
+      "hero_element": "nav_bar",
+      "content_variant": "nav_bar",
+      "layout_hint": null,
+      "decoration_policy": "subtle_glow",
+      "negative_space": "large",
+      "visual_priority": [
+        "title",
+        "navigation"
+      ],
+      "avoid_elements": [
+        "icons",
+        "mixed-focus",
+        "multi-box",
+        "quote",
+        "code-block"
+      ],
+      "visual_weight": "hero",
+      "composition": "default",
+      "max_body_lines": 1,
+      "max_key_points": 3,
+      "layout_variation": "closing"
+    }
+  ],
+  "strategy_version": "director-v1",
+  "page_animations": true,
+  "page_animation_preset": "stagger",
+  "enhancement": "minimal",
+  "render_mode": "production",
+  "typography_scale": "static"
+}

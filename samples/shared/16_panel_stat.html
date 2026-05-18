@@ -5,123 +5,97 @@
 <meta name="viewport" content="width=1920, height=1080">
 <title>{{TITLE}}</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700;800&family=Manrope:wght@400;500;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700;800&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { width: 1920px; height: 1080px; overflow: hidden; }
   body {
     width: 1920px; height: 1080px;
-    background: {{BODY_BG}};
-    font-family: '{{FONT}}', 'PingFang SC', sans-serif;
-    color: {{TEXT_PRIMARY}};
+    background: var(--sf-page-bg-panel, var(--sf-body-gradient, var(--sf-body-bg)));
+    font-family: var(--sf-font);
+    color: var(--sf-text-primary);
     display: flex; align-items: stretch;
     position: relative; overflow: hidden;
   }
-  /* ── Left: panel with key points ───────────────────────── */
   .left {
     flex: 0 0 1100px;
     padding: 80px 80px 80px 120px;
     display: flex; flex-direction: column; justify-content: center;
-    border-right: 1px solid {{HAIRLINE_COLOR}};
+    border-right: 1px solid var(--sf-hairline);
   }
   .eyebrow {
     font-size: 13px; font-weight: 800; letter-spacing: 0.2em;
-    color: {{EYEBROW_COLOR}}; text-transform: uppercase; margin-bottom: 18px;
+    color: var(--sf-eyebrow); text-transform: uppercase; margin-bottom: 18px;
   }
   .title {
-    font-size: 52px; font-weight: 800; line-height: 1.05;
-    color: {{TEXT_PRIMARY}}; margin-bottom: 40px;
+    font-size: var(--sf-title-size, 52px); font-weight: 800; line-height: 1.05;
+    color: var(--sf-text-primary); margin-bottom: 40px;
   }
   .panel {
-    background: {{PANEL_BG}};
-    border: {{PANEL_BORDER}};
-    border-top: {{PANEL_BORDER_TOP}};
-    border-bottom: {{PANEL_BORDER_BOTTOM}};
-    box-shadow: {{PANEL_SHADOW}};
-    border-radius: {{PANEL_RADIUS}};
-    backdrop-filter: blur({{PANEL_BLUR}});
-    -webkit-backdrop-filter: blur({{PANEL_BLUR}});
+    background: var(--sf-panel-bg);
+    border: var(--sf-panel-border);
+    border-top: var(--sf-panel-border-top);
+    border-bottom: var(--sf-panel-border-bottom);
+    box-shadow: var(--sf-panel-shadow);
+    border-radius: var(--sf-panel-radius, 20px);
     padding: 32px 40px;
     flex: 1;
     display: flex; flex-direction: column; justify-content: space-around;
   }
   .kp-item {
     display: flex; align-items: center; gap: 16px;
-    font-size: 22px; line-height: 1.5; color: {{TEXT_SECONDARY}};
+    font-size: 22px; line-height: 1.5; color: var(--sf-text-secondary);
     padding: 10px 0;
-    border-bottom: 1px solid {{HAIRLINE_COLOR}};
+    border-bottom: 1px solid var(--sf-hairline);
   }
   .kp-item:last-child { border-bottom: none; }
   .kp-dot {
     flex-shrink: 0; width: 8px; height: 8px;
-    background: {{ACCENT}}; border-radius: 50%;
+    background: var(--sf-accent); border-radius: 50%;
   }
-  /* ── Right: stat callout ────────────────────────────────── */
   .right {
     flex: 1;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     padding: 80px 60px;
-    gap: 0;
   }
   .stat-label-top {
     font-size: 15px; font-weight: 600; letter-spacing: 0.18em;
-    color: {{EYEBROW_COLOR}}; text-transform: uppercase; margin-bottom: 24px;
+    color: var(--sf-eyebrow); text-transform: uppercase; margin-bottom: 24px;
   }
   .stat-value {
-    font-size: 140px; font-weight: 800; line-height: 0.9;
+    font-size: var(--sf-stat-number-size, 140px); font-weight: 800; line-height: 0.9;
     letter-spacing: -0.05em;
-    color: {{ACCENT_LIGHT}};
+    color: var(--sf-accent-light, var(--sf-accent));
   }
   .stat-unit {
     font-size: 48px; font-weight: 300;
-    color: {{TEXT_MUTED}}; margin-left: 8px; vertical-align: super;
+    color: var(--sf-text-muted); margin-left: 8px;
   }
   .stat-name {
-    font-size: 24px; font-weight: 500; color: {{TEXT_SECONDARY}};
+    font-size: 24px; font-weight: 500; color: var(--sf-text-secondary);
     margin-top: 24px; text-align: center; line-height: 1.4;
   }
   .stat-caption {
-    font-size: 16px; color: {{TEXT_MUTED}};
+    font-size: 16px; color: var(--sf-text-muted);
     margin-top: 12px; text-align: center; line-height: 1.5; max-width: 500px;
   }
   .stat-ring {
     position: absolute;
-    width: 600px; height: 600px;
+    width: 520px; height: 520px;
     border-radius: 50%;
-    border: 1px solid {{HAIRLINE_COLOR}};
-    opacity: 0.3;
+    border: 1px solid var(--sf-hairline);
+    opacity: 0.35;
     pointer-events: none;
   }
-  /* ── Footer ─────────────────────────────────────────────── */
   .hairline {
     position: absolute; bottom: 80px; left: 120px; right: 120px;
-    height: 1px; background: {{HAIRLINE_COLOR}};
+    height: 1px; background: var(--sf-hairline);
   }
   .page-num {
     position: absolute; bottom: 56px; right: 120px;
-    font-size: 13px; color: {{TEXT_MUTED}};
+    font-size: 13px; color: var(--sf-text-muted);
   }
-
-  /* ── hover: 与入场动画并存（不用 transform）──────────────────────────── */
-  @media (hover: hover) and (pointer: fine) {
-    .panel .kp-item {
-      transition: outline-color 0.2s ease, background-color 0.2s ease;
-      outline: 2px solid transparent;
-      outline-offset: 2px;
-      border-radius: 8px;
-    }
-    .panel .kp-item:hover {
-      outline-color: rgba(255,255,255,0.26);
-      background-color: rgba(255,255,255,0.06);
-    }
-  }
-
-  /* ── layout hints ─────────────────────────────────────────── */
-  body.layout-sidebar-left .left { flex: 0 0 800px; }
-  body.layout-sidebar-left .title { font-size: 44px; }
-  body.layout-sidebar-left .stat-value { font-size: 160px; }
-  body.layout-wide-stat .left { flex: 0 0 900px; }
-  body.layout-wide-stat .stat-value { font-size: 180px; }
+  body.layout-wide-stat .stat-value { font-size: 168px; }
 </style>
 </head>
 <body>

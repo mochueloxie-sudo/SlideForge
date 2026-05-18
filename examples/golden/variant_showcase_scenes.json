@@ -4,7 +4,7 @@
     "type": "cover",
     "eyebrow": "G2 · 陈列",
     "title": "Shared 变体一览",
-    "secondary": "paper-ink · card / icon / funnel / stack",
+    "secondary": "paper-ink · shared 变体全矩阵验收",
     "visual_weight": "hero"
   },
   {
@@ -51,6 +51,46 @@
       { "title": "宿主 Agent", "desc": "scenes.json + 主题选择" },
       { "title": "slide-forge", "desc": "design → html → package" },
       { "title": "交付", "desc": "PDF / HTML · 1920×1080" }
+    ]
+  },
+  {
+    "id": "vs-twocol",
+    "type": "content",
+    "content_variant": "two_col",
+    "title": "双栏 · 叙事与要点",
+    "left_body": "左侧长文说明设计系统如何落到样张：深度页走 _core，叙事变体走 shared，主题只保留 tokens 与少数封面定制。",
+    "right_label": "要点",
+    "right_points": ["_core 深度 8 页", "shared 统一 code/table", "validate 字段→变体"]
+  },
+  {
+    "id": "vs-panel-stat",
+    "type": "content",
+    "content_variant": "panel_stat",
+    "title": "指标 + 要点",
+    "stat_value": "118%",
+    "stat_label": "净留存",
+    "stat_unit": "",
+    "stat_caption": "同比 +6pt",
+    "key_points": ["大客户占比 41%", "渠道贡献提升", "毛利率稳定"]
+  },
+  {
+    "id": "vs-code",
+    "type": "content",
+    "content_variant": "code",
+    "title": "命令示例",
+    "code_label": "bash",
+    "code_snippet": "npm run check:golden\nopen output_golden/variant_showcase/presentation.html"
+  },
+  {
+    "id": "vs-table",
+    "type": "content",
+    "content_variant": "table",
+    "title": "变体对照",
+    "table_headers": ["变体", "路径", "状态"],
+    "table_rows": [
+      ["card_grid", "shared/", "✓ wave3"],
+      ["two_col", "shared/", "✓ wave3"],
+      ["code", "shared/", "✓ wave3"]
     ]
   },
   {

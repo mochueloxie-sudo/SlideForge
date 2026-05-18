@@ -10,16 +10,16 @@
   html { width: 1920px; height: 1080px; overflow: hidden; }
   body {
     width: 1920px; height: 1080px;
-    background: {{BODY_BG}};
-    font-family: '{{FONT}}', 'PingFang SC', sans-serif;
-    color: {{TEXT_PRIMARY}};
+    background: var(--sf-page-bg-panel, var(--sf-body-gradient, var(--sf-body-bg)));
+    font-family: var(--sf-font, 'PingFang SC', sans-serif;
+    color: var(--sf-text-primary);
     padding: 80px 160px 100px;
     display: flex; flex-direction: column; justify-content: center;
     position: relative; overflow: hidden;
   }
   .eyebrow {
     font-size: 13px; font-weight: 800; letter-spacing: 0.2em;
-    color: {{EYEBROW_COLOR}}; text-transform: uppercase; margin-bottom: 24px;
+    color: var(--sf-eyebrow); text-transform: uppercase; margin-bottom: 24px;
     flex-shrink: 0;
   }
   /* ── Quote block ────────────────────────────────────────── */
@@ -31,54 +31,54 @@
   }
   .quote-mark {
     font-size: 160px; line-height: 1; font-weight: 800;
-    color: {{ACCENT}}; opacity: 0.15;
+    color: var(--sf-accent); opacity: 0.15;
     position: absolute; left: 120px; top: 100px;
     font-family: Georgia, serif;
     pointer-events: none;
   }
   .quote-text {
     font-size: 48px; font-weight: 500; line-height: 1.35;
-    color: {{TEXT_PRIMARY}};
+    color: var(--sf-text-primary);
     max-width: 1300px;
   }
   /* ── Attribution + context ──────────────────────────────── */
   .context-wrap {
-    background: {{PANEL_BG}};
-    border: {{PANEL_BORDER}};
-    border-top: {{PANEL_BORDER_TOP}};
-    border-bottom: {{PANEL_BORDER_BOTTOM}};
-    box-shadow: {{PANEL_SHADOW}};
-    border-radius: {{PANEL_RADIUS}};
-    backdrop-filter: blur({{PANEL_BLUR}});
-    -webkit-backdrop-filter: blur({{PANEL_BLUR}});
+    background: var(--sf-panel-bg);
+    border: var(--sf-panel-border);
+    border-top: var(--sf-panel-border-top);
+    border-bottom: var(--sf-panel-border-bottom);
+    box-shadow: var(--sf-panel-shadow);
+    border-radius: var(--sf-panel-radius, 20px);
+    backdrop-filter: blur(12px;
+    -webkit-backdrop-filter: blur(12px;
     padding: 28px 40px;
     display: flex; align-items: flex-start; gap: 40px;
     flex-shrink: 0;
   }
   .attr-block { flex-shrink: 0; }
   .attr-name {
-    font-size: 20px; font-weight: 700; color: {{ACCENT_LIGHT}};
+    font-size: 20px; font-weight: 700; color: var(--sf-accent-light, var(--sf-accent));
     margin-bottom: 4px;
   }
   .attr-title {
-    font-size: 15px; color: {{TEXT_MUTED}};
+    font-size: 15px; color: var(--sf-text-muted);
   }
   .context-divider {
-    width: 1px; background: {{HAIRLINE_COLOR}};
+    width: 1px; background: var(--sf-hairline);
     align-self: stretch; flex-shrink: 0;
   }
   .context-text {
     font-size: 20px; line-height: 1.6;
-    color: {{TEXT_SECONDARY}};
+    color: var(--sf-text-secondary);
   }
   /* ── Footer ─────────────────────────────────────────────── */
   .hairline {
     position: absolute; bottom: 80px; left: 120px; right: 120px;
-    height: 1px; background: {{HAIRLINE_COLOR}};
+    height: 1px; background: var(--sf-hairline);
   }
   .page-num {
     position: absolute; bottom: 56px; right: 120px;
-    font-size: 13px; color: {{TEXT_MUTED}};
+    font-size: 13px; color: var(--sf-text-muted);
   }
 
   /* ── layout hints ─────────────────────────────────────────── */
