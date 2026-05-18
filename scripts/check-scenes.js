@@ -19,14 +19,16 @@ const path = require('path');
 const args = process.argv.slice(2);
 const useAll = args.includes('--all');
 
-// Keep in sync with .github/workflows/ci.yml whitelist.
-const WHITELIST = [
+// `--all` runs the full examples set (matches CI's glob).
+const ALL_EXAMPLES = [
   'examples/scenes_example.json',
   'examples/four_new_variants_scenes.json',
+  'examples/tencent_intro_scenes_fixture.json',
+  'examples/verify_notebook_shell_scenes.json',
 ];
 
 const files = useAll
-  ? WHITELIST
+  ? ALL_EXAMPLES
   : args.filter(a => !a.startsWith('-'));
 
 if (files.length === 0) {

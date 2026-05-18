@@ -3,8 +3,7 @@
     "id": 1,
     "type": "cover",
     "title": "Notebook 单壳验证",
-    "subtitle": "shared 变体包在 .paper 内 · 页内 stagger 动效",
-    "body": []
+    "subtitle": "shared 变体包在 .paper 内 · 页内 stagger 动效"
   },
   {
     "id": 2,
@@ -12,9 +11,14 @@
     "content_variant": "two_col",
     "eyebrow": "SHARED · TWO COL",
     "title": "双栏页应出现米色纸与左侧色条",
+    "left_body": "左栏：第一段说明，用于检查 .paper 米色纸面是否正确包裹整个 two_col 容器。第二段用于占高，验证左栏文字超过一行时仍能正确换行与对齐。",
+    "right_label": "三个 stagger 测试要点",
+    "key_points": [
+      "要点一（stagger）",
+      "要点二",
+      "要点三"
+    ],
     "layout_hint": "wide-left",
-    "body": ["左栏：说明第一段。", "左栏：第二段，用于占高。"],
-    "key_points": ["要点一（stagger）", "要点二", "要点三"],
     "script_hint": "看纸面与 tabs；右栏 hover 列表项。"
   },
   {
@@ -36,7 +40,10 @@
     "content_variant": "panel",
     "eyebrow": "THEME · PANEL",
     "title": "本页用主题自带 02_panel（不走 shared 包壳）",
-    "key_points": ["对比：无 vp-shell-slot 包裹", "仍是 notebook-tabs 目录样张"],
+    "key_points": [
+      "对比：无 vp-shell-slot 包裹",
+      "仍是 notebook-tabs 目录样张"
+    ],
     "script_hint": "与第 2、3 页视觉框架应一致（都有 paper + tabs）。"
   }
 ]

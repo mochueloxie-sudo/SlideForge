@@ -3,51 +3,65 @@
     "id": 1,
     "type": "cover",
     "title": "腾讯公司介绍",
-    "subtitle": "用户为本 · 科技向善",
-    "body": []
+    "subtitle": "用户为本 · 科技向善"
   },
   {
     "id": 2,
     "type": "content",
-    "title": "使命与文化",
+    "content_variant": "panel",
     "eyebrow": "01",
+    "title": "使命与文化",
     "key_points": [
       "「用户为本」：产品与服务围绕真实需求迭代",
       "「科技向善」：AI、云与公益、教育、医疗等场景结合",
       "「开放、协同、创新」：打破壁垒、团队联动、鼓励试错"
-    ]
+    ],
+    "key_point_descs": [
+      "以用户体验为核心驱动产品演进",
+      "把技术能力投向社会议题与公共服务",
+      "组织上鼓励跨团队协作与试错精神"
+    ],
+    "layout_hint": "grid-3"
   },
   {
     "id": 3,
     "type": "content",
-    "title": "关键数字",
+    "content_variant": "stats_grid",
     "eyebrow": "02",
+    "title": "关键数字",
     "stats": [
-      { "number": "1998", "label": "创立年份", "unit": "" },
-      { "number": "14", "label": "微信及 WeChat 月活（亿级）", "unit": "亿+" },
-      { "number": "0700", "label": "港交所主板", "unit": ".HK" }
+      { "number": "1998", "label": "创立年份", "desc": "深圳起家，二十余年技术沉淀" },
+      { "number": "14 亿+", "label": "微信及 WeChat 月活", "desc": "覆盖海内外华人主流社交网络" },
+      { "number": "0700.HK", "label": "港交所主板", "desc": "全球市值前列的科技公司" }
     ]
   },
   {
     "id": 4,
     "type": "content",
-    "title": "业务演进",
+    "content_variant": "timeline",
     "eyebrow": "03",
+    "title": "业务演进",
     "steps": [
       { "label": "社交基石", "desc": "QQ、微信连接人与服务" },
       { "label": "内容与娱乐", "desc": "视频、音乐、游戏与文学生态" },
       { "label": "金融科技与产业互联网", "desc": "支付、云与企业数字化" }
-    ]
+    ],
+    "layout_hint": "horizontal"
   },
   {
     "id": 5,
     "type": "content",
-    "title": "社交与内容",
+    "content_variant": "two_col",
     "eyebrow": "04",
-    "body": [
-      "微信与 QQ 构成国民级社交网络，整合支付、出行与政务等能力。",
-      "腾讯视频、TME、阅文等组成数字内容矩阵，覆盖长视频、音乐与网文。"
-    ]
+    "title": "社交与内容",
+    "left_body": "微信与 QQ 构成国民级社交网络，整合支付、出行与政务等能力，已成为日常基础设施。腾讯视频、TME、阅文等组成数字内容矩阵，覆盖长视频、音乐与网文，与社交网络形成内容—分发—消费闭环。",
+    "right_label": "三大内容支柱",
+    "key_points": [
+      "腾讯视频：长视频与综艺",
+      "TME：音乐与音频",
+      "阅文：网文与 IP 改编"
+    ],
+    "layout_hint": "wide-left"
   },
   {
     "id": 6,
