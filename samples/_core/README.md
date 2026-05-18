@@ -9,8 +9,9 @@
 | ------------------------------ | -------------------------------------------- |
 | [TOKENS.md](./TOKENS.md)       | **Token 契约**（必填键、页面背景、组件语义色）                 |
 | `../themes/{theme}/tokens.css` | 主题色板 CSS 变量（`--sf-accent` 等）                 |
+| `../themes/{theme}/overrides/` | 主题 HTML 覆盖（cover、legacy `content.html` 等）     |
 | `inject/visual-slot.css`       | 主视觉槽（`hero_image`）通用样式，由 `html_generator` 注入 |
-| `layouts/`                     | 全主题共享 **8** 个深度页：`cover`、`01_text_only`、`02_panel`、`03_stats_grid`、`04_number`、`05_quote`、`20_compare`、`21_process_flow`。`loadTemplateWithSource`：**主题目录** → **`_core/layouts`** → **`shared/`** |
+| `layouts/`                     | 全主题共享 **8** 个深度页。`loadTemplateWithSource`：**overrides** → **`_core/layouts`** → **`shared/`**（见 `samples/README.md`） |
 
 
 完整键表见 [TOKENS.md](./TOKENS.md)。样张可逐步从 `{{BODY_BG}}` 迁移到 `var(--sf-page-bg-*)` / `var(--sf-body-bg)`；生成器仍填充 legacy token 以兼容旧模板。

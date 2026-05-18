@@ -1,7 +1,7 @@
 /**
  * HTML Generator for slide-forge
  * 直接复制样张 HTML 结构，替换内容 tokens
- * 样张路径: samples/{design_mode}/cover.html | content.html
+ * 样张路径: samples/themes/{design_mode}/overrides/ → _core/layouts → shared
  */
 const fs = require('fs');
 const path = require('path');
@@ -19,6 +19,11 @@ const {
 const { getThemeTokensCSS } = require('./theme_tokens');
 const { kpScale, buildTypographyVarsCss, shouldApplyTypographyAdapt } = require('./typography');
 const { applyVisualSlot, loadVisualSlotCSS } = require('./visual_assets');
+const {
+  CORE_LAYOUTS_DIR,
+  SHARED_DIR,
+  themeOverrideFile
+} = require('./sample_paths');
 const { sanitizeArtDirectedCss, readCustomCssFile } = require('./art_directed_css');
 
 function effectiveRenderMode(scene, designParams) {
@@ -344,16 +349,15 @@ const DESIGN_TEMPLATES = {
 
 function loadTemplateWithSource(designMode, templateName) {
   const theme = designMode || 'electric-studio';
-  const tplPath = path.join(__dirname, '..', 'samples', theme, `${templateName}.html`);
+  const tplPath = themeOverrideFile(theme, templateName);
   if (fs.existsSync(tplPath)) {
     return { html: fs.readFileSync(tplPath, 'utf8'), fromShared: false };
   }
-  const coreLayoutPath = path.join(__dirname, '..', 'samples', '_core', 'layouts', `${templateName}.html`);
+  const coreLayoutPath = path.join(CORE_LAYOUTS_DIR, `${templateName}.html`);
   if (fs.existsSync(coreLayoutPath)) {
-    // Token-based depth DOM; notebook-tabs + shared/_core use shell merge when fromShared.
     return { html: fs.readFileSync(coreLayoutPath, 'utf8'), fromShared: true };
   }
-  const sharedPath = path.join(__dirname, '..', 'samples', 'shared', `${templateName}.html`);
+  const sharedPath = path.join(SHARED_DIR, `${templateName}.html`);
   if (fs.existsSync(sharedPath)) {
     return { html: fs.readFileSync(sharedPath, 'utf8'), fromShared: true };
   }
@@ -374,7 +378,7 @@ function stripTitleFromHeadInner(headInner) {
  * Keeps a single <body> so layout_hint / density injection unchanged.
  */
 function mergeNotebookTabsSharedIntoShell(sharedFullHtml) {
-  const shellPath = path.join(__dirname, '..', 'samples', 'notebook-tabs', '_content_shell.html');
+  const shellPath = themeOverrideFile('notebook-tabs', '_content_shell');
   if (!fs.existsSync(shellPath)) return sharedFullHtml;
   const headM = sharedFullHtml.match(/<head[^>]*>([\s\S]*?)<\/head>/i);
   const bodyM = sharedFullHtml.match(/<body([^>]*)>([\s\S]*?)<\/body>/i);

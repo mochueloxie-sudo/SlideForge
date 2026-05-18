@@ -6,6 +6,22 @@
 
 ---
 
+## [4.3.0] — 2026-05-18 — 仓库目录结构收敛
+
+### Breaking（路径）
+
+- 主题 HTML 覆盖：**`samples/{theme}/`** → **`samples/themes/{theme}/overrides/`**（`utils/sample_paths.js` + `html_generator`）。
+- 示例 fixture：**`examples/fixtures/`**；演示产物：**`examples/demos/`**。
+- 维护脚本：**`scripts/maintenance/`**；工具诊断：**`scripts/check-tools.sh`**。
+
+### 变更
+
+- 删除 `samples/paper-ink/` 与 `_core` 重复的深度页；仅保留 `themes/paper-ink/overrides/cover.html` + `content.html`。
+- 移除 13 个 `samples/{theme}/` 根目录；`samples/README.md` 写明加载顺序。
+- `golden-render` 清理 `output_golden/` 根目录遗留 `page_*.html`。
+
+---
+
 ## [4.2.10] — 2026-05-18 — 交付后补图（visual slots）+ 输出品质 wave6/7
 
 ### 新增

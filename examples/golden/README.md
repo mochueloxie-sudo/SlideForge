@@ -18,7 +18,10 @@
 | `editorial_notes` | `editorial_notes_scenes.json` | `paper-ink` | 编辑手记 / 长文浅色 |
 | `variant_showcase` | `variant_showcase_scenes.json` | `paper-ink` | shared 变体 + **nav_bar / chart** 锚点（12 页） |
 | `business_swiss` | `business_swiss_scenes.json` | `swiss-modern` | 商务浅色 / 8 页含 split-visual 主视觉 |
-| `tech_variants` | `tech_variants_scenes.json` | `deep-tech-keynote` | 技术叙事变体 + `content_variant:"auto"`（第七金标） |
+| `tech_variants` | `tech_variants_scenes.json` | `deep-tech-keynote` | 技术叙事变体 + `auto` |
+| `ops_terminal` | `ops_terminal_scenes.json` | `terminal-green` | 运维 / process compact / funnel |
+| `pastel_product` | `pastel_product_scenes.json` | `pastel-geometry` | 浅色产品 / icon_grid |
+| `creative_pitch` | `creative_pitch_scenes.json` | `creative-voltage` | 高对比提案 / compare |
 
 ## 变体覆盖矩阵
 

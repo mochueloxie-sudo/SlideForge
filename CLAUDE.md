@@ -128,7 +128,7 @@ step7_publish.js     → steps/publish.js         (内部，被 deliver 调用)
 关键函数：
 
 - `loadTemplate(theme, variant)` — 先找主题目录，再 **`samples/_core/layouts/`**，再 `shared/`（`loadTemplateWithSource` 同路径并额外返回 `fromShared`）
-- **`notebook-tabs` + 非主题内样张**：`generateContent` 在 `design_mode === 'notebook-tabs'` 且 `fromShared`（含 `_core` 回退）时，用 `samples/notebook-tabs/_content_shell.html` 包一层（`.paper` / `.tabs` / `body.vp-notebook-outer`），把内层模板的 `<head>` 片段与 `<body>` 并入壳内；`cover` 仍可用主题自带 `cover.html` 绕过 `_core`
+- **`notebook-tabs` + 非主题内样张**：`design_mode === 'notebook-tabs'` 且 `fromShared`（含 `_core` 回退）时，用 `samples/themes/notebook-tabs/overrides/_content_shell.html` 包一层；`cover` 仍可用主题 `overrides/cover.html` 绕过 `_core`
 - `buildTokens(scene, total)` — 构建 token map
 - `replaceTokens(html, tokens)` — `{{NAME}}` → 值
 - `getReadabilityCSS()` — 全局最小字号基线
@@ -188,7 +188,7 @@ open ./debug/page_002.html
 ### 全流程测试（v4 — 从 scenes.json 起）
 
 ```bash
-mkdir -p test_e2e && cp examples/four_new_variants_scenes.json test_e2e/scenes.json
+mkdir -p test_e2e && cp examples/fixtures/four_new_variants_scenes.json test_e2e/scenes.json
 echo '{"command":"validate","scenes":"./test_e2e/scenes.json"}' | node executor.js
 echo '{"command":"render","scenes":"./test_e2e/scenes.json","output_dir":"./test_e2e","format":["pdf","html"]}' | node executor.js
 open ./test_e2e/presentation.html
@@ -339,7 +339,7 @@ v4 起 `project.json` 不再由内置命令自动生成，全部由宿主 Agent 
 
 **当前产品主轴（2026-05）**：**输出品质** — 从「好看模板」到「设计作品」。完整规格见 **[docs/ROADMAP_OUTPUT_QUALITY.md](docs/ROADMAP_OUTPUT_QUALITY.md)**（Q0 / Q1 / Q2）。下列 **Q 系列**与动效 / 导入 **并行**，但资源上 **Q 优先于加主题**。
 
-**当前工程侧优先保证的交付形态**：主场景为 **`pdf`** / **`html`**（或二者组合）；design → package 在 Node + Puppeteer/Chrome 下完整跑通。**`video`** 仍支持（FFmpeg + TTS），但排期与 smoke **低于 PDF/HTML**；见下方 P0 阶段 2。发版前 smoke 可用 `examples/four_new_variants_scenes.json` + 显式 `design_mode` 跑 design → screenshot → package（`format` 建议 `pdf` 或 `html`，详见 `.gitignore` 中的 `release_smoke_*` 约定）。
+**当前工程侧优先保证的交付形态**：主场景为 **`pdf`** / **`html`**（或二者组合）；design → package 在 Node + Puppeteer/Chrome 下完整跑通。**`video`** 仍支持（FFmpeg + TTS），但排期与 smoke **低于 PDF/HTML**；见下方 P0 阶段 2。发版前 smoke 可用 `examples/fixtures/four_new_variants_scenes.json` + 显式 `design_mode` 跑 design → screenshot → package（`format` 建议 `pdf` 或 `html`，详见 `.gitignore` 中的 `release_smoke_*` 约定）。
 
 #### Q0 — 输出品质（当前执行）
 

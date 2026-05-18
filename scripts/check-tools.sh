@@ -2,14 +2,15 @@
 # 工具诊断脚本：检查 slide-forge 依赖的外部工具（在仓库根执行）
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR" || exit 1
+ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$ROOT" || exit 1
 
 echo "🔧 SlideForge 工具诊断"
 echo "================================"
 echo ""
 
 # 加载 tool locator（相对本仓库，勿写死 ~/.openclaw 路径）
-TOOL_LOCATOR="$SCRIPT_DIR/steps/utils/tool-locator.js"
+TOOL_LOCATOR="$ROOT/steps/utils/tool-locator.js"
 
 if [ ! -f "$TOOL_LOCATOR" ]; then
   echo "❌ 未找到 tool-locator.js"

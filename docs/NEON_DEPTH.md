@@ -49,7 +49,7 @@
 
 | 脚本 | 说明 |
 |------|------|
-| `sync:depth-themes` | `scripts/sync-depth-from-neon.js`（**no-op**，保留 npm 入口；曾用于 neon→bold/dark 逐文件复制） |
+| `sync:depth-themes` | `scripts/maintenance/sync-depth-from-neon.js`（**no-op**，保留 npm 入口） |
 
 ```bash
 npm run sync:depth-themes   # 无复制；改深度布局请编辑 samples/_core/layouts/*.html

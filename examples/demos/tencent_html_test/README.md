@@ -7,7 +7,7 @@
 
 ## 数据源
 
-- 分镜：`../tencent_intro_scenes_fixture.json`（由 `tencent_intro_light.md` 提炼的结构化示例）
+- 分镜：`../../fixtures/tencent_intro_scenes_fixture.json`（由 `fixtures/tencent_intro_light.md` 提炼）
 
 ## 一键生成
 
@@ -33,7 +33,7 @@ open ./test_tencent_html/presentation.html
 ## 手动逐步（等价于上面脚本）
 
 ```bash
-mkdir -p test_tencent_html && cp examples/tencent_intro_scenes_fixture.json test_tencent_html/scenes.json
+mkdir -p test_tencent_html && cp examples/fixtures/tencent_intro_scenes_fixture.json test_tencent_html/scenes.json
 echo '{"command":"design","scenes":"./test_tencent_html/scenes.json","output_dir":"./test_tencent_html","design_mode":"neon-cyber"}' | node executor.js
 echo '{"command":"html","scenes":"./test_tencent_html/scenes.json","design_params":"./test_tencent_html/design_params.json","output_dir":"./test_tencent_html"}' | node executor.js
 echo '{"command":"screenshot","html_dir":"./test_tencent_html","output_dir":"./test_tencent_html/screenshots","design_params":"./test_tencent_html/design_params.json"}' | node executor.js

@@ -22,9 +22,9 @@ const useAll = args.includes('--all');
 // `--all` runs the full examples set (matches CI's glob).
 const ALL_EXAMPLES = [
   'examples/scenes_example.json',
-  'examples/four_new_variants_scenes.json',
-  'examples/tencent_intro_scenes_fixture.json',
-  'examples/verify_notebook_shell_scenes.json',
+  'examples/fixtures/four_new_variants_scenes.json',
+  'examples/fixtures/tencent_intro_scenes_fixture.json',
+  'examples/fixtures/verify_notebook_shell_scenes.json',
 ];
 
 const GOLDEN_EXAMPLES = [

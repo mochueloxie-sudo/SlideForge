@@ -40,6 +40,17 @@ function run(cmd) {
   return JSON.parse(out.slice(start, end + 1));
 }
 
+/** Remove stale flat page_*.html left in output_golden/ root from older runs. */
+function cleanOutputGoldenRoot() {
+  const base = path.join(ROOT, 'output_golden');
+  if (!fs.existsSync(base)) return;
+  for (const name of fs.readdirSync(base)) {
+    if (/^page_\d+\.html$/i.test(name) || name === 'design_params.json') {
+      fs.rmSync(path.join(base, name), { force: true });
+    }
+  }
+}
+
 for (const set of SETS) {
   const out = path.join(ROOT, 'output_golden', set.name);
   fs.rmSync(out, { recursive: true, force: true });
@@ -57,4 +68,5 @@ for (const set of SETS) {
   console.error(`   ✅ ${pages.length} pages → ${out}`);
 }
 
+cleanOutputGoldenRoot();
 console.error('\n✅ all golden sets rendered');
