@@ -1,5 +1,6 @@
 # SlideForge
 
+[![English](https://img.shields.io/badge/lang-English-blue)](README_en.md)
 [![CI](https://github.com/mochueloxie-sudo/SlideForge/actions/workflows/ci.yml/badge.svg)](https://github.com/mochueloxie-sudo/SlideForge/actions/workflows/ci.yml)
 [![Latest Release](https://img.shields.io/github/v/release/mochueloxie-sudo/SlideForge?display_name=tag&color=blue&label=release)](https://github.com/mochueloxie-sudo/SlideForge/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -9,7 +10,7 @@
 
 **v4.2 要点**：`preview` 多主题试看 · `critique` HTML 发版前检查 · 可选单页 `art-directed` 自定义 CSS；4.1 起的视觉品质（主视觉槽、排版自适应、深度样张）见 [CHANGELOG](CHANGELOG.md#420--2026-05-18--q2-双模式预览与-critique)。
 
-[English](README_en.md) · [SKILL.md](SKILL.md) · [SCENES_SCHEMA](docs/SCENES_SCHEMA.md) · [CRITIQUE](docs/CRITIQUE.md) · [CLAUDE.md](CLAUDE.md) · [CHANGELOG](CHANGELOG.md)
+[SKILL.md](SKILL.md) · [SCENES_SCHEMA](docs/SCENES_SCHEMA.md) · [CRITIQUE](docs/CRITIQUE.md) · [CLAUDE.md](CLAUDE.md) · [CHANGELOG](CHANGELOG.md)
 
 **[查看示例输出 →](examples/demo-output/)** 在浏览器打开 `presentation.html`（iframe 壳 + 同目录 `page_*.html`，支持 hover / 入场动画；**勿只拷贝单个 HTML**）；纯截图单文件轮播见 `presentation_static.html`。
 

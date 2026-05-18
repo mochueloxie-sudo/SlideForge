@@ -1,5 +1,6 @@
 # SlideForge
 
+[![中文](https://img.shields.io/badge/lang-中文-blue)](README.md)
 [![CI](https://github.com/mochueloxie-sudo/SlideForge/actions/workflows/ci.yml/badge.svg)](https://github.com/mochueloxie-sudo/SlideForge/actions/workflows/ci.yml)
 [![Latest Release](https://img.shields.io/github/v/release/mochueloxie-sudo/SlideForge?display_name=tag&color=blue&label=release)](https://github.com/mochueloxie-sudo/SlideForge/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -9,7 +10,7 @@
 
 **v4.2 highlights**: `preview` (theme try-on) · `critique` (pre-ship HTML checks) · optional per-page `art-directed` CSS. Visual quality from 4.1 (hero slots, typography adapt, depth layouts) in [CHANGELOG](CHANGELOG.md#420--2026-05-18--q2-双模式预览与-critique).
 
-[中文](README.md) · [SKILL.md](SKILL.md) · [SCENES_SCHEMA](docs/SCENES_SCHEMA.md) · [CRITIQUE](docs/CRITIQUE.md) · [CLAUDE.md](CLAUDE.md) · [CHANGELOG](CHANGELOG.md)
+[SKILL.md](SKILL.md) · [SCENES_SCHEMA](docs/SCENES_SCHEMA.md) · [CRITIQUE](docs/CRITIQUE.md) · [CLAUDE.md](CLAUDE.md) · [CHANGELOG](CHANGELOG.md)
 
 **[View demo output →](examples/demo-output/)** Open `presentation.html` (iframe shell + co-located `page_*.html`; **never ship a single HTML alone**). For single-file sharing use `presentation_static.html`.
 
