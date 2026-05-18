@@ -522,19 +522,28 @@ echo '{"command":"critique","html_dir":"./project","scenes":"./project/scenes.js
 
 ### 3.11 nav_bar — 章节封面
 
+**语义**：顶栏 = 全 deck 章节导航（`nav_items`）；**页面中央** = 本章标题 + **一段导语**（`subtitle` 或 `key_points`）。`nav_items` **不会**自动填满正文区。
+
 ```json
 {
   "type": "content", "content_variant": "nav_bar",
-  "title": "第二章 · 落地路径",
-  "nav_logo": "SlideForge",
-  "nav_items": ["概述", "落地", "效果", "未来"],
-  "nav_active": 1,
-  "section_label": "Chapter 02 · 04",
-  "progress_pct": 50
+  "title": "今日看点",
+  "subtitle": "本章四条叙事线：语音界面、Agent、认知差、月报素材",
+  "nav_logo": "Tech",
+  "nav_items": ["ElevenLabs", "GPT Agent", "专家 vs 新手", "CEO 月报"],
+  "nav_active": 0,
+  "section_label": "SECTION 02 · 10",
+  "progress_pct": 20
 }
 ```
 
-- **必填**：`nav_items`（3-6 项）
+- **必填**：`nav_items`（3-6 项，短标签，勿把长段落塞进顶栏）
+- **正文区至少其一**（否则 HTML 仅标题 + 大面积留白）：
+  - `subtitle` 或 `secondary` 或 `body[0]` 或（仅 video 时）`script` 作副标题
+  - **或** `key_points`（2-4 条，渲染为标题下摘要列表）
+- **建议**：`nav_active`（0 起）、`section_label`、`progress_pct`
+- **勿用**：仅有 `title` + `nav_items`（要点应进 `card_grid` / `icon_grid`，不是 `nav_bar`）
+- **validate**：缺正文区时 `quality_warnings[]` → `QUALITY_NAV_BAR_NO_LEDE`（见 SKILL.md §第四步）
 
 ### 3.12 panel_stat — 要点 + 一个大数字
 

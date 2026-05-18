@@ -107,6 +107,36 @@ echo '{"command":"extract","source":"<URL或路径>","output_dir":"./project"}' 
 5. **`script` 字段可选**：只在 `format` 含 `video` 时必填，zh 150–200 字 / en 50–80 词
 6. **`recommended_design_mode` 可选**：写在 `<output_dir>/project.json` 里；不写则交 `design` 命令兜底
 
+### `nav_bar` 章节页（易错 · 必读）
+
+**用途**：全 deck **章节过渡 / 目录锚点**（顶栏显示各章名 + 当前章高亮），**不是**要点列表页、也不是卡片矩阵页。
+
+| 区域 | 填什么 | 常见误用 |
+|------|--------|----------|
+| 顶栏 `nav_items` | 3–6 个**短章节名**（建议 ≤12 字，可带 emoji） | 把四条正文要点只写进 `nav_items` → 中间大块空白 |
+| 标题下正文 | **`subtitle`**（1–2 句）**或** `key_points`（2–4 条摘要）**至少其一** | 只有 `title` + `nav_items` |
+| `nav_active` | 当前章在 `nav_items` 中的下标（0 起） | 省略导致高亮错位 |
+| `visual_weight:"breathing"` | 可与「短标题 + 短副文」同用 | 不能代替 `subtitle` / `key_points` |
+
+**何时改用别的变体**：若本页要展示 3–4 个并列概念（带说明）→ `card_grid` 或 `icon_grid`；若是一串流程 → `timeline` / `process_flow`。
+
+```json
+{
+  "type": "content",
+  "content_variant": "nav_bar",
+  "title": "今日看点",
+  "subtitle": "语音界面 · Agent · 专家差距 · 月报素材四条线",
+  "nav_items": ["ElevenLabs", "GPT Agent", "专家 vs 新手", "CEO 月报"],
+  "nav_active": 0,
+  "section_label": "SECTION 02 · 10",
+  "progress_pct": 20
+}
+```
+
+无 `subtitle` 时可写 `key_points`（渲染为标题下要点列表）。
+
+**渲染兜底（v4.2+）**：若仅有 `title` + `nav_items`、无 `subtitle`/`key_points`，`html` 会用 `nav_items` 自动生成标题下摘要列表（顶栏仍显示完整 `nav_items`）。`validate` 会报 **`QUALITY_NAV_BAR_LEDE_INFERRED`**（建议仍显式写 `subtitle`）；若连 `nav_items` 都没有则 **`QUALITY_NAV_BAR_NO_LEDE`**。均不阻塞 render。
+
 ### 品质清单（要「作品感」时必做）
 
 完整字段表见 [docs/SCENES_SCHEMA.md](docs/SCENES_SCHEMA.md) **§0.7–§0.8**。写完后 `validate` 会额外给出 `quality_warnings[]`（**不阻塞** render，但应优先处理）。

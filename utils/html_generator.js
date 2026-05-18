@@ -470,6 +470,103 @@ function getVariantInteractiveHoverStyleBlock(variant) {
   return '';
 }
 
+/** nav_bar: empty {{SUBTITLE}} leaves a huge void — tighten layout + optional key_points lede. */
+function getNavBarEnhancementCSS() {
+  return `<style id="vp-nav-bar-enhance">
+  body.nav-bar--title-only .content { justify-content: center; }
+  body.nav-bar--title-only .title {
+    font-size: clamp(64px, 5vw, 88px) !important;
+    margin-bottom: 0 !important;
+    max-width: 1200px;
+  }
+  body.nav-bar--title-only .section-label { margin-bottom: 28px !important; }
+  body.nav-bar--title-only p.body:empty { display: none; }
+  ul.nav-lede {
+    list-style: none;
+    margin: 36px 0 0;
+    padding: 0;
+    max-width: 920px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  ul.nav-lede li {
+    font-size: 22px;
+    line-height: 1.55;
+    color: var(--sf-text-secondary, rgba(255,255,255,0.55));
+    padding-left: 22px;
+    position: relative;
+  }
+  ul.nav-lede li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0.65em;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--sf-accent, #00f5d4);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--sf-accent, #00f5d4) 50%, transparent);
+  }
+  .topbar .nav-items {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 20px 28px;
+    max-width: 62%;
+  }
+  .topbar .nav-item {
+    max-width: 220px;
+    text-align: right;
+    line-height: 1.35;
+    white-space: normal;
+  }
+</style>`;
+}
+
+function polishNavBarHtml(html, scene, designParams) {
+  const { deriveNavBarLedePoints } = require('./nav_bar_helpers');
+  const sub = scene.subtitle || scene.secondary
+    || (Array.isArray(scene.body) ? scene.body[0] : (scene.body != null ? String(scene.body) : ''))
+    || (scene.script ? String(scene.script).trim() : '');
+  const hasSub = Boolean(sub && String(sub).trim());
+  let ledePoints = Array.isArray(scene.key_points) ? scene.key_points.filter(Boolean) : [];
+  if (!hasSub && ledePoints.length === 0) {
+    ledePoints = deriveNavBarLedePoints(scene);
+  }
+
+  html = html.replace(/<p class="body">\s*<\/p>/gi, '');
+
+  if (!hasSub && ledePoints.length > 0) {
+    const lede = ledePoints.map((kp, i) =>
+      `<li${vpBlockAnimAttrs(designParams, i)}>${escapeHtml(String(kp))}</li>`
+    ).join('\n      ');
+    html = html.replace(
+      /(<h1 class="title">[\s\S]*?<\/h1>)/i,
+      `$1\n    <ul class="nav-lede nav-lede--inferred">\n      ${lede}\n    </ul>`
+    );
+    html = html.replace(/<body([^>]*)>/i, (match, attrs) => {
+      if (/class="/i.test(attrs)) {
+        return match.replace(/class="([^"]*)"/, 'class="$1 nav-bar--has-lede"');
+      }
+      return `<body${attrs} class="nav-bar--has-lede">`;
+    });
+  } else if (hasSub) {
+    html = html.replace(/<body([^>]*)>/i, (match, attrs) => {
+      if (/class="/i.test(attrs)) {
+        return match.replace(/class="([^"]*)"/, 'class="$1 nav-bar--has-lede"');
+      }
+      return `<body${attrs} class="nav-bar--has-lede">`;
+    });
+  } else {
+    html = html.replace(/<body([^>]*)>/i, (match, attrs) => {
+      if (/class="/i.test(attrs)) {
+        return match.replace(/class="([^"]*)"/, 'class="$1 nav-bar--title-only"');
+      }
+      return `<body${attrs} class="nav-bar--title-only">`;
+    });
+  }
+
+  return html;
+}
+
 function replaceTokens(html, tokens) {
   let result = html;
   for (const [key, value] of Object.entries(tokens)) {
@@ -1301,7 +1398,12 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages, designPara
     tokens.NAV_LOGO_B = escapeHtml(logoMatch ? logoMatch[2] : '');
 
     const navItems = Array.isArray(scene.nav_items) ? scene.nav_items : [];
-    const activeIdx = typeof scene.nav_active === 'number' ? scene.nav_active : 0;
+    let activeIdx = typeof scene.nav_active === 'number' ? scene.nav_active : null;
+    if (activeIdx == null && navItems.length > 0) {
+      const pn = Math.max(0, Math.min(pageNum - 1, navItems.length - 1));
+      activeIdx = pn % navItems.length;
+    }
+    if (activeIdx == null) activeIdx = 0;
     tokens.NAV_ITEMS_HTML = navItems.map((item, i) =>
       `      <div class="nav-item${i === activeIdx ? ' active' : ''}"${vpBlockAnimAttrs(designParams, i)}>${escapeHtml(String(item))}</div>`
     ).join('\n');
@@ -1316,9 +1418,10 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages, designPara
     // 14_nav_bar 正文在 {{SUBTITLE}}（不是 {{BODY}}）；body 为 null 时常仅剩 Step1 的 script
     if (variant === 'nav_bar') {
       const subSrc = scene.subtitle || scene.secondary
-        || (Array.isArray(scene.body) ? scene.body[0] : (scene.body != null ? String(scene.body) : ''));
-      if ((!subSrc || !String(subSrc).trim()) && scene.script) {
-        tokens.SUBTITLE = escapeHtml(String(scene.script).trim());
+        || (Array.isArray(scene.body) ? scene.body[0] : (scene.body != null ? String(scene.body) : ''))
+        || (scene.script ? String(scene.script).trim() : '');
+      if (subSrc && String(subSrc).trim()) {
+        tokens.SUBTITLE = escapeHtml(String(subSrc).trim());
       }
     }
   }
@@ -1509,6 +1612,7 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages, designPara
   .page-num, .hairline, .vp-footnote { position: absolute !important; }
 `);
     const hoverStyle = getVariantInteractiveHoverStyleBlock(variant);
+    const navBarStyle = variant === 'nav_bar' ? getNavBarEnhancementCSS() : '';
     html = injectQ1Head(html, designModeResolved, tpl);
     const typoCss = shouldApplyTypographyAdapt(scene, designParams)
       ? buildTypographyVarsCss(scene, { pageType: 'content', variant })
@@ -1518,7 +1622,7 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages, designPara
     (artInj.warnings || []).forEach(w => console.error(`   ⚠️  ${w}`));
     const artBlock = artInj.block || '';
     html = html.replace('</head>',
-      `<style>${style.readCSS}${style.densityCSS}${style.glassCSS}${style.artCSS}${style.titleCSS}${cardCenterCSS}\n  </style>\n${typoBlock}${artBlock}${hoverStyle || ''}</head>`);
+      `<style>${style.readCSS}${style.densityCSS}${style.glassCSS}${style.artCSS}${style.titleCSS}${cardCenterCSS}\n  </style>\n${typoBlock}${artBlock}${hoverStyle || ''}${navBarStyle}</head>`);
   }
 
   const assetCtx = assetContextFrom(designParams, outputDir);
@@ -1537,7 +1641,11 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages, designPara
   }
 
   // ── 9. Done ──────────────────────────────────────────────────────────────
-  return mergeAnimationIntoHtml(replaceTokens(html, tokens), designParams);
+  let finalHtml = replaceTokens(html, tokens);
+  if (variant === 'nav_bar') {
+    finalHtml = polishNavBarHtml(finalHtml, scene, designParams);
+  }
+  return mergeAnimationIntoHtml(finalHtml, designParams);
 }
 
 function generateSummary(scene, tpl, designMode, pageNum, totalPages, designParams, outputDir) {
@@ -1569,11 +1677,12 @@ function generateHtml(scenes, designMode, outputDir, designParamsOrDirections) {
       if (Array.isArray(s.layers) && s.layers.length >= 2) return 'architecture_stack';
       if (Array.isArray(s.funnel_stages) && s.funnel_stages.length >= 2) return 'funnel';
       if (Array.isArray(s.chart_data)  && s.chart_data.length)  return 'chart';
-      if (Array.isArray(s.nav_items)   && s.nav_items.length)   return 'nav_bar';
       if (Array.isArray(s.stats)       && s.stats.length)       return 'stats_grid';
       if (Array.isArray(s.steps)       && s.steps.length)       return 'timeline';
       if (s.left_body != null)                                   return 'two_col';
       if (Array.isArray(s.cards)       && s.cards.length)       return 'card_grid';
+      if (Array.isArray(s.icons)       && s.icons.length)       return 'icon_grid';
+      if (Array.isArray(s.nav_items)   && s.nav_items.length)   return 'nav_bar';
       // hybrid variants: detect by unique field combinations first
       if (s.stat_value != null && Array.isArray(s.key_points) && s.key_points.length && s.icons == null) return 'panel_stat';
       if (s.stat_value != null && Array.isArray(s.key_points) && s.key_points.length && s.big_number == null) return 'number_bullets';
@@ -1581,9 +1690,9 @@ function generateHtml(scenes, designMode, outputDir, designParamsOrDirections) {
       if (s.body      != null && Array.isArray(s.icons) && s.icons.length && s.icons.length <= 4) return 'text_icons';
       // standard variants
       if (Array.isArray(s.chart_data)  && s.chart_data.length)  return 'chart';
-      if (Array.isArray(s.nav_items)   && s.nav_items.length)   return 'nav_bar';
       if (Array.isArray(s.stats)       && s.stats.length)       return 'stats_grid';
       if (Array.isArray(s.icons)       && s.icons.length)       return 'icon_grid';
+      if (Array.isArray(s.nav_items)   && s.nav_items.length)   return 'nav_bar';
       if (s.table_headers != null)                               return 'table';
       if (s.code_snippet  != null)                               return 'code';
       if (s.quote_body    != null)                               return 'quote';

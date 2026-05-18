@@ -87,7 +87,7 @@ const FIELD_HINTS = {
   table_headers:        'table 表头数组（一维）',
   table_rows:           'table 二维数组：行 × 列',
   chart_data:           'chart 数据 [{label, values[], unit?}]',
-  nav_items:            'nav_bar 的 3-6 个章节名数组',
+  nav_items:            'nav_bar 顶栏 3-6 个短章节名；正文区另须 subtitle 或 key_points（见 SCENES_SCHEMA §3.11）',
   content_variant:      '每个 type:"content" 必须声明 content_variant；22 种合法值见 SCENES_SCHEMA §3 或 §0.2 决策图',
   title:                'title 必填且非空字符串',
   type:                 'type 必须是 "cover" | "content" | "summary" 之一',

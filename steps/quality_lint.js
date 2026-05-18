@@ -8,6 +8,7 @@
  */
 
 const { resolveVisualAsset } = require('../utils/visual_assets');
+const { navBarHasLede, deriveNavBarLedePoints } = require('../utils/nav_bar_helpers');
 
 const VALID_VISUAL_WEIGHT = new Set(['hero', 'normal', 'dense', 'breathing']);
 const VALID_COMPOSITION = new Set(['default', 'title-only', 'stat-hero', 'split-visual']);
@@ -27,6 +28,8 @@ const QUALITY_HINTS = {
   QUALITY_INVALID_VW: '合法 visual_weight：hero | normal | dense | breathing',
   QUALITY_INVALID_COMP: '合法 composition：default | title-only | stat-hero | split-visual',
   QUALITY_VISUAL_ASSET_MISSING: 'scene 声明了 hero_image / diagram / brand_mark 但路径解析不到文件；渲染时会回退到 SVG 占位（带 data-vp-placeholder）',
+  QUALITY_NAV_BAR_NO_LEDE: 'nav_bar 须填 subtitle（或 secondary/body[0]）或 key_points；仅有 title 且无 nav_items 时正文区会空。并列概念页请用 card_grid / icon_grid',
+  QUALITY_NAV_BAR_LEDE_INFERRED: 'nav_bar 未写 subtitle/key_points；渲染已用 nav_items 生成标题下摘要。建议显式写 subtitle 或 key_points，顶栏 nav_items 保持短标签',
 };
 
 function attachQualityHints(items) {
@@ -80,6 +83,23 @@ function lintQuality(scenesData, ctx = {}) {
         code: 'QUALITY_TOO_MANY_KP',
         msg: `panel has ${scene.key_points.length} key_points (recommended max 5)`
       });
+    }
+
+    if (scene.content_variant === 'nav_bar' && !navBarHasLede(scene)) {
+      const inferred = deriveNavBarLedePoints(scene);
+      if (inferred.length) {
+        quality_warnings.push({
+          at,
+          code: 'QUALITY_NAV_BAR_LEDE_INFERRED',
+          msg: `nav_bar lede inferred from ${inferred.length} nav_items (render OK; add explicit subtitle or key_points)`
+        });
+      } else {
+        quality_warnings.push({
+          at,
+          code: 'QUALITY_NAV_BAR_NO_LEDE',
+          msg: 'nav_bar has no subtitle/key_points and no nav_items to infer lede from'
+        });
+      }
     }
 
     // Q1-B: visual asset reachability (hero_image / diagram / brand_mark).

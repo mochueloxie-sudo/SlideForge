@@ -270,7 +270,12 @@ function buildPageDirections(scenes, designParams, design_mode) {
       density = 'medium';
       decoration_policy = 'none';
       avoid_elements.push('quote', 'code-block', 'key-points');
-    } else if (hasNavBar) {
+    } else if (
+      hasNavBar &&
+      (!scene.content_variant || scene.content_variant === 'nav_bar') &&
+      !(Array.isArray(scene.cards) && scene.cards.length) &&
+      !(Array.isArray(scene.icons) && scene.icons.length && scene.content_variant !== 'nav_bar')
+    ) {
       page_intent = 'structure';
       hero_element = 'nav_bar';
       content_variant = 'nav_bar';
