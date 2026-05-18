@@ -131,6 +131,8 @@ echo '{"command":"render","scenes":"./project/scenes.json","output_dir":"./proje
 open ./project/presentation.html
 ```
 
+> **Tip**：每个 `validate` 错误都自带 `hint` 字段，直接告诉你怎么修。不用回查本文档每次。
+
 ### 0.5 五个最常见错误（写之前先扫一眼）
 
 | 错误 | validate 报什么 | 怎么改 |

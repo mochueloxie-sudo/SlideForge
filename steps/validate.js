@@ -59,6 +59,85 @@ const REQUIRED_BY_VARIANT = {
   funnel:             ['funnel_stages']
 };
 
+// ─── Hint table ──────────────────────────────────────────────────────────────
+// 目的：让 Agent 拿到 error 就能直接修，不必去翻 SCENES_SCHEMA。
+// 查找顺序：先按 error msg 模式（更具体），再按 `at` 路径末段字段名。
+
+const FIELD_HINTS = {
+  key_points:           '常见拼写错误：keypoints / keyPoints / key_point。正确是 snake_case 复数 "key_points"。详见 SCENES_SCHEMA §3.1',
+  key_point_descs:      '与 key_points 同长的数组；panel + layout_hint:"grid-3"/"cards" 时强烈建议提供',
+  stats:                'stats[] 每项需 { number, label, desc }，desc 必填——否则页面信息密度太低',
+  steps:                'timeline 的 steps[] 每项需 { num, label, desc }',
+  process_stages:       'process_flow 的 process_stages[] 每项需 { label, desc }，3-6 项',
+  flow_lanes:           'process_flow 的 flow_lanes[] 每项需 { lane_label, cells: [{label, desc}] }，2-3 lane',
+  layers:               'architecture_stack 的 layers[] 每项需 { title, desc }，3-5 层',
+  funnel_stages:        'funnel 的 funnel_stages[] 每项需 { label, desc }，3-5 阶',
+  quote_body:           'quote / quote_context 的主引文字段（字符串）',
+  context_body:         'quote_context 的上下文段（1-2 句背景或意义）',
+  cards:                'card_grid 的 cards[] 每项需 { title, body }，body 必填——只有 title 的卡片浪费空间',
+  icons:                'icon_grid / text_icons 的 icons[] 每项需 { emoji, label, desc }',
+  compare_left_points:  'compare 需同时提供 compare_left_points 与 compare_right_points（建议等长 3-5 项）',
+  compare_right_points: 'compare 需同时提供 compare_left_points 与 compare_right_points（建议等长 3-5 项）',
+  big_number:           'number 的主数字（如 "240%"、"1.2 亿"）',
+  stat_value:           'panel_stat / number_bullets 的主数字',
+  left_body:            'two_col 左栏散文（2-3 句最佳）',
+  body:                 'text 的散文 / text_icons 的散文 / number 的说明文字',
+  code_snippet:         'code 变体的代码字符串',
+  table_headers:        'table 表头数组（一维）',
+  table_rows:           'table 二维数组：行 × 列',
+  chart_data:           'chart 数据 [{label, values[], unit?}]',
+  nav_items:            'nav_bar 的 3-6 个章节名数组',
+  content_variant:      '每个 type:"content" 必须声明 content_variant；22 种合法值见 SCENES_SCHEMA §3 或 §0.2 决策图',
+  title:                'title 必填且非空字符串',
+  type:                 'type 必须是 "cover" | "content" | "summary" 之一',
+  script:               'script 是口播逐字稿；仅 format 含 video 时必填，zh 150-200 字 / en 50-80 词',
+};
+
+const MSG_PATTERN_HINTS = [
+  { pattern: /^expected exactly 1 cover scene/,
+    hint: '首页必须是 type:"cover" 且只能有一个；其它页用 type:"content"，末页可用 type:"summary"' },
+  { pattern: /^expected at most 1 summary scene/,
+    hint: '末页可放一个 type:"summary"（可选）；中间页全部用 type:"content"' },
+  { pattern: /first scene should be type=cover/,
+    hint: 'scenes 数组第一项必须是 cover 页（虽然只是 warning 不阻塞渲染，建议修正）' },
+  { pattern: /process_flow requires one of/,
+    hint: 'process_flow 需要 process_stages[] 或 flow_lanes[]（或 legacy steps[]）至少一个非空。最常用 process_stages（横向阶段条）' },
+  { pattern: /scenes must be an array/,
+    hint: 'scenes.json 顶层是 JSON 数组 [{...}, {...}]，不是对象；{scenes:[...]} 包装也兼容' },
+  { pattern: /scenes is empty/,
+    hint: '至少要有一个 cover 页才能渲染' },
+  { pattern: /consecutive same content_variant/,
+    hint: '相邻两页同变体观感单调，考虑换变体或合并；这是 warning 不阻塞渲染' },
+  { pattern: /script very short/,
+    hint: 'zh 建议 150-200 字 / en 50-80 词；过短会让 TTS 语音过急' },
+  { pattern: /script very long/,
+    hint: '过长会让单页朗读时间偏长（>30s）；建议拆分到多页或精炼' },
+  { pattern: /unknown theme id/,
+    hint: '13 个合法主题 id：electric-studio / bold-signal / creative-voltage / dark-botanical / neon-cyber / terminal-green / deep-tech-keynote / swiss-modern / paper-ink / vintage-editorial / notebook-tabs / pastel-geometry / split-pastel' },
+  { pattern: /invalid type/,
+    hint: 'type 必须是 "cover" | "content" | "summary" 三选一' },
+  { pattern: /unknown content_variant/,
+    hint: '22 种合法变体：panel / stats_grid / timeline / two_col / number / quote / text / code / table / chart / nav_bar / panel_stat / number_bullets / quote_context / text_icons / icon_grid / card_grid / compare / process_flow / architecture_stack / funnel。决策图见 SCENES_SCHEMA §0.2' },
+  { pattern: /content scene must declare content_variant/,
+    hint: '每个 type:"content" 的 scene 必须有 content_variant 字段；拿不准选 "panel" 兜底' },
+];
+
+function lookupHint(at, msg) {
+  for (const { pattern, hint } of MSG_PATTERN_HINTS) {
+    if (pattern.test(msg)) return hint;
+  }
+  const lastSegment = (at || '').split('.').pop().replace(/^\$/, '');
+  if (FIELD_HINTS[lastSegment]) return FIELD_HINTS[lastSegment];
+  return undefined;
+}
+
+function attachHints(items) {
+  for (const it of items) {
+    const h = lookupHint(it.at, it.msg);
+    if (h) it.hint = h;
+  }
+}
+
 function validate(scenesData, opts = {}) {
   const errors = [];
   const warnings = [];
@@ -158,6 +237,9 @@ function validate(scenesData, opts = {}) {
       });
     }
   }
+
+  attachHints(errors);
+  attachHints(warnings);
 
   return { valid: errors.length === 0, errors, warnings };
 }
