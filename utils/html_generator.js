@@ -6,6 +6,42 @@
 const fs = require('fs');
 const path = require('path');
 const { mergeAnimationIntoHtml, normalizePreset } = require('./page_animations');
+const {
+  resolveArtDirection,
+  getArtDirectionCSS
+} = require('./art_direction');
+const {
+  normalizeEnhancement,
+  buildPageStyleBundle,
+  shouldInjectUniversalCentering,
+  shouldInjectDensity
+} = require('./enhancement');
+const { getThemeTokensCSS } = require('./theme_tokens');
+const { kpScale } = require('./typography');
+const { applyVisualSlot, loadVisualSlotCSS } = require('./visual_assets');
+
+function buildQ1HeadInject(designMode, tpl) {
+  const tokenCss = getThemeTokensCSS(designMode, tpl);
+  const visualCss = loadVisualSlotCSS();
+  let block = '';
+  if (tokenCss) block += `<style id="sf-theme-tokens">\n${tokenCss}\n</style>\n`;
+  if (visualCss) block += `<style id="sf-q1-visual">\n${visualCss}\n</style>\n`;
+  return block;
+}
+
+function injectQ1Head(html, designMode, tpl) {
+  const block = buildQ1HeadInject(designMode, tpl);
+  if (!block) return html;
+  if (html.includes('id="sf-theme-tokens"')) return html;
+  return html.replace('</head>', `${block}</head>`);
+}
+
+function assetContextFrom(designParams, outputDir) {
+  return {
+    scenesPath: designParams && designParams.scenes_path,
+    outputDir: (designParams && designParams.output_dir) || outputDir
+  };
+}
 
 // 每个模板的精确 CSS 值（从样张提取）
 const DESIGN_TEMPLATES = {
@@ -282,6 +318,11 @@ function loadTemplateWithSource(designMode, templateName) {
   const tplPath = path.join(__dirname, '..', 'samples', theme, `${templateName}.html`);
   if (fs.existsSync(tplPath)) {
     return { html: fs.readFileSync(tplPath, 'utf8'), fromShared: false };
+  }
+  const coreLayoutPath = path.join(__dirname, '..', 'samples', '_core', 'layouts', `${templateName}.html`);
+  if (fs.existsSync(coreLayoutPath)) {
+    // Token-based depth DOM; notebook-tabs + shared/_core use shell merge when fromShared.
+    return { html: fs.readFileSync(coreLayoutPath, 'utf8'), fromShared: true };
   }
   const sharedPath = path.join(__dirname, '..', 'samples', 'shared', `${templateName}.html`);
   if (fs.existsSync(sharedPath)) {
@@ -797,13 +838,16 @@ function generateCover(scene, tpl, designMode, pageNum, totalPages, designParams
   tokens.TITLE_SIZE = tpl.titleSize.cover;
   // covers always use sparse density (breathing room is the cover's purpose)
   const coverScene = { ...scene, type: 'cover' };
-  const density = computeDensity(coverScene);
-  const classes = [
+  const art = resolveArtDirection(scene, {});
+  const density = art.densityOverride || computeDensity(coverScene);
+  const enhancement = normalizeEnhancement(designParams);
+  const coverClasses = [
     scene.layout_hint ? `layout-${scene.layout_hint}` : null,
-    density !== 'normal' ? `density-${density}` : null,
+    art.visual_weight === 'hero' ? 'vp-vw-hero' : null,
+    'vp-cover'
   ].filter(Boolean);
-  if (classes.length > 0) {
-    const classStr = classes.join(' ');
+  if (coverClasses.length > 0) {
+    const classStr = coverClasses.join(' ');
     html = html.replace(/<body([^>]*)>/i, (_, attrs) => {
       const m = attrs.match(/class="([^"]*)"/);
       return m
@@ -811,12 +855,22 @@ function generateCover(scene, tpl, designMode, pageNum, totalPages, designParams
         : `<body${attrs} class="${classStr}">`;
     });
   }
-  // Readability + density + glass + title scale
-  const readCSS = getReadabilityCSS();
-  const densityCSS = getDensityCSS(density);
-  const glassCSS = getGlassEnhancementCSS(tpl);
-  const titleCSS = getTitleEnhancementCSS('cover');
-  html = html.replace('</head>', `<style>${readCSS}${densityCSS}${glassCSS}${titleCSS}\n  </style>\n</head>`);
+  const style = buildPageStyleBundle({
+    enhancement,
+    art,
+    variant: 'cover',
+    pageType: 'cover',
+    tpl,
+    density,
+    getReadabilityCSS,
+    getDensityCSS,
+    getGlassEnhancementCSS,
+    getTitleEnhancementCSS,
+    getArtDirectionCSS
+  });
+  html = injectQ1Head(html, designMode || 'electric-studio', tpl);
+  html = html.replace('</head>',
+    `<style>${style.readCSS}${style.densityCSS}${style.glassCSS}${style.artCSS}${style.titleCSS}\n  </style>\n</head>`);
   const footnoteText = scene.footnote || scene.annotation || '';
   if (footnoteText) {
     html = html.replace('</body>',
@@ -825,9 +879,7 @@ function generateCover(scene, tpl, designMode, pageNum, totalPages, designParams
   return mergeAnimationIntoHtml(replaceTokens(html, tokens), designParams);
 }
 
-
-
-function generateContent(scene, tpl, designMode, pageNum, totalPages, designParams) {
+function generateContent(scene, tpl, designMode, pageNum, totalPages, designParams, outputDir) {
   // ── 1. Resolve variant → template file ─────────────────────────────────
   // Table fallback: if table_headers missing/empty, degrade to panel
   let variant = scene.content_variant || 'panel';
@@ -943,10 +995,18 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages, designPara
 
   // ── 4. BODY repeat marker ────────────────────────────────────────────────
   // Strategy: find the LINE containing {{BODY}}, repeat it per body paragraph.
+  const compositionEarly = scene.composition || scene._artDirection?.composition;
   if (html.includes('{{BODY}}')) {
     const bodyRaw = scene.body || [];
     const bodyLines = Array.isArray(bodyRaw) ? bodyRaw : String(bodyRaw).split(/\n\n+/).filter(Boolean);
-    if (bodyLines.length > 0) {
+    if (
+      compositionEarly === 'title-only' && variant === 'text' &&
+      bodyLines.length > 0 && !scene.secondary
+    ) {
+      tokens.SECONDARY = bodyLines.map(p => escapeHtml(p)).join(' <br> ');
+      tokens.BODY = '';
+      html = html.split('\n').filter(l => !l.includes('{{BODY}}')).join('\n');
+    } else if (bodyLines.length > 0) {
       tokens.BODY = bodyLines.map(p => escapeHtml(p)).join(' <br> ');
       const lines = html.split('\n');
       const bodyIdx = lines.findIndex(l => l.includes('{{BODY}}'));
@@ -1277,13 +1337,7 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages, designPara
 
   // Adaptive font size for key_points: fewer items → larger font
   const kpCount = Array.isArray(scene.key_points) ? scene.key_points.length : 0;
-  const kpFontSize = kpCount <= 2 ? 46
-    : kpCount === 3 ? 38
-    : kpCount === 4 ? 32
-    : kpCount === 5 ? 27
-    : kpCount === 6 ? 24
-    : 21;
-  const kpDotSize = kpFontSize >= 38 ? 11 : kpFontSize >= 32 ? 9 : 8;
+  const { fontSize: kpFontSize, dotSize: kpDotSize } = kpScale(kpCount);
   tokens.KP_FONT_SIZE = String(kpFontSize);
   tokens.KP_DOT_SIZE  = String(kpDotSize);
   tokens.BIG_NUMBER  = escapeHtml(scene.big_number  || '');
@@ -1336,7 +1390,7 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages, designPara
   if (scene.secondary) {
     const secArr = Array.isArray(scene.secondary) ? scene.secondary : [String(scene.secondary)];
     tokens.SECONDARY = secArr.map(p => escapeHtml(p)).join(' <br> ');
-  } else {
+  } else if (!tokens.SECONDARY) {
     tokens.SECONDARY = '';
   }
 
@@ -1373,11 +1427,15 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages, designPara
   // ── 7. layout_hint + density → <body class="..."> 通用注入 ──────────────
   // 注入在 replaceTokens 之前，避免干扰 token 替换
   {
-    const density = computeDensity(scene);
+    const art = scene._artDirection || resolveArtDirection(scene, {});
+    const enhancement = normalizeEnhancement(designParams);
+    const density = art.densityOverride || computeDensity(scene);
     const classes = [
       scene.layout_hint ? `layout-${scene.layout_hint}` : null,
       (!scene.layout_hint && variant === 'process_flow') ? 'layout-horizontal' : null,
-      density !== 'normal'  ? `density-${density}`       : null,
+      shouldInjectDensity(enhancement, density) && density !== 'normal' ? `density-${density}` : null,
+      ...(art.bodyClasses || []),
+      scene.type === 'summary' ? 'vp-closing' : null,
     ].filter(Boolean);
 
     if (classes.length > 0) {
@@ -1389,17 +1447,22 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages, designPara
           : `<body${attrs} class="${classStr}">`;
       });
     }
-
-    // Readability + density + glass + title scale + variant-specific layout
-    const readCSS = getReadabilityCSS();
-    const densityCSS = getDensityCSS(density);
-    const glassCSS = getGlassEnhancementCSS(tpl);
-    const titleCSS = getTitleEnhancementCSS('content');
-    // Universal vertical centering: all content variants center on the 1080p canvas.
-    // Card-grid group: title stays top, .grid fills remaining space with align-content:center.
-    // All other variants: entire title+content block is centered as a group (justify-content:center).
+    const style = buildPageStyleBundle({
+      enhancement,
+      art,
+      variant,
+      pageType: 'content',
+      tpl,
+      density,
+      getReadabilityCSS,
+      getDensityCSS,
+      getGlassEnhancementCSS,
+      getTitleEnhancementCSS,
+      getArtDirectionCSS
+    });
+    const useCenter = shouldInjectUniversalCentering(enhancement, variant);
     const isCardVariant = ['card_grid', 'panel_stat', 'text_icons'].includes(variant);
-    const cardCenterCSS = isCardVariant ? `
+    const cardCenterCSS = !useCenter ? '' : (isCardVariant ? `
   /* ── Card grid: title top-aligned, cards centered in remaining space ── */
   body { display: flex !important; flex-direction: column !important; justify-content: flex-start !important; }
   .grid { flex: 1 !important; align-content: center !important; min-height: 0 !important; margin-left: auto !important; margin-right: auto !important; width: 100% !important; }
@@ -1408,9 +1471,18 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages, designPara
   /* ── Universal: whole title+content group centered vertically ── */
   body { display: flex !important; flex-direction: column !important; justify-content: center !important; }
   .page-num, .hairline, .vp-footnote { position: absolute !important; }
-`;
+`);
     const hoverStyle = getVariantInteractiveHoverStyleBlock(variant);
-    html = html.replace('</head>', `<style>${readCSS}${densityCSS}${glassCSS}${titleCSS}${cardCenterCSS}\n  </style>\n${hoverStyle || ''}</head>`);
+    html = injectQ1Head(html, designModeResolved, tpl);
+    html = html.replace('</head>',
+      `<style>${style.readCSS}${style.densityCSS}${style.glassCSS}${style.artCSS}${style.titleCSS}${cardCenterCSS}\n  </style>\n${hoverStyle || ''}</head>`);
+  }
+
+  const assetCtx = assetContextFrom(designParams, outputDir);
+  const visualApplied = applyVisualSlot(html, scene, assetCtx);
+  html = visualApplied.html;
+  if (visualApplied.warnings && visualApplied.warnings.length) {
+    visualApplied.warnings.forEach(w => console.error(`   ⚠️  ${w}`));
   }
 
   // ── 8. footnote — inject before </body> if scene.footnote is set ─────────
@@ -1425,8 +1497,8 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages, designPara
   return mergeAnimationIntoHtml(replaceTokens(html, tokens), designParams);
 }
 
-function generateSummary(scene, tpl, designMode, pageNum, totalPages, designParams) {
-  return generateContent({ ...scene, type: 'content', use_panel: true }, tpl, designMode, pageNum, totalPages, designParams);
+function generateSummary(scene, tpl, designMode, pageNum, totalPages, designParams, outputDir) {
+  return generateContent({ ...scene, type: 'content', use_panel: true }, tpl, designMode, pageNum, totalPages, designParams, outputDir);
 }
 
 function generateHtml(scenes, designMode, outputDir, designParamsOrDirections) {
@@ -1434,8 +1506,8 @@ function generateHtml(scenes, designMode, outputDir, designParamsOrDirections) {
   fs.mkdirSync(outputDir, { recursive: true });
 
   const designParams = Array.isArray(designParamsOrDirections) || designParamsOrDirections == null
-    ? null
-    : designParamsOrDirections;
+    ? { output_dir: outputDir }
+    : { ...designParamsOrDirections, output_dir: designParamsOrDirections.output_dir || outputDir };
   const pageDirs = Array.isArray(designParamsOrDirections)
     ? designParamsOrDirections
     : (designParamsOrDirections?.page_directions || tpl.page_directions || []);
@@ -1478,7 +1550,15 @@ function generateHtml(scenes, designMode, outputDir, designParamsOrDirections) {
     }
     // layout_hint: scene (LLM) wins over dir (step2), dir wins over undefined
     const layoutHint = rawScene.layout_hint || dir.layout_hint || null;
-    const scene = { ...rawScene, content_variant: inferVariant(rawScene), layout_hint: layoutHint };
+    const art = resolveArtDirection(rawScene, dir);
+    const scene = {
+      ...rawScene,
+      content_variant: inferVariant(rawScene),
+      layout_hint: layoutHint,
+      visual_weight: art.visual_weight,
+      composition: art.composition,
+      _artDirection: art
+    };
     const pageNum = i + 1;
     const totalPages = scenes.length;
 
@@ -1486,9 +1566,9 @@ function generateHtml(scenes, designMode, outputDir, designParamsOrDirections) {
     if (scene.type === 'cover') {
       html = generateCover(scene, tpl, designMode, pageNum, totalPages, designParams);
     } else if (scene.type === 'summary') {
-      html = generateSummary(scene, tpl, designMode, pageNum, totalPages, designParams);
+      html = generateSummary(scene, tpl, designMode, pageNum, totalPages, designParams, outputDir);
     } else {
-      html = generateContent(scene, tpl, designMode, pageNum, totalPages, designParams);
+      html = generateContent(scene, tpl, designMode, pageNum, totalPages, designParams, outputDir);
     }
 
     if (!html) {

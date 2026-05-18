@@ -6,6 +6,65 @@
 
 ---
 
+## [4.1.1] — 2026-05-18 — 飞书 deliver 支持 PDF（优先）
+
+> **patch**：`scenes.json` 契约不变；仅扩展 `deliver` / `render` 与文档。
+
+### 变更
+
+- **`channel: "feishu"`**：`presentation.mp4` 与 `presentation.pdf` **至少嵌入其一**（可两者皆有），仍走 `lark-cli docs +media-insert`；两者都有时 **PDF 优先**（Markdown 段落与 `+media-insert` 顺序一致）。
+- **`render`**：`format` 含 `pdf` 时自动向 `deliver` 传入 `pdf_path`（默认同目录 `presentation.pdf`）；仅 PDF 即可闭环飞书，无需 FFmpeg/TTS。
+- **`publish` 元数据**：`pdf_token` / `pdf_block_id`；`block_id` 仍为视频块 id（与旧版兼容）。
+
+---
+
+## [4.1.0] — 2026-05-18 — Q1 视觉生产层（起步）
+
+> **minor**：新增可选 scenes 字段与生成器能力；默认渲染行为不变（未写 `hero_image` 的 deck 与 4.0.x 一致）。
+
+### 新增（Q1）
+
+- **Q1-A 主题 tokens（阶段 1）**：`samples/_core/TOKENS.md`；neon / bold / dark 三套扩展 `tokens.css`；**深度 8 页** 已 `var(--sf-*)`，HTML 单源 **`samples/_core/layouts/`**（见 Q1-D）。
+- **Q1-B 主视觉**：`hero_image` / `diagram` / `brand_mark` + `visual_alt`；`utils/visual_assets.js` 解析路径并填充 `.vp-visual-slot`；金标 `product_launch` 演示页示例 `examples/assets/orbit-demo.svg`。
+- **Q1-C 排版**：`utils/typography.js`（`kpScale` 等）；`html_generator` 改用统一 kp 字号逻辑。
+- **`design`**：`hero_image` + `panel` 时自动推断 `composition: split-visual`（可被 scene 覆盖）。
+- **Q1-D（阶段 2）**：深度 **8** 布局单源 **`samples/_core/layouts/`**；**全部 13 主题** 删除主题内重复 HTML（**保留** `notebook-tabs/cover.html` 定制封面）；`loadTemplateWithSource`：**主题 → `_core` → `shared/`**；无 `tokens.css` 时 **`utils/depth_tokens_from_tpl.js`** 从 `DESIGN_TEMPLATES` 生成完整 `--sf-*`；`sync:depth-themes` 为 **no-op**。
+
+### 文档
+
+- **samples/_core/TOKENS.md**、**NEON_DEPTH**、**ROADMAP**（Q1-A / Q1-D）。
+
+---
+
+## [4.0.3] — 2026-05-18 — 输出品质 Q0（金标 + 样张深度 + Agent 指引）
+
+> **patch 级**。宿主 Agent 写 `scenes.json` 的契约不变；渲染默认仍为 `enhancement: minimal`（样张主导排版）。
+
+### 新增
+
+- **Q0 输出品质路线**：[docs/ROADMAP_OUTPUT_QUALITY.md](docs/ROADMAP_OUTPUT_QUALITY.md)、[docs/NEON_DEPTH.md](docs/NEON_DEPTH.md)；金标 `examples/golden/`（product_launch / business_report / humanities_narrative）。
+- **Art direction**：`visual_weight` / `composition` → `utils/art_direction.js`；summary 收尾 `layout_hint: cards` + 样张内 CTA pills。
+- **品质 lint**：`steps/quality_lint.js` → `validate` 的 `quality_warnings[]`（不阻塞 render）。
+- **`enhancement: minimal`（默认）\| `full`**：`utils/enhancement.js`；minimal 不注入全局 readability/density 盖样张。
+- **深度样张（neon-cyber）**：… **4.1.0 起** HTML 单源 `samples/_core/layouts/` + `tokens.css` 换肤（见 4.1.0 节 Q1-D）；`sync:depth-themes` 为 no-op。
+- **金标用 shared 变体主题化**：`npm run sync:shared-themes`（bold：`timeline` / `panel_stat`；dark：`two_col` / `quote_context`）。
+- **`npm run check:golden`**：`validate` → `golden:render` → 检查未替换 `{{TOKEN}}` 与 `readability baseline` 泄漏；CI 已接入。
+- **`npm run golden:render`**：三套金标一键 design + html。
+
+### 文档
+
+- **[docs/SCENES_SCHEMA.md](docs/SCENES_SCHEMA.md)** §0.7–§0.8：艺术指导 + **品质清单**（写 scenes 时自检）。
+- **[SKILL.md](SKILL.md)**：第四步增加品质节奏表与 `quality_warnings` 处理说明。
+
+### 升级
+
+```bash
+git pull && npm install
+npm run check:golden    # 发版前建议跑一遍
+```
+
+---
+
 ## [4.0.2] — 2026-05-18 — CI + validate hint + 开发者校验脚本
 
 > **patch 级**：无破坏性 API 变更。侧重宿主 Agent / 贡献者的校验体验与仓库卫生。

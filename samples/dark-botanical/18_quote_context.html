@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>{{TITLE}}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Manrope:wght@400;500;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { width: 1920px; height: 1080px; overflow: hidden; }
+  body {
+    width: 1920px; height: 1080px;
+    background: {{BODY_BG}};
+    font-family: '{{FONT}}', 'PingFang SC', sans-serif;
+    color: {{TEXT_PRIMARY}};
+    padding: 80px 160px 100px;
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .eyebrow {
+    font-size: 13px; font-weight: 800; letter-spacing: 0.2em;
+    color: {{EYEBROW_COLOR}}; text-transform: uppercase; margin-bottom: 24px;
+    flex-shrink: 0;
+  }
+  /* ── Quote block ────────────────────────────────────────── */
+  .quote-wrap {
+    flex: 1; display: flex; align-items: center;
+    border-left: 4px solid {{ACCENT}};
+    padding-left: 56px;
+    margin-bottom: 40px;
+  }
+  .quote-mark {
+    font-size: 160px; line-height: 1; font-weight: 800;
+    color: {{ACCENT}}; opacity: 0.15;
+    position: absolute; left: 120px; top: 100px;
+    font-family: Georgia, serif;
+    pointer-events: none;
+  }
+  .quote-text {
+    font-size: 48px; font-weight: 500; line-height: 1.35;
+    color: {{TEXT_PRIMARY}};
+    max-width: 1300px;
+  }
+  /* ── Attribution + context ──────────────────────────────── */
+  .context-wrap {
+    background: {{PANEL_BG}};
+    border: {{PANEL_BORDER}};
+    border-top: {{PANEL_BORDER_TOP}};
+    border-bottom: {{PANEL_BORDER_BOTTOM}};
+    box-shadow: {{PANEL_SHADOW}};
+    border-radius: {{PANEL_RADIUS}};
+    backdrop-filter: blur({{PANEL_BLUR}});
+    -webkit-backdrop-filter: blur({{PANEL_BLUR}});
+    padding: 28px 40px;
+    display: flex; align-items: flex-start; gap: 40px;
+    flex-shrink: 0;
+  }
+  .attr-block { flex-shrink: 0; }
+  .attr-name {
+    font-size: 20px; font-weight: 700; color: {{ACCENT_LIGHT}};
+    margin-bottom: 4px;
+  }
+  .attr-title {
+    font-size: 15px; color: {{TEXT_MUTED}};
+  }
+  .context-divider {
+    width: 1px; background: {{HAIRLINE_COLOR}};
+    align-self: stretch; flex-shrink: 0;
+  }
+  .context-text {
+    font-size: 20px; line-height: 1.6;
+    color: {{TEXT_SECONDARY}};
+  }
+  /* ── Footer ─────────────────────────────────────────────── */
+  .hairline {
+    position: absolute; bottom: 80px; left: 120px; right: 120px;
+    height: 1px; background: {{HAIRLINE_COLOR}};
+  }
+  .page-num {
+    position: absolute; bottom: 56px; right: 120px;
+    font-size: 13px; color: {{TEXT_MUTED}};
+  }
+
+  /* ── layout hints ─────────────────────────────────────────── */
+  body.layout-full .quote-text { font-size: 64px; }
+  body.layout-full .quote-wrap { border-left: none; padding-left: 0; }
+  body.layout-centered { align-items: center; text-align: center; }
+  body.layout-centered .quote-wrap { border-left: none; padding-left: 0; justify-content: center; }
+  body.layout-centered .quote-text { text-align: center; }
+  body.layout-centered .context-wrap { justify-content: center; }
+</style>
+</head>
+<body>
+  <div class="quote-mark">"</div>
+  <div class="eyebrow">{{EYEBROW}}</div>
+  <div class="quote-wrap">
+    <div class="quote-text">{{QUOTE_BODY}}</div>
+  </div>
+  <div class="context-wrap">
+    <div class="attr-block">
+      <div class="attr-name">{{QUOTE_SOURCE}}</div>
+      <div class="attr-title">{{QUOTE_ROLE}}</div>
+    </div>
+    <div class="context-divider"></div>
+    <div class="context-text">{{CONTEXT_BODY}}</div>
+  </div>
+  <div class="hairline"></div>
+  <span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
+</body>
+</html>

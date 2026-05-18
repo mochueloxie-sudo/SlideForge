@@ -236,7 +236,8 @@ async function run_render(params) {
     ...params,
     channel,
     scenes: params.scenes,
-    video_path: formats.includes('video') ? path.join(params.output_dir, 'presentation.mp4') : undefined
+    video_path: formats.includes('video') ? path.join(params.output_dir, 'presentation.mp4') : undefined,
+    pdf_path: formats.includes('pdf') ? path.join(params.output_dir, 'presentation.pdf') : undefined
   });
   results.push(rDeliver);
 

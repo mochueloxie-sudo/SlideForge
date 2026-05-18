@@ -1,0 +1,80 @@
+[
+  {
+    "id": "br-cover",
+    "type": "cover",
+    "eyebrow": "Q1 BUSINESS REVIEW",
+    "title": "增长与效率",
+    "secondary": "董事会简报 · 2026 Q1",
+    "visual_weight": "hero"
+  },
+  {
+    "id": "br-thesis",
+    "type": "content",
+    "content_variant": "quote",
+    "visual_weight": "hero",
+    "title": "核心判断",
+    "quote_body": "规模扩张没有牺牲单位经济，效率投资开始兑现。",
+    "quote_source": "CEO 备忘录摘要"
+  },
+  {
+    "id": "br-kpi",
+    "type": "content",
+    "content_variant": "panel_stat",
+    "visual_weight": "hero",
+    "composition": "stat-hero",
+    "title": "收入质量",
+    "stat_value": "¥ 4.6 亿",
+    "stat_label": "季度经常性收入",
+    "key_points": [
+      "净收入留存 118%",
+      "毛利率 +3.2pt",
+      "大客户占比 41%"
+    ]
+  },
+  {
+    "id": "br-grid",
+    "type": "content",
+    "content_variant": "stats_grid",
+    "layout_hint": "2x2",
+    "title": "运营仪表盘",
+    "stats": [
+      { "number": "+22%", "label": "新签", "desc": "同比；渠道贡献提升" },
+      { "number": "-14%", "label": "CAC", "desc": "产品主导获客占比提高" },
+      { "number": "96%", "label": "续约", "desc": "Top 50 客户全部续约" },
+      { "number": "31d", "label": "回款", "desc": "DSO 较上季缩短 4 天" }
+    ]
+  },
+  {
+    "id": "br-breath",
+    "type": "content",
+    "content_variant": "text",
+    "visual_weight": "breathing",
+    "composition": "title-only",
+    "eyebrow": "风险",
+    "title": "海外合规节奏需与扩张同步",
+    "body": "已启动区域化控制面与数据驻留评估"
+  },
+  {
+    "id": "br-actions",
+    "type": "content",
+    "content_variant": "timeline",
+    "title": "下季度三件事",
+    "steps": [
+      { "num": "01", "label": "行业模板", "desc": "金融 / 零售打包方案上架" },
+      { "num": "02", "label": "AI 助手", "desc": "内嵌报表解读与异常归因" },
+      { "num": "03", "label": "伙伴生态", "desc": "ISV 市场分成计划 GA" }
+    ]
+  },
+  {
+    "id": "br-end",
+    "type": "summary",
+    "visual_weight": "breathing",
+    "layout_hint": "cards",
+    "title": "决议请求",
+    "key_points": [
+      "批准亚太区编制 +12",
+      "追加 ¥ 800 万 研发资本化",
+      "下次复盘：2026-08-15"
+    ]
+  }
+]

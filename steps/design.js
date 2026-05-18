@@ -133,6 +133,7 @@ process.stdin.on('end', async () => {
     designParams.page_animation_preset = normalizePreset(
       params.page_animation_preset ?? designParams.page_animation_preset
     );
+    designParams.enhancement = params.enhancement === 'full' ? 'full' : 'minimal';
 
     const outputPath = path.resolve(output_dir);
     ensureDir(outputPath);
@@ -404,6 +405,21 @@ function buildPageDirections(scenes, designParams, design_mode) {
     // ── layout_hint: 内容属性驱动，scene 已有值则直接采用 ─────────────────
     const layout_hint = scene.layout_hint || computeLayoutHint(scene, content_variant);
 
+    const VALID_VW = new Set(['hero', 'normal', 'dense', 'breathing']);
+    const VALID_COMP = new Set(['default', 'title-only', 'stat-hero', 'split-visual']);
+    let visual_weight = scene.visual_weight;
+    if (visual_weight && !VALID_VW.has(visual_weight)) visual_weight = undefined;
+    let composition = scene.composition;
+    if (composition && !VALID_COMP.has(composition)) composition = undefined;
+    if (!visual_weight && scene.type === 'content') {
+      if (['number', 'quote', 'compare'].includes(content_variant)) visual_weight = 'hero';
+      else if (content_variant === 'text' && !hasKeyPoints) visual_weight = 'breathing';
+    }
+    if (!composition && scene.type === 'content') {
+      if (content_variant === 'number' || content_variant === 'stats_grid') composition = 'stat-hero';
+      else if (scene.hero_image && content_variant === 'panel') composition = 'split-visual';
+    }
+
     return {
       id: scene.id,
       page_intent,
@@ -416,6 +432,8 @@ function buildPageDirections(scenes, designParams, design_mode) {
       negative_space,
       visual_priority,
       avoid_elements,
+      visual_weight: visual_weight || 'normal',
+      composition: composition || 'default',
       max_body_lines: page_intent === 'structure' ? 1 : (density === 'low' ? 2 : 3),
       max_key_points: 3
     };
@@ -446,9 +464,9 @@ function buildPageDirections(scenes, designParams, design_mode) {
       dir.decoration_policy = 'hairline';    // add hairline separator
     }
 
-    // First content page after cover: give it extra visual weight
-    if (i === 0) {
-      dir.visual_weight = 'high';
+    // First content page after cover: give it extra visual weight (unless scene set explicitly)
+    if (i === 0 && (!dir.visual_weight || dir.visual_weight === 'normal')) {
+      dir.visual_weight = 'hero';
       dir.decoration_policy = dir.decoration_policy === 'none' ? 'subtle_glow' : dir.decoration_policy;
     }
 
@@ -502,6 +520,7 @@ function computeLayoutHint(scene, variant) {
   switch (variant) {
     case 'panel': {
       const kpCount = Array.isArray(scene.key_points) ? scene.key_points.length : 0;
+      if (scene.type === 'summary' && kpCount >= 2 && kpCount <= 4) return 'cards';
       if (kpCount <= 3 && (scene.key_points || []).every(p => p.length <= 20)) return 'grid-3';
       if (kpCount >= 5) return 'stack';
       if (scene.panel_title || scene.panel_eyebrow) return 'sidebar-left';
@@ -509,6 +528,7 @@ function computeLayoutHint(scene, variant) {
     }
     case 'stats_grid': {
       const count = Array.isArray(scene.stats) ? scene.stats.length : 0;
+      if (scene.composition === 'stat-hero' && count >= 2 && count <= 4) return 'hero-1';
       if (count === 1) return 'hero-1';
       if (count === 4) return '2x2';
       return 'row';

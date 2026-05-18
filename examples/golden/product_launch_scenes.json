@@ -1,0 +1,102 @@
+[
+  {
+    "id": "pl-cover",
+    "type": "cover",
+    "eyebrow": "PRODUCT LAUNCH",
+    "title": "Orbit 2.0",
+    "secondary": "实时协作，从文档到交付一条链",
+    "visual_weight": "hero"
+  },
+  {
+    "id": "pl-hero-num",
+    "type": "content",
+    "content_variant": "number",
+    "visual_weight": "hero",
+    "composition": "stat-hero",
+    "eyebrow": "北极星指标",
+    "title": "上线首周",
+    "big_number": "3.2×",
+    "body": "活跃团队周环比；核心场景「联调→发布」耗时中位数下降 58%"
+  },
+  {
+    "id": "pl-breath",
+    "type": "content",
+    "content_variant": "text",
+    "visual_weight": "breathing",
+    "composition": "title-only",
+    "eyebrow": "问题",
+    "title": "工具链越长，上下文丢得越快",
+    "body": "我们让状态、审批与发布留在同一张画布上"
+  },
+  {
+    "id": "pl-compare",
+    "type": "content",
+    "content_variant": "compare",
+    "visual_weight": "hero",
+    "title": "Before / After",
+    "compare_left_title": "以前",
+    "compare_right_title": "现在",
+    "compare_left_points": [
+      "5 个系统来回切换",
+      "口径靠人肉对齐",
+      "发布窗口不可预测"
+    ],
+    "compare_right_points": [
+      "单一协作平面",
+      "契约与指标同源",
+      "金丝雀 + 自动回滚"
+    ]
+  },
+  {
+    "id": "pl-flow",
+    "type": "content",
+    "content_variant": "process_flow",
+    "title": "一条链跑通",
+    "process_stages": [
+      { "label": "对齐", "desc": "需求、验收、依赖在同一视图冻结" },
+      { "label": "联调", "desc": "环境矩阵与契约测试门禁" },
+      { "label": "发布", "desc": "观测驱动的渐进放量" }
+    ]
+  },
+  {
+    "id": "pl-stats",
+    "type": "content",
+    "content_variant": "stats_grid",
+    "composition": "stat-hero",
+    "title": "早期客户",
+    "stats": [
+      { "number": "120+", "label": "团队", "desc": "金融 / 制造 / SaaS" },
+      { "number": "99.95%", "label": "SLO", "desc": "生产可用性季度均值" },
+      { "number": "<8min", "label": "恢复", "desc": "P1 事故 MTTR 中位数" }
+    ]
+  },
+  {
+    "id": "pl-split",
+    "type": "content",
+    "content_variant": "panel",
+    "composition": "split-visual",
+    "layout_hint": "sidebar-left",
+    "hero_image": "examples/assets/orbit-demo.svg",
+    "visual_alt": "Orbit 协作界面示意",
+    "eyebrow": "DEMO",
+    "title": "现场演示",
+    "panel_title": "你会看到",
+    "key_points": [
+      "多人光标与评论同屏",
+      "发布单与 Runbook 自动关联",
+      "异常一键拉齐值班群"
+    ]
+  },
+  {
+    "id": "pl-close",
+    "type": "summary",
+    "visual_weight": "breathing",
+    "layout_hint": "cards",
+    "title": "现在开始",
+    "key_points": [
+      "预约 30 分钟现场 walkthrough",
+      "sandbox 租户 14 天全功能",
+      "orbit.io/launch"
+    ]
+  }
+]

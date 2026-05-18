@@ -47,7 +47,99 @@
 └─ 章节封面 / 大纲页 ──────────────────────▶ nav_bar
 ```
 
-> 拿不准时**选 `panel`**——通用兜底，几乎任何要点列表都能塞进去。
+> 拿不准时**选 `panel`**——通用兜底，几乎任何要点列表都能塞进去。  
+> **要作品感而非模板感**：为关键页加 `visual_weight` / `composition`（见 §0.7），并穿插 `number` / `quote` / `compare` 等高能变体。
+
+### 0.7 艺术指导（可选 · 抬品质）
+
+写在 **content / summary** 页（cover 可写 `visual_weight:"hero"`）。`validate` 会产出 `**quality_warnings[]`**（不阻塞渲染），提示 panel 堆砌、缺高能页等。
+
+`**visual_weight**` — 页型能量
+
+
+| 值           | 何时用            |
+| ----------- | -------------- |
+| `hero`      | 冲击页：大标题、单指标、对照 |
+| `normal`    | 默认（可省略）        |
+| `dense`     | 信息密、多要点        |
+| `breathing` | 呼吸页：大留白、少元素    |
+
+
+`**composition**` — 构图意图
+
+
+| 值              | 何时用                                            |
+| -------------- | ---------------------------------------------- |
+| `default`      | 变体默认（可省略）                                      |
+| `title-only`   | 整页只传达一句（常配 `text` + `breathing`）               |
+| `stat-hero`    | 数字绝对主角（`number` / `stats_grid` / `panel_stat`） |
+| `split-visual` | 主视觉区；配 `hero_image` / `diagram` 填入右侧槽（Q1-B）   |
+
+
+```json
+{
+  "type": "content",
+  "content_variant": "text",
+  "visual_weight": "breathing",
+  "composition": "title-only",
+  "eyebrow": "转折",
+  "title": "真正的问题不是工具不够",
+  "secondary": "而是上下文在切换中丢失"
+}
+```
+
+金标示例：`examples/golden/`（`npm run golden:render`）。完整路线：[docs/ROADMAP_OUTPUT_QUALITY.md](ROADMAP_OUTPUT_QUALITY.md)。
+
+**渲染增强**：`design` 默认写入 `design_params.enhancement: "minimal"`（样张主导排版）；需旧版全局字号垫层时传 `"enhancement": "full"`。
+
+### 0.8 品质清单（写 scenes 时自检）
+
+`validate` 在 schema 通过后附加 `quality_warnings[]`（**不阻塞** render）。以下与 `steps/quality_lint.js` 一致，宿主 Agent 应在落盘前尽量满足：
+
+| 规则 | 建议 |
+|------|------|
+| 连续 ≥3 页 `content_variant:"panel"` | 合并或改用 `number` / `quote` / `compare` / `stats_grid` / `process_flow` |
+| content 页过半为 `panel`（且 deck ≥4 页 content） | 加冲击页 `visual_weight:"hero"` + 高能变体 |
+| deck ≥6 页且无高能变体 | 至少 1 页 `number` / `quote` / `compare` / `stats_grid` / `process_flow` / `quote_context` / `panel_stat` 等 |
+| content `title` >48 字 | 缩短标题，细节放 `body` / `key_points` |
+| `panel` 且 `key_points.length` >5 | 拆页或改用 `card_grid` / `timeline` |
+| 非法 `visual_weight` / `composition` | 见 §0.7 合法值表 |
+
+**deck 节奏模板（7–10 页）**：`cover(hero)` → 冲击页（`number` 或 `compare`）→ 呼吸页（`text` + `title-only` + `breathing`）→ 信息页（`panel` / `stats_grid`）→ 可选 `timeline` / `two_col` → `summary`（2–4 条 CTA，`breathing` 可选）。
+
+**金标参考**：
+
+| 文件 | 场景 | 建议 `design_mode` |
+|------|------|-------------------|
+| `examples/golden/product_launch_scenes.json` | 产品发布 | `neon-cyber` |
+| `examples/golden/business_report_scenes.json` | 商业报告 | `bold-signal` |
+| `examples/golden/humanities_narrative_scenes.json` | 人文叙事 | `dark-botanical` |
+
+### 0.9 主视觉资产（Q1-B · 可选）
+
+用于 `composition:"split-visual"` 的 `panel` 页（样张右侧 `.vp-visual-slot`）。路径相对于 **scenes.json 所在目录**、**output_dir** 或仓库根。
+
+| 字段 | 用途 |
+|------|------|
+| `hero_image` | 主图（截图 / 照片），`object-fit: cover` |
+| `diagram` | 示意图，适合透明底 PNG/SVG |
+| `brand_mark` | Logo / 标识，`object-fit: contain` |
+| `visual_alt` | 可选无障碍描述 |
+
+优先级：`hero_image` > `diagram` > `brand_mark`。未找到文件时 `html` 步骤 stderr 告警，槽位保持占位样式。
+
+```json
+{
+  "type": "content",
+  "content_variant": "panel",
+  "composition": "split-visual",
+  "hero_image": "examples/assets/orbit-demo.svg",
+  "title": "现场演示",
+  "key_points": ["要点一", "要点二"]
+}
+```
+
+主题色板见 `samples/themes/{design_mode}/tokens.css`（Q1-A）。
 
 ### 0.3 三个最常用变体的最小骨架
 
@@ -135,13 +227,15 @@ open ./project/presentation.html
 
 ### 0.5 五个最常见错误（写之前先扫一眼）
 
-| 错误 | validate 报什么 | 怎么改 |
-|------|----------------|--------|
-| 字段名拼错（`keypoints` / `keyPoints` / `key_point`） | `requires non-empty "key_points"` | 字段名是 **snake_case 复数** `key_points` |
-| content 页没写 `content_variant` | `content scene must declare content_variant` | 每个 `type:"content"` 都必须有 |
-| 多个 cover 或没有 cover | `expected exactly 1 cover scene` | 首页且只有一个 `type:"cover"` |
-| `stats_grid` 漏 `desc` | （warning）数据稀薄 | 每个 stat 都加一句 `desc`，否则页面很空 |
-| 连续两页同变体 | （warning）`consecutive same content_variant` | 节奏感差。考虑换变体或合并 |
+
+| 错误                                             | validate 报什么                                 | 怎么改                                 |
+| ---------------------------------------------- | -------------------------------------------- | ----------------------------------- |
+| 字段名拼错（`keypoints` / `keyPoints` / `key_point`） | `requires non-empty "key_points"`            | 字段名是 **snake_case 复数** `key_points` |
+| content 页没写 `content_variant`                  | `content scene must declare content_variant` | 每个 `type:"content"` 都必须有            |
+| 多个 cover 或没有 cover                             | `expected exactly 1 cover scene`             | 首页且只有一个 `type:"cover"`              |
+| `stats_grid` 漏 `desc`                          | （warning）数据稀薄                                | 每个 stat 都加一句 `desc`，否则页面很空          |
+| 连续两页同变体                                        | （warning）`consecutive same content_variant`  | 节奏感差。考虑换变体或合并                       |
+
 
 ### 0.6 高频字段速记
 
@@ -191,17 +285,19 @@ open ./project/presentation.html
 
 所有 scene 都可以带：
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `id` | number | 1-based 序号；不写也行，渲染前会自动补 |
-| `type` | `"cover"` \| `"content"` \| `"summary"` | 必填 |
-| `title` | string | 必填，主标题 |
-| `eyebrow` | string | 标题上方的小标签，如「核心数据」「BACKGROUND」 |
-| `secondary` / `subtitle` | string | 副标题 |
-| `script` | string | 口播逐字稿；**可选**——只在要导出 video 时需要。zh 150–200 字 / en 50–80 词 |
-| `script_hint` | string | 一句话提示「这页该怎么讲」；不写口播稿时给个 hint 也好 |
-| `footnote` | string | 页脚一行注脚，可用于数据来源 |
-| `layout_hint` | string | 同变体下的子布局微调（见 §4） |
+
+| 字段                       | 类型                                    | 说明                                                      |
+| ------------------------ | ------------------------------------- | ------------------------------------------------------- |
+| `id`                     | number                                | 1-based 序号；不写也行，渲染前会自动补                                 |
+| `type`                   | `"cover"` | `"content"` | `"summary"` | 必填                                                      |
+| `title`                  | string                                | 必填，主标题                                                  |
+| `eyebrow`                | string                                | 标题上方的小标签，如「核心数据」「BACKGROUND」                            |
+| `secondary` / `subtitle` | string                                | 副标题                                                     |
+| `script`                 | string                                | 口播逐字稿；**可选**——只在要导出 video 时需要。zh 150–200 字 / en 50–80 词 |
+| `script_hint`            | string                                | 一句话提示「这页该怎么讲」；不写口播稿时给个 hint 也好                          |
+| `footnote`               | string                                | 页脚一行注脚，可用于数据来源                                          |
+| `layout_hint`            | string                                | 同变体下的子布局微调（见 §4）                                        |
+
 
 `type: "content"` **额外必填**：`content_variant`。
 
@@ -211,6 +307,7 @@ open ./project/presentation.html
 
 > 选哪个？看你这页的**叙事意图**和**已有素材结构**，不看美学。
 > 决策树速查：
+>
 > - 一个核心数字是主角 → `number` 或 `panel_stat`
 > - 多个数字并列 → `stats_grid`
 > - 流程时间线 → `timeline`（时间）/ `process_flow`（业务流） / `architecture_stack`（分层） / `funnel`（漏斗）
@@ -238,7 +335,7 @@ open ./project/presentation.html
 
 - **必填**：`key_points`（3-6 项，每项 ≤30 字）
 - `layout_hint`: `stack`（默认）/ `grid-3`（≤3 项）/ `cards`（4-6 项）/ `sidebar-left` / `numbered`
-- **`grid-3` / `cards` 时**：`key_point_descs` 强烈建议同长，每项 1-2 句
+- `**grid-3` / `cards` 时**：`key_point_descs` 强烈建议同长，每项 1-2 句
 
 ### 3.2 stats_grid — 2-4 个并列数据
 
@@ -580,19 +677,21 @@ open ./project/presentation.html
 
 ## 4. layout_hint 速查
 
-| 变体 | 可用 layout_hint |
-|------|------------------|
-| `panel` | `stack`(默认) / `grid-3` / `sidebar-left` / `cards` / `numbered` |
-| `stats_grid` | `row`(默认) / `hero-1` / `2x2` |
-| `timeline` | `vertical`(默认) / `horizontal` / `alternating` |
-| `two_col` | `equal`(默认) / `wide-left` / `wide-right` |
-| `quote` | `center`(默认) / `left-bar` / `full` |
-| `number` | `center`(默认) / `split` |
-| `card_grid` | 默认 / `2x2`（恰好 4 张时） |
-| `compare` | `equal`(默认) / `wide-left` / `wide-right` |
-| `process_flow` | `horizontal`(默认) / `swimlane`（需 `flow_lanes[]`） |
-| `architecture_stack` | 默认 / `compact`（≥5 层时） |
-| `funnel` | 默认 / `compact`（≥5 层时） |
+
+| 变体                   | 可用 layout_hint                                                 |
+| -------------------- | -------------------------------------------------------------- |
+| `panel`              | `stack`(默认) / `grid-3` / `sidebar-left` / `cards` / `numbered` |
+| `stats_grid`         | `row`(默认) / `hero-1` / `2x2`                                   |
+| `timeline`           | `vertical`(默认) / `horizontal` / `alternating`                  |
+| `two_col`            | `equal`(默认) / `wide-left` / `wide-right`                       |
+| `quote`              | `center`(默认) / `left-bar` / `full`                             |
+| `number`             | `center`(默认) / `split`                                         |
+| `card_grid`          | 默认 / `2x2`（恰好 4 张时）                                            |
+| `compare`            | `equal`(默认) / `wide-left` / `wide-right`                       |
+| `process_flow`       | `horizontal`(默认) / `swimlane`（需 `flow_lanes[]`）                |
+| `architecture_stack` | 默认 / `compact`（≥5 层时）                                          |
+| `funnel`             | 默认 / `compact`（≥5 层时）                                          |
+
 
 ---
 
@@ -679,11 +778,14 @@ open ./my_deck/presentation.html
 
 ## 8. 常见坑
 
-| 现象 | 原因 / 处理 |
-|------|------------|
-| `validate` 报 `expected exactly 1 cover scene` | 缺少 cover 或多了；首页必须 type=cover |
-| `validate` 报 `content_variant="panel" requires non-empty "key_points"` | 必填字段缺；按 §3 对应小节补上 |
-| 截图全是空白 | 多半 scenes.json 字段名拼错（如 `key_point` 单数）；validate 不会捕获拼写错误，对照 §3 字段名 |
-| 多页同变体连续被 warning | 软约束。可换变体或忽略 |
-| 想要逐字稿但 script 字段缺 | format 含 video 时需要；纯 PDF/HTML 不需要 |
-| recommended_design_mode 不生效 | 当次 JSON 传了显式 `design_mode` 会覆盖 project.json 的推荐 |
+
+| 现象                                                                     | 原因 / 处理                                                            |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `validate` 报 `expected exactly 1 cover scene`                          | 缺少 cover 或多了；首页必须 type=cover                                       |
+| `validate` 报 `content_variant="panel" requires non-empty "key_points"` | 必填字段缺；按 §3 对应小节补上                                                  |
+| 截图全是空白                                                                 | 多半 scenes.json 字段名拼错（如 `key_point` 单数）；validate 不会捕获拼写错误，对照 §3 字段名 |
+| 多页同变体连续被 warning                                                       | 软约束。可换变体或忽略                                                        |
+| 想要逐字稿但 script 字段缺                                                      | format 含 video 时需要；纯 PDF/HTML 不需要                                  |
+| recommended_design_mode 不生效                                            | 当次 JSON 传了显式 `design_mode` 会覆盖 project.json 的推荐                    |
+
+

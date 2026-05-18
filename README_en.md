@@ -113,7 +113,7 @@ Every step persists JSON / HTML / PNG to disk; any command can be re-run individ
 | **Google Chrome / bundled Puppeteer** | Screenshots + PDF (screenshot / package) | Usually pre-installed |
 | `edge-tts` | video only | `pip install edge-tts` (or macOS `say`) |
 | `ffmpeg` | video only | `brew install ffmpeg` |
-| `lark-cli` + Feishu credentials | Feishu source / `channel:"feishu"` | `npm i -g @larksuite/cli` + `.env` `FEISHU_*` |
+| `lark-cli` + Feishu credentials | Feishu source / `channel:"feishu"` (embed **mp4 and/or pdf** in doc) | `npm i -g @larksuite/cli` + `.env` `FEISHU_*` |
 
 **No LLM API credentials required.**
 

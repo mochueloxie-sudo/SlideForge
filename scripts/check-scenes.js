@@ -27,13 +27,24 @@ const ALL_EXAMPLES = [
   'examples/verify_notebook_shell_scenes.json',
 ];
 
-const files = useAll
-  ? ALL_EXAMPLES
-  : args.filter(a => !a.startsWith('-'));
+const GOLDEN_EXAMPLES = [
+  'examples/golden/product_launch_scenes.json',
+  'examples/golden/business_report_scenes.json',
+  'examples/golden/humanities_narrative_scenes.json',
+];
+
+const useGolden = args.includes('--golden');
+
+const files = useGolden
+  ? GOLDEN_EXAMPLES
+  : useAll
+    ? ALL_EXAMPLES
+    : args.filter(a => !a.startsWith('-'));
 
 if (files.length === 0) {
   console.error('Usage: npm run check -- <path/to/scenes.json> [more...]');
   console.error('       npm run check:all          # check the v4-schema whitelist');
+  console.error('       npm run check:golden       # validate + golden:render + HTML regression');
   process.exit(2);
 }
 

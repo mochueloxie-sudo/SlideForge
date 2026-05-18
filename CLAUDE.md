@@ -17,25 +17,26 @@
 ## 架构
 
 
-| 层 | 文件 | 职责 |
-|----|------|------|
-| 入口 | `executor.js` | 路由命令到各 step 脚本；`run_render`（别名 `all`）串联 design → deliver |
-| 提取 | `steps/extract.js` | 把 source（飞书 / 本地 / 网页）抽成 `raw_content.txt` + `source_meta.json`，**零 LLM** |
-| 校验 | `steps/validate.js` | scenes.json schema 校验，输出 `errors[]` / `warnings[]`，**零 LLM、零网络**；永远 exit 0 |
-| 核心渲染 | `utils/html_generator.js` | 加载样张 → 替换 token → 注入 CSS → 写出 HTML |
-| 页内动画 | `utils/page_animations.js` | `design_params.page_animations` 时注入整页入场 CSS + 启动脚本（与 FFmpeg 的 `steps/animations/animation-strategies.js` 分离） |
-| 截图 | `utils/screenshot.js` | Puppeteer 批量截图 1920×1080 |
-| 样张 | `samples/{theme}/` + `samples/shared/` | 13 主题；每主题一组样张 + `shared/` 通用变体（含 compare / process_flow / architecture_stack / funnel），纯 HTML + CSS |
-| design | `steps/design.js` | 规则引擎：主题选择（user override > project.json `recommended_design_mode` > 内容推断）+ 变体推断 + layout_hint |
-| html | `steps/html.js` | 调用 html_generator |
-| screenshot | `steps/screenshot.js` | 调用 utils/screenshot.js |
-| tts | `steps/tts.js` | edge-tts（降级 macOS say）|
-| package | `steps/package.js` | 打包交付格式：video / pdf / html + outline + script |
-| deliver | `steps/deliver.js` | 交付渠道：local / feishu |
-| 内部 | `steps/video.js` | FFmpeg H.264+AAC 25fps（被 `package` 调用） |
-| 内部 | `steps/publish.js` | lark-cli 飞书发布（被 `deliver` 调用） |
-| 工具 | `steps/utils/content_extractor.js` | 多源内容提取（飞书 / 本地 / 网页）；`extractBlockText` 按 `block_type` switch-case 覆盖 Heading1–9 / Bullet / Ordered / Code / Quote / Divider / Todo / Callout 等完整飞书块类型 |
-| 工具 | `steps/utils/tool-locator.js` | ffmpeg / ffprobe / imagemagick 自动发现 |
+| 层          | 文件                                     | 职责                                                                                                                                                     |
+| ---------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 入口         | `executor.js`                          | 路由命令到各 step 脚本；`run_render`（别名 `all`）串联 design → deliver                                                                                               |
+| 提取         | `steps/extract.js`                     | 把 source（飞书 / 本地 / 网页）抽成 `raw_content.txt` + `source_meta.json`，**零 LLM**                                                                              |
+| 校验         | `steps/validate.js`                    | scenes.json schema 校验，输出 `errors[]` / `warnings[]`，**零 LLM、零网络**；永远 exit 0                                                                             |
+| 核心渲染       | `utils/html_generator.js`              | 加载样张 → 替换 token → 注入 CSS → 写出 HTML                                                                                                                     |
+| 页内动画       | `utils/page_animations.js`             | `design_params.page_animations` 时注入整页入场 CSS + 启动脚本（与 FFmpeg 的 `steps/animations/animation-strategies.js` 分离）                                           |
+| 截图         | `utils/screenshot.js`                  | Puppeteer 批量截图 1920×1080                                                                                                                               |
+| 样张         | `samples/{theme}/` + `samples/shared/` | 13 主题；每主题一组样张 + `shared/` 通用变体（含 compare / process_flow / architecture_stack / funnel），纯 HTML + CSS                                                    |
+| design     | `steps/design.js`                      | 规则引擎：主题选择（user override > project.json `recommended_design_mode` > 内容推断）+ 变体推断 + layout_hint                                                           |
+| html       | `steps/html.js`                        | 调用 html_generator                                                                                                                                      |
+| screenshot | `steps/screenshot.js`                  | 调用 utils/screenshot.js                                                                                                                                 |
+| tts        | `steps/tts.js`                         | edge-tts（降级 macOS say）                                                                                                                                 |
+| package    | `steps/package.js`                     | 打包交付格式：video / pdf / html + outline + script                                                                                                           |
+| deliver    | `steps/deliver.js`                     | 交付渠道：local / feishu（飞书：`publish.js` 嵌入 **mp4 和/或 pdf**，至少其一）                                                                                                                                    |
+| 内部         | `steps/video.js`                       | FFmpeg H.264+AAC 25fps（被 `package` 调用）                                                                                                                 |
+| 内部         | `steps/publish.js`                     | lark-cli 飞书发布（被 `deliver` 调用）                                                                                                                          |
+| 工具         | `steps/utils/content_extractor.js`     | 多源内容提取（飞书 / 本地 / 网页）；`extractBlockText` 按 `block_type` switch-case 覆盖 Heading1–9 / Bullet / Ordered / Code / Quote / Divider / Todo / Callout 等完整飞书块类型 |
+| 工具         | `steps/utils/tool-locator.js`          | ffmpeg / ffprobe / imagemagick 自动发现                                                                                                                    |
+
 
 ### 已移除（v4.0 起不存在）
 
@@ -43,7 +44,7 @@
 - `steps/step1_script.js`（MiniMax 写口播稿）
 - `steps/utils/minimax_utils.js`（OpenAI 兼容 HTTP + L1/L2/L3 容错）
 - `steps/utils/llm_client.js`（历史 MiniMax 封装）
-- `.env` 中 `MINIMAX_*` / `LLM_*` 字段（保留飞书凭证）
+- `.env` 中 `MINIMAX_`* / `LLM_*` 字段（保留飞书凭证）
 - `executor.js` 的 `step0` / `step1` / `step2`-`step7` 命令分支（命中时抛错并指引到新名）
 
 ### 命令重命名映射（v3 → v4）
@@ -61,7 +62,6 @@ step7_channel.js     → steps/deliver.js         (command: deliver)
 step7_publish.js     → steps/publish.js         (内部，被 deliver 调用)
 ```
 
-
 ---
 
 ## 样张系统
@@ -74,14 +74,9 @@ step7_publish.js     → steps/publish.js         (内部，被 deliver 调用)
 
 ### 变体文件
 
-每个主题目录包含：
+每个主题目录通常仍含 **非深度** 变体（`10_icon_grid` … `15_chart_demo`、`content.html` 等）。**深度 8 页**（`cover` / `01_text_only` / `02_panel` / `03_stats_grid` / `04_number` / `05_quote` / `20_compare` / `21_process_flow`）默认单源 **`samples/_core/layouts/`**；主题内若存在同名文件则 **覆盖**（当前仅 **`notebook-tabs/cover.html`** 保留定制封面）。
 
-- `cover.html`
-- `01_text_only.html` / `02_panel.html` / `04_number.html` / `05_quote.html`
-- `10_icon_grid.html` / `11_code_block.html` / `12_table.html`
-- `13_card_grid.html` / `14_nav_bar.html` / `15_chart_demo.html`
-
-`shared/` 通用变体（主题无关，**全主题经 `loadTemplate` / `loadTemplateWithSource` 回退共用**）：
+`shared/` 通用变体（主题无关）与 `samples/_core/layouts/`（深度 DOM + `var(--sf-*)`）：**`loadTemplateWithSource` 回退顺序**为 **主题目录** → **`_core/layouts`** → **`shared/`**。
 
 - `03_stats_grid.html` / `07_timeline.html` / `08_two_col.html`
 - `16_panel_stat.html` / `17_number_bullets.html` / `18_quote_context.html` / `19_text_icons.html`
@@ -122,7 +117,7 @@ step7_publish.js     → steps/publish.js         (内部，被 deliver 调用)
 
 ```
 1. scene.type → generateCover / generateContent / generateSummary
-2. generateContent：按 content_variant 加载样张（`notebook-tabs` 且实际来自 `shared/` 时先合并 `_content_shell.html`）
+2. generateContent：按 content_variant 加载样张（`notebook-tabs` 且实际来自 `shared/` 或 `_core/layouts/` 时先合并 `_content_shell.html`）
 3. 扫描 {{TOKEN}} markers → 替换
 4. repeat marker → 按数组长度重复对应 HTML 片段（`{{KEY_POINT}}` / `{{BODY}}` 行在 stagger 预设下对首标签注入 `data-vp-animate`）
 5. 注入全局 CSS：readability + density + glass + title + centering
@@ -132,8 +127,8 @@ step7_publish.js     → steps/publish.js         (内部，被 deliver 调用)
 
 关键函数：
 
-- `loadTemplate(theme, variant)` — 先找主题目录，fallback 到 shared/（`loadTemplateWithSource` 同路径并额外返回 `fromShared`）
-- `**notebook-tabs` + shared 回退**：`generateContent` 在 `design_mode === 'notebook-tabs'` 且 `fromShared` 时，用 `samples/notebook-tabs/_content_shell.html` 包一层（`.paper` / `.tabs` / `body.vp-notebook-outer`），把共享模板的 `<head>` 片段与 `<body>` 内层并入壳内；`layout_hint` / `density` 仍只注入最终文档的单个 `<body>`，无需为主题复制整套 shared 变体文件
+- `loadTemplate(theme, variant)` — 先找主题目录，再 **`samples/_core/layouts/`**，再 `shared/`（`loadTemplateWithSource` 同路径并额外返回 `fromShared`）
+- **`notebook-tabs` + 非主题内样张**：`generateContent` 在 `design_mode === 'notebook-tabs'` 且 `fromShared`（含 `_core` 回退）时，用 `samples/notebook-tabs/_content_shell.html` 包一层（`.paper` / `.tabs` / `body.vp-notebook-outer`），把内层模板的 `<head>` 片段与 `<body>` 并入壳内；`cover` 仍可用主题自带 `cover.html` 绕过 `_core`
 - `buildTokens(scene, total)` — 构建 token map
 - `replaceTokens(html, tokens)` — `{{NAME}}` → 值
 - `getReadabilityCSS()` — 全局最小字号基线
@@ -237,7 +232,7 @@ echo '{"command":"package","scenes":"'"$P"'/scenes.json","screenshots_dir":"'"$P
 - **scene.body / scene.secondary 可能是 string 或 string[]**：访问前做 `Array.isArray` 判断
 - **副标题 fallback 链**：`scene.subtitle || scene.secondary || scene.body?.[0] || ''`
 - **系统 Chrome 降级**：`utils/screenshot.js` 和 `steps/package.js` 在 Puppeteer 找不到 bundled Chrome 时 fallback 到 `/Applications/Google Chrome.app`
-- **`validate` 永远 exit 0**：`valid:false` 不是工具崩溃而是检查发现问题；调用方读 JSON 字段判断。仅在文件不存在 / JSON 解析错等系统级错时 exit 1。
+- `**validate` 永远 exit 0**：`valid:false` 不是工具崩溃而是检查发现问题；调用方读 JSON 字段判断。仅在文件不存在 / JSON 解析错等系统级错时 exit 1。
 - **外部依赖与预检**：实现上**无**统一「跑前一键检测」；缺 FFmpeg/ffprobe、TTS、飞书凭证等会在 **screenshot / tts / package / deliver** 等命令处失败。给用户与 Agent 的**收窄规则、条件表、典型报错落点**已写在 **[SKILL.md](SKILL.md)** 第二步；README 接入节与之对齐。
 
 #### 已知限制
@@ -259,7 +254,7 @@ v4 起 `project.json` 不再由内置命令自动生成，全部由宿主 Agent 
 
 **dark-botanical**：已映射内容类型 **人文社科**（中/英键），`inferContentType()` 含人文/社科/策展/心理学等关键词时命中；与 **文化艺术** → **vintage-editorial** 并列分流。
 
-**`design` preset 来源**：仅 `steps/presets/frontend-presets.json`（`getFallbackPreset`）与专业模式的 `getDeepTechKeynotePreset`；**不再**调用 OpenClaw 的 `graphic-design` executor（历史上曾硬编码 `~/.openclaw/.../executor.js` 并导致 30s 超时）。若将来再接外部设计 agent，建议用**显式环境变量**（例如仅当 `GRAPHIC_DESIGN_EXECUTOR` 指向可读脚本时才 `spawn`），默认关闭。
+`**design` preset 来源**：仅 `steps/presets/frontend-presets.json`（`getFallbackPreset`）与专业模式的 `getDeepTechKeynotePreset`；**不再**调用 OpenClaw 的 `graphic-design` executor（历史上曾硬编码 `~/.openclaw/.../executor.js` 并导致 30s 超时）。若将来再接外部设计 agent，建议用**显式环境变量**（例如仅当 `GRAPHIC_DESIGN_EXECUTOR` 指向可读脚本时才 `spawn`），默认关闭。
 
 #### 借鉴 — frontend-slides（对照参考）
 
@@ -269,7 +264,7 @@ v4 起 `project.json` 不再由内置命令自动生成，全部由宿主 Agent 
 
 **Roadmap**：未纳入（暂缓；未写入 P0/P1/P2 表）。
 
-**当前排期：暂缓。** 完整落地依赖「选风格 → 回写 `design_mode` / 会话 → 再走 design → package 或分支入口」等产品闭环改造，触面大；近期不推进，仅作长期参考。在此之前仍可通过 **当次 JSON 显式传入 `design_mode`**、**宿主 Agent 在 `project.json` 写 `recommended_design_mode`**、或 **`design` 命令的内容规则兜底** 控制风格。
+**当前排期：暂缓。** 完整落地依赖「选风格 → 回写 `design_mode` / 会话 → 再走 design → package 或分支入口」等产品闭环改造，触面大；近期不推进，仅作长期参考。在此之前仍可通过 **当次 JSON 显式传入 `design_mode`**、**宿主 Agent 在 `project.json` 写 `recommended_design_mode`**、或 `**design` 命令的内容规则兜底** 控制风格。
 
 **机制**：生成 3 个单页封面 HTML（不同 CSS 变量组合）→ 用户看图选 → 选定风格后批量生成完整演示。
 
@@ -295,7 +290,7 @@ v4 起 `project.json` 不再由内置命令自动生成，全部由宿主 Agent 
 
 ##### 3. Anti-AI-Slop 意识
 
-**Roadmap**：未纳入（prompt / 可选 lint；未写入 P0/P1/P2 表）。
+**Roadmap**：**→ Q0**（金标 deck + `quality_warnings` + `refs/STYLE_PRESETS` 气质清单；见 [docs/ROADMAP_OUTPUT_QUALITY.md](docs/ROADMAP_OUTPUT_QUALITY.md)）。
 
 **机制**：有意识地避免 AI 味视觉（告别紫白渐变），提供有辨识度的设计风格。
 
@@ -326,14 +321,14 @@ v4 起 `project.json` 不再由内置命令自动生成，全部由宿主 Agent 
 **工程主线（与（二）P1 一致；拆解步骤见（二）「P1 → 用户自定义主题 → 实现路径」）**：
 
 
-| 项 | 约定 |
-|----|------|
-| **Step** | 新增 `steps/step_import.js`（规划；落地后由 `executor` 路由，作为可选上游工具，不替代 Agent 写 scenes.json） |
-| **输入** | `.pptx`、`.pdf`、`.png` |
-| **PPT 路径** | `pptx-parser` 等解析母版 → 色板 / 字体 / 版式 → `samples/custom-{name}/` |
-| **图片路径** | **由宿主 Agent** 用其 vision 能力推断布局 → 同上生成自定义主题样张（v4 不在 Skill 内调外部 vision API） |
-| **输出** | `cover.html` + 变体 HTML，注册 `DESIGN_TEMPLATES`，后续由 `html_generator` 与现有 Step 消费 |
-| **脚手架** | `samples/_template/` 先行手工主题（P1 同段） |
+| 项          | 约定                                                                                |
+| ---------- | --------------------------------------------------------------------------------- |
+| **Step**   | 新增 `steps/step_import.js`（规划；落地后由 `executor` 路由，作为可选上游工具，不替代 Agent 写 scenes.json） |
+| **输入**     | `.pptx`、`.pdf`、`.png`                                                             |
+| **PPT 路径** | `pptx-parser` 等解析母版 → 色板 / 字体 / 版式 → `samples/custom-{name}/`                     |
+| **图片路径**   | **由宿主 Agent** 用其 vision 能力推断布局 → 同上生成自定义主题样张（v4 不在 Skill 内调外部 vision API）         |
+| **输出**     | `cover.html` + 变体 HTML，注册 `DESIGN_TEMPLATES`，后续由 `html_generator` 与现有 Step 消费     |
+| **脚手架**    | `samples/_template/` 先行手工主题（P1 同段）                                                |
 
 
 **外部参考**：可借鉴 frontend-slides 仓库内 `scripts/extract-pptx.py` 一类抽取思路，**不必**在 slide-forge 内复制其整树。
@@ -342,9 +337,26 @@ v4 起 `project.json` 不再由内置命令自动生成，全部由宿主 Agent 
 
 ### （二）已明确的 Roadmap
 
+**当前产品主轴（2026-05）**：**输出品质** — 从「好看模板」到「设计作品」。完整规格见 **[docs/ROADMAP_OUTPUT_QUALITY.md](docs/ROADMAP_OUTPUT_QUALITY.md)**（Q0 / Q1 / Q2）。下列 **Q 系列**与动效 / 导入 **并行**，但资源上 **Q 优先于加主题**。
+
 **当前工程侧优先保证的交付形态**：`format` 为 `**html`** / `**pdf`**（或二者组合）时，design → package 链路在具备 Node + Puppeteer/Chrome 的环境下可完整跑通；`**video`** 另依赖 FFmpeg、TTS。发版前 smoke 可用 `examples/four_new_variants_scenes.json` + 显式 `design_mode` 跑 design → screenshot → package（详见 `.gitignore` 中的 `release_smoke_*` 约定）。
 
-#### P0 — HTML 动画支持
+#### Q0 — 输出品质（当前执行）
+
+
+| ID       | 内容                                                                                      | 状态                                   |
+| -------- | --------------------------------------------------------------------------------------- | ------------------------------------ |
+| **Q0-A** | 金标 deck + neon-cyber 样张 diff（`examples/golden/VISUAL_DIFF.md`）                         | **首批完成**                            |
+| **Q0-B** | `visual_weight` / `composition` → `design` → `utils/art_direction.js` → HTML body class | **已落地**                              |
+| **Q0-C** | `steps/quality_lint.js`；`validate` 输出 `quality_warnings[]`                              | **已落地**                              |
+| **Q0-D** | `design_params.enhancement`：`minimal`（默认）/ `full`；`utils/enhancement.js`                    | **已落地**                              |
+
+
+#### Q1 / Q2
+
+见 [docs/ROADMAP_OUTPUT_QUALITY.md](docs/ROADMAP_OUTPUT_QUALITY.md)（设计系统、主视觉管线、双模式、风格预览）。
+
+#### P0 — HTML 动画支持（呈现层，与 Q 系列正交）
 
 当前截图是静态 1920×1080 PNG，交互式 HTML 演示也是图片轮播。下一步让 HTML 页面本身具备动画能力；`format=html` 时直接播放动画，`format=video` 长期可用 Puppeteer 录制动效帧。
 
@@ -353,11 +365,11 @@ v4 起 `project.json` 不再由内置命令自动生成，全部由宿主 Agent 
 **分阶段（执行顺序）**
 
 
-| 阶段    | 内容                                                                                                                                            | 状态      |
-| ----- | --------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| **0** | `design_params.page_animations`（`design` 命令默认 `true`）+ `utils/page_animations.js` 注入 CSS + boot 脚本；`screenshot.js` 在开启动画时等待 `data-vp-anim-ready`   | **已落地** |
+| 阶段    | 内容                                                                                                                                               | 状态      |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------- |
+| **0** | `design_params.page_animations`（`design` 命令默认 `true`）+ `utils/page_animations.js` 注入 CSS + boot 脚本；`screenshot.js` 在开启动画时等待 `data-vp-anim-ready` | **已落地** |
 | **1** | `html_generator` 为列表/卡片/时间线等块加 `data-vp-animate` + 行内 stagger；`page_animation_preset`: `none` / `fade` / `stagger`；`html` 命令传入完整 `design_params` | **已落地** |
-| **2** | `format=video`：Puppeteer 录制动效帧；与 `presentation.html`（iframe 单页）动效策略对齐                                                                         | 待做      |
+| **2** | `format=video`：Puppeteer 录制动效帧；与 `presentation.html`（iframe 单页）动效策略对齐                                                                            | 待做      |
 
 
 **与现有文件分工**
@@ -396,14 +408,14 @@ v4 起 `project.json` 不再由内置命令自动生成，全部由宿主 Agent 
 - 新增 `extract`（纯内容提取）+ `validate`（本地 schema 校验）命令
 - `executor` 的 `command: "all"` 改为 `command: "render"`（保留 `all` 别名），从 `scenes.json` 起串联 design → deliver
 - v3 数字编号 `step2`-`step7` 全部重命名为语义动词 `design` / `html` / `screenshot` / `tts` / `package` / `deliver`
-- `_meta.json` / `package.json` / `.env.example` / `SKILL.md` / `README*` 同步更新
+- `_meta.json` / `package.json` / `.env.example` / `SKILL.md` / `README`* 同步更新
 - `docs/SCENES_SCHEMA.md` 作为宿主 Agent 自产 `scenes.json` 的唯一 schema 信息源
 
 **v3 → v4 升级要点（如需向后兼容某些用例）**：
 
 - `step0` / `step1` 命中时 executor 抛错并提示走 `extract` + Agent 自产 + `render`
 - `project.json` 不再由内置 Step 自动生成；宿主 Agent 想锁主题时自己写 `recommended_design_mode`
-- `.env` 中删去 `MINIMAX_*` / `LLM_*`；保留 `FEISHU_*`
+- `.env` 中删去 `MINIMAX_`* / `LLM_*`；保留 `FEISHU_*`
 
 #### ~~P2 — LLM 稳定性优化~~（v4.0 已不适用）
 

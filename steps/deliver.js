@@ -3,13 +3,12 @@
  * Step 7: 交付渠道
  *
  *   - "local"  → 汇总所有产出文件清单，打包到 output_dir（默认）
- *   - "feishu" → 创建飞书文档，嵌入视频，写入大纲和逐字稿（当前仅 presentation.mp4；PDF 直传待实现，见 CLAUDE.md 已知限制 / 待优化）
+ *   - "feishu" → 创建飞书文档，写入导览 + 逐字稿，并用 lark-cli 嵌入 **presentation.mp4 和/或 presentation.pdf**（至少其一；同 `docs +media-insert`）
  */
 
 const fs   = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
-const { ensureDir } = require('./utils/step-utils');
 
 let input = '';
 process.stdin.on('data', chunk => input += chunk);
@@ -21,6 +20,7 @@ process.stdin.on('end', async () => {
       output_dir = './output',
       scenes,
       video_path,
+      pdf_path,
       doc_title,
       folder_token,
       source_url
@@ -36,7 +36,15 @@ process.stdin.on('end', async () => {
         result = deliverLocal(outputPath);
         break;
       case 'feishu':
-        result = await deliverFeishu({ output_dir, scenes, video_path, doc_title, folder_token, source_url });
+        result = await deliverFeishu({
+          output_dir,
+          scenes,
+          video_path,
+          pdf_path,
+          doc_title,
+          folder_token,
+          source_url
+        });
         break;
       default:
         throw new Error(`未知渠道: ${channel}。支持: local, feishu`);
@@ -122,23 +130,36 @@ function formatSize(bytes) {
 // Feishu delivery: delegates to publish.js
 // ═══════════════════════════════════════════════════════════════════════════════
 
+function resolveDeliverAttachment(params, key, basename) {
+  let p = params[key];
+  const out = path.resolve(params.output_dir);
+  if (p && typeof p === 'string') {
+    p = path.resolve(p);
+    if (fs.existsSync(p)) return p;
+  }
+  const candidate = path.join(out, basename);
+  return fs.existsSync(candidate) ? candidate : null;
+}
+
 async function deliverFeishu(params) {
-  if (!params.video_path) {
-    const candidate = path.join(path.resolve(params.output_dir), 'presentation.mp4');
-    if (fs.existsSync(candidate)) {
-      params.video_path = candidate;
-    } else {
-      throw new Error('channel=feishu 需要视频文件。请先用 format=video 生成，或指定 video_path。');
-    }
+  const videoPath = resolveDeliverAttachment(params, 'video_path', 'presentation.mp4');
+  const pdfPath = resolveDeliverAttachment(params, 'pdf_path', 'presentation.pdf');
+
+  if (!videoPath && !pdfPath) {
+    throw new Error(
+      'channel=feishu 需要 presentation.mp4 和/或 presentation.pdf。' +
+        '请先用 format 包含 video 和/或 pdf 跑 package，或显式传入 video_path / pdf_path。'
+    );
   }
 
   const publishScript = path.resolve(__dirname, 'publish.js');
+  const payload = { ...params, video_path: videoPath || undefined, pdf_path: pdfPath || undefined };
   return new Promise((resolve, reject) => {
     const proc = spawn('node', [publishScript], { stdio: ['pipe', 'pipe', 'pipe'] });
     let stdout = '', stderr = '';
     proc.stdout.on('data', d => stdout += d);
     proc.stderr.on('data', d => { stderr += d; process.stderr.write(d); });
-    proc.stdin.write(JSON.stringify(params));
+    proc.stdin.write(JSON.stringify(payload));
     proc.stdin.end();
     proc.on('close', code => {
       if (code === 0) {

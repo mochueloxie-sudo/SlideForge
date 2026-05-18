@@ -18,6 +18,7 @@
 
 const fs   = require('fs');
 const path = require('path');
+const { lintQuality } = require('./quality_lint');
 
 const VALID_SCENE_TYPES   = new Set(['cover', 'content', 'summary']);
 const VALID_VARIANTS = new Set([
@@ -241,7 +242,9 @@ function validate(scenesData, opts = {}) {
   attachHints(errors);
   attachHints(warnings);
 
-  return { valid: errors.length === 0, errors, warnings };
+  const { quality_warnings } = lintQuality(scenesData);
+
+  return { valid: errors.length === 0, errors, warnings, quality_warnings };
 }
 
 let input = '';
@@ -280,8 +283,9 @@ process.stdin.on('end', () => {
       scenes_count: Array.isArray(scenesData) ? scenesData.length : 0,
       errors: result.errors,
       warnings: result.warnings,
+      quality_warnings: result.quality_warnings,
       message: result.valid
-        ? `OK — ${Array.isArray(scenesData) ? scenesData.length : 0} scenes${result.warnings.length ? ` (${result.warnings.length} warnings)` : ''}`
+        ? `OK — ${Array.isArray(scenesData) ? scenesData.length : 0} scenes${result.warnings.length ? ` (${result.warnings.length} warnings)` : ''}${result.quality_warnings.length ? `, ${result.quality_warnings.length} quality` : ''}`
         : `INVALID — ${result.errors.length} error(s), ${result.warnings.length} warning(s)`
     };
 

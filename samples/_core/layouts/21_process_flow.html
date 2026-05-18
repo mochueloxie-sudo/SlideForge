@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>{{TITLE}}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { width: 1920px; height: 1080px; overflow: hidden; }
+
+  body {
+    width: 1920px; height: 1080px;
+    background: var(--sf-page-bg-process);
+    font-family: var(--sf-font);
+    color: var(--sf-text-primary);
+    padding: 80px 120px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .eyebrow {
+    font-size: 13px; font-weight: 600; letter-spacing: 0.2em;
+    color: var(--sf-eyebrow); text-transform: uppercase; margin-bottom: 20px;
+  }
+  .eyebrow:empty { display: none; }
+  .title {
+    font-size: 58px; font-weight: 700; line-height: 1.05;
+    letter-spacing: -0.03em; margin-bottom: 52px; max-width: 1100px;
+  }
+  .pf-rail {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 0;
+    max-width: 1680px;
+    position: relative;
+    padding-top: 12px;
+  }
+  .pf-rail::before {
+    content: '';
+    position: absolute;
+    left: 48px; right: 48px; top: 11px;
+    height: 2px;
+    background: var(--sf-process-rail-line);
+    z-index: 0;
+    pointer-events: none;
+  }
+  .pf-stage {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 10px;
+    max-width: 340px;
+  }
+  .pf-node {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--sf-process-node-bg);
+    box-shadow: var(--sf-process-node-shadow);
+    margin-bottom: 22px;
+    flex-shrink: 0;
+  }
+  .pf-card {
+    width: 100%;
+    background: var(--sf-process-card-bg);
+    border: var(--sf-process-card-border);
+    border-top: var(--sf-process-card-border-top);
+    border-radius: 20px;
+    box-shadow: var(--sf-process-card-shadow);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 26px 24px 30px;
+    min-height: 200px;
+    text-align: left;
+  }
+  .pf-label {
+    font-size: 24px; font-weight: 700;
+    color: var(--sf-text-primary); line-height: 1.3; margin-bottom: 10px;
+  }
+  .pf-desc {
+    font-size: 18px; color: var(--sf-text-secondary); line-height: 1.55;
+  }
+  .pf-swimlanes { display: none; flex-direction: column; gap: 28px; max-width: 1680px; }
+  body.layout-swimlane .pf-rail { display: none !important; }
+  body.layout-swimlane .pf-swimlanes { display: flex !important; }
+  .hairline {
+    position: absolute; bottom: 80px; left: 120px; right: 120px; height: 1px;
+    background: var(--sf-hairline-gradient);
+  }
+  .page-num {
+    position: absolute; bottom: 56px; right: 120px;
+    font-size: 13px; color: var(--sf-page-num);
+  }
+  body.vp-vw-hero .title { font-size: 64px; }
+</style>
+</head>
+<body>
+  <div class="eyebrow">{{EYEBROW}}</div>
+  <h1 class="title">{{TITLE}}</h1>
+  <div class="pf-rail">{{PROCESS_RAIL_HTML}}</div>
+  <div class="pf-swimlanes">{{PROCESS_SWIMLANES_HTML}}</div>
+  <div class="hairline"></div>
+  <span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
+</body>
+</html>

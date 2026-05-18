@@ -1,0 +1,128 @@
+/* Q1-A — neon-cyber tokens (depth samples consume via var(--sf-*)) */
+/* Contract: samples/_core/TOKENS.md */
+:root {
+  --sf-font: 'Space Grotesk', 'PingFang SC', sans-serif;
+  --sf-body-bg: #0f0f14;
+  --sf-body-gradient: linear-gradient(180deg, #0f0f14 0%, #14141f 55%, #0a0a10 100%);
+  --sf-text-primary: #f0f0f8;
+  --sf-text-secondary: #9898b0;
+  --sf-text-muted: #686880;
+  --sf-text-subtitle: #b8b8d0;
+  --sf-accent: #00f5d4;
+  --sf-accent-secondary: #8b5cf6;
+  --sf-accent-light: #00f5d4;
+  --sf-eyebrow: #00f5d4;
+  --sf-eyebrow-ring: 1px solid rgba(0, 245, 212, 0.3);
+  --sf-subtitle-lede: #c8c8e0;
+  --sf-text-subtitle: #b8b8d0;
+  --sf-page-num: rgba(154, 167, 189, 0.55);
+
+  --sf-panel-bg: rgba(15, 15, 20, 0.75);
+  --sf-panel-border: 1px solid rgba(139, 92, 246, 0.2);
+  --sf-panel-border-top: 1px solid rgba(0, 245, 212, 0.12);
+  --sf-panel-border-bottom: 1px solid rgba(0, 0, 0, 0.35);
+  --sf-panel-shadow: 0 20px 60px rgba(0, 0, 0, 0.45), 0 4px 12px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(0, 245, 212, 0.1), inset 0 1px 0 rgba(200, 220, 255, 0.08);
+  --sf-panel-radius: 24px;
+
+  --sf-hairline: rgba(139, 92, 246, 0.35);
+  --sf-hairline-gradient: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.4), rgba(0, 245, 212, 0.35), transparent);
+
+  /* Page backgrounds */
+  --sf-cover-bg:
+    radial-gradient(ellipse at 60% 45%, rgba(139, 92, 246, 0.24) 0%, transparent 52%),
+    radial-gradient(circle at 12% 88%, rgba(0, 245, 212, 0.12) 0%, transparent 38%),
+    radial-gradient(circle at 22% 12%, rgba(0, 245, 212, 0.08) 0%, transparent 32%),
+    linear-gradient(165deg, #0c0c12 0%, #13131e 48%, #08080e 100%);
+  --sf-corner-accent: radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.22) 0%, transparent 65%);
+  --sf-bottom-line-gradient: linear-gradient(90deg, transparent 0%, #8b5cf6 30%, #00f5d4 60%, transparent 100%);
+  --sf-accent-bar-gradient: linear-gradient(90deg, #8b5cf6, #00f5d4);
+  --sf-cover-title-glow: rgba(139, 92, 246, 0.18);
+
+  --sf-page-bg-text:
+    radial-gradient(circle at 22% 18%, rgba(0, 245, 212, 0.1) 0%, transparent 30%),
+    radial-gradient(circle at 78% 82%, rgba(139, 92, 246, 0.08) 0%, transparent 36%),
+    var(--sf-body-gradient);
+  --sf-page-bg-panel:
+    radial-gradient(circle at 20% 15%, rgba(0, 245, 212, 0.1) 0%, rgba(10, 10, 18, 0) 28%),
+    var(--sf-body-gradient);
+  --sf-page-bg-number:
+    radial-gradient(circle at 18% 20%, rgba(0, 245, 212, 0.14) 0%, transparent 32%),
+    radial-gradient(circle at 82% 70%, rgba(139, 92, 246, 0.12) 0%, transparent 38%),
+    linear-gradient(165deg, #0c0c12 0%, #12121c 48%, #08080e 100%);
+  --sf-page-bg-stats:
+    radial-gradient(circle at 20% 15%, rgba(0, 245, 212, 0.1) 0%, transparent 30%),
+    var(--sf-body-gradient);
+  --sf-page-bg-compare:
+    radial-gradient(circle at 12% 18%, rgba(139, 92, 246, 0.12) 0%, transparent 34%),
+    radial-gradient(circle at 88% 80%, rgba(0, 245, 212, 0.08) 0%, transparent 36%),
+    var(--sf-body-gradient);
+  --sf-page-bg-process:
+    radial-gradient(circle at 15% 20%, rgba(0, 245, 212, 0.1) 0%, transparent 32%),
+    var(--sf-body-gradient);
+  --sf-page-bg-quote:
+    radial-gradient(circle at 20% 15%, rgba(0, 245, 212, 0.1) 0%, rgba(0, 0, 0, 0) 28%),
+    var(--sf-body-gradient);
+
+  --sf-kp-text: #b0b0c8;
+  --sf-kp-divider: rgba(139, 92, 246, 0.12);
+  --sf-kp-arrow-glow: 0 0 12px rgba(0, 245, 212, 0.9);
+  --sf-card-muted-border: rgba(255, 255, 255, 0.08);
+  --sf-card-muted-bg: rgba(255, 255, 255, 0.03);
+
+  --sf-visual-slot-border: 1px solid rgba(0, 245, 212, 0.22);
+  --sf-visual-slot-bg:
+    radial-gradient(circle at 30% 25%, rgba(0, 245, 212, 0.14) 0%, transparent 45%),
+    radial-gradient(circle at 70% 75%, rgba(139, 92, 246, 0.16) 0%, transparent 50%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.2));
+  --sf-visual-slot-shadow: 0 32px 80px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(0, 245, 212, 0.12);
+  --sf-visual-slot-grid-line-a: rgba(0, 245, 212, 0.04);
+  --sf-visual-slot-grid-line-b: rgba(139, 92, 246, 0.05);
+  --sf-visual-slot-bar: linear-gradient(135deg, rgba(0, 245, 212, 0.12), rgba(139, 92, 246, 0.18));
+  --sf-visual-slot-bar-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+  --sf-visual-slot-frame-border: 1px solid rgba(0, 245, 212, 0.12);
+  --sf-visual-slot-label: rgba(0, 245, 212, 0.75);
+
+  --sf-cta-pill-border: 1px solid rgba(0, 245, 212, 0.38);
+  --sf-cta-pill-bg: rgba(0, 245, 212, 0.07);
+
+  --sf-compare-col-bg: rgba(15, 15, 22, 0.82);
+  --sf-compare-col-border: 1px solid rgba(139, 92, 246, 0.22);
+  --sf-compare-col-border-top: 1px solid rgba(0, 245, 212, 0.1);
+  --sf-compare-col-shadow: 0 24px 64px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --sf-compare-col-right-border: rgba(0, 245, 212, 0.32);
+  --sf-compare-col-right-shadow: 0 28px 72px rgba(0, 245, 212, 0.12), 0 24px 64px rgba(0, 0, 0, 0.45),
+    inset 0 0 0 1px rgba(0, 245, 212, 0.08);
+  --sf-compare-center-line: linear-gradient(180deg, transparent, rgba(139, 92, 246, 0.5) 20%, rgba(0, 245, 212, 0.75) 50%, rgba(139, 92, 246, 0.5) 80%, transparent);
+  --sf-compare-center-glow: 0 0 28px rgba(0, 245, 212, 0.4);
+  --sf-compare-title-border: rgba(139, 92, 246, 0.35);
+  --sf-compare-list-text: #d0d0e4;
+  --sf-compare-dot-right-glow: 0 0 12px rgba(0, 245, 212, 0.85);
+  --sf-compare-vs-border: 2px solid rgba(0, 245, 212, 0.35);
+  --sf-compare-vs-bg: rgba(0, 245, 212, 0.06);
+  --sf-compare-vs-shadow: 0 0 40px rgba(0, 245, 212, 0.15);
+
+  --sf-process-rail-line: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), rgba(0, 245, 212, 0.6), transparent);
+  --sf-process-node-bg: #00f5d4;
+  --sf-process-node-shadow: 0 0 20px rgba(0, 245, 212, 0.85), 0 0 40px rgba(0, 245, 212, 0.25);
+  --sf-process-card-bg: rgba(15, 15, 22, 0.85);
+  --sf-process-card-border: 1px solid rgba(139, 92, 246, 0.22);
+  --sf-process-card-border-top: 1px solid rgba(0, 245, 212, 0.12);
+  --sf-process-card-shadow: 0 20px 56px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+  --sf-stats-card-bg: rgba(15, 15, 22, 0.78);
+  --sf-stats-card-border: 1px solid rgba(139, 92, 246, 0.2);
+  --sf-stats-card-border-top: 1px solid rgba(0, 245, 212, 0.1);
+  --sf-stats-card-shadow: 0 20px 56px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --sf-stats-number-shadow: 0 0 48px rgba(0, 245, 212, 0.25);
+  --sf-stats-label: #c8c8e0;
+  --sf-stats-desc: #787890;
+  --sf-stats-hero-border: rgba(0, 245, 212, 0.32);
+  --sf-stats-hero-shadow: 0 28px 80px rgba(0, 245, 212, 0.1), 0 20px 56px rgba(0, 0, 0, 0.45);
+
+  --sf-quote-mark: rgba(139, 92, 246, 0.3);
+  --sf-number-glow: radial-gradient(circle, rgba(0, 245, 212, 0.28) 0%, transparent 68%);
+  --sf-number-glow-hero: radial-gradient(circle, rgba(0, 245, 212, 0.38) 0%, transparent 65%);
+  --sf-number-text-shadow: 0 0 100px rgba(0, 245, 212, 0.35), 0 0 24px rgba(0, 245, 212, 0.2);
+  --sf-stat-border-left: 3px solid rgba(139, 92, 246, 0.55);
+}

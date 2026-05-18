@@ -113,7 +113,7 @@ JSON 里 `design_mode` 锁定其一；省略则由 `design` 命令按内容关�
 | **Google Chrome / Puppeteer 自带** | 截图 + PDF（screenshot / package） | 通常已预装 |
 | `edge-tts` | 仅 video | `pip install edge-tts`（或用 macOS `say`） |
 | `ffmpeg` | 仅 video | `brew install ffmpeg` |
-| `lark-cli` + 飞书凭证 | 飞书源 / `channel:"feishu"` | `npm i -g @larksuite/cli` + `.env` 配 `FEISHU_*` |
+| `lark-cli` + 飞书凭证 | 飞书源 / `channel:"feishu"`（文档内嵌 **mp4 和/或 pdf**） | `npm i -g @larksuite/cli` + `.env` 配 `FEISHU_*` |
 
 **不需要**任何 LLM API 凭证。
 

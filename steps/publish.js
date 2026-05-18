@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 // Step 7: 飞书发布（完整实现）
-// 流程：创建文档 → 写入内容 → 嵌入视频（自动上传）
-// 使用 lark-cli docs +media-insert（自动处理文件上传 + 块创建）
+// 流程：创建文档 → 写入内容 → 嵌入附件（视频 / PDF，至少其一；lark-cli docs +media-insert）
 
 const fs = require('fs');
 const path = require('path');
@@ -64,6 +63,7 @@ process.stdin.on('end', async () => {
     const params = JSON.parse(input);
     const {
       video_path,
+      pdf_path,
       scenes,
       doc_title = 'AI 新鲜事',
       folder_token = DEFAULT_FOLDER,
@@ -74,15 +74,23 @@ process.stdin.on('end', async () => {
     console.error('📹 Step 7: 飞书发布');
     console.error('========================');
 
-    // 1. 验证输入
-    const videoPath = typeof video_path === 'string' ? path.resolve(video_path) : video_path;
-    const scenesData = typeof scenes === 'string' ? JSON.parse(fs.readFileSync(scenes)) : scenes;
+    const videoPath =
+      typeof video_path === 'string' && video_path && fs.existsSync(path.resolve(video_path))
+        ? path.resolve(video_path)
+        : null;
+    const pdfPath =
+      typeof pdf_path === 'string' && pdf_path && fs.existsSync(path.resolve(pdf_path))
+        ? path.resolve(pdf_path)
+        : null;
 
-    if (!fs.existsSync(videoPath)) {
-      throw new Error(`Video not found: ${videoPath}`);
+    if (!videoPath && !pdfPath) {
+      throw new Error('需要 presentation.mp4 和/或 presentation.pdf（存在且可读）');
     }
 
-    console.error(`✅ 视频: ${videoPath}`);
+    const scenesData = typeof scenes === 'string' ? JSON.parse(fs.readFileSync(scenes)) : scenes;
+
+    if (videoPath) console.error(`✅ 视频: ${videoPath}`);
+    if (pdfPath) console.error(`✅ PDF: ${pdfPath}`);
     console.error(`✅ 标题: ${doc_title}`);
 
     // 2. 创建文档
@@ -91,18 +99,33 @@ process.stdin.on('end', async () => {
     const { docToken, docUrl } = await createDoc(doc_title, folder_token);
     console.error(`✅ 文档已创建: ${docUrl}`);
 
-    // 3. 生成并写入文档内容（不含视频）
+    // 3. 生成并写入文档内容（不含附件块）
     console.error('');
     console.error('✍️  步骤 2/3: 写入内容（导览 + 逐字稿）...');
-    const markdown = generateMarkdownContent(scenesData, source_url);
+    const markdown = generateMarkdownContent(scenesData, source_url, {
+      hasVideo: !!videoPath,
+      hasPdf: !!pdfPath
+    });
     await updateDoc(docToken, markdown);
     console.error('✅ 内容已写入');
 
-    // 4. 嵌入视频播放器（自动上传本地文件）
+    // 4. 嵌入附件（+media-insert 需在文件所在目录 cwd）
+    //    顺序：PDF 优先（轻量、首选分享物），视频次之
     console.error('');
-    console.error('🎬 步骤 3/3: 嵌入视频播放器...');
-    const { fileToken, blockId } = await embedVideo(docToken, videoPath);
-    console.error(`✅ 视频已嵌入 (file_token: ${fileToken})`);
+    console.error('🎬 步骤 3/3: 嵌入附件...');
+    const mediaMeta = { video_token: null, video_block_id: null, pdf_token: null, pdf_block_id: null };
+    if (pdfPath) {
+      const { fileToken, blockId } = await embedMediaFile(docToken, pdfPath, 'PDF');
+      mediaMeta.pdf_token = fileToken;
+      mediaMeta.pdf_block_id = blockId;
+      console.error(`✅ PDF 已嵌入 (file_token: ${fileToken})`);
+    }
+    if (videoPath) {
+      const { fileToken, blockId } = await embedMediaFile(docToken, videoPath, '视频');
+      mediaMeta.video_token = fileToken;
+      mediaMeta.video_block_id = blockId;
+      console.error(`✅ 视频已嵌入 (file_token: ${fileToken})`);
+    }
 
     // 完成
     console.error('');
@@ -111,15 +134,23 @@ process.stdin.on('end', async () => {
 
     writeResult({
       success: true,
-      step: "deliver",
-      outputs: [docToken, fileToken],
-      message: "飞书发布完成",
+      step: 'deliver',
+      outputs: [docToken, mediaMeta.pdf_token, mediaMeta.video_token].filter(Boolean),
+      message: '飞书发布完成',
       metadata: {
         doc_token: docToken,
-        video_token: fileToken,
-        block_id: blockId,
+        video_token: mediaMeta.video_token,
+        video_block_id: mediaMeta.video_block_id,
+        pdf_token: mediaMeta.pdf_token,
+        pdf_block_id: mediaMeta.pdf_block_id,
+        // legacy: 与旧版一致，仅在有视频时等于 video_block_id
+        block_id: mediaMeta.video_block_id || undefined,
         doc_url: docUrl,
-        pages: scenesData.length
+        pages: scenesData.length,
+        attachments: {
+          video: !!videoPath,
+          pdf: !!pdfPath
+        }
       }
     });
 
@@ -209,12 +240,12 @@ async function updateDoc(docToken, markdown) {
 }
 
 /**
- * 嵌入视频（自动上传 + 插入）
+ * 嵌入本地文件（视频 / PDF 等；lark-cli +media-insert）
  */
-async function embedVideo(docToken, videoPath) {
+async function embedMediaFile(docToken, absolutePath, labelForError) {
   return new Promise((resolve, reject) => {
-    const videoDir = path.dirname(videoPath);
-    const videoFile = path.basename(videoPath);
+    const videoDir = path.dirname(absolutePath);
+    const videoFile = path.basename(absolutePath);
     try {
       const args = [
         'docs', '+media-insert',
@@ -233,7 +264,7 @@ async function embedVideo(docToken, videoPath) {
 
       proc.on('close', code => {
         if (code !== 0) {
-          return reject(new Error(`视频嵌入失败: ${stderr}`));
+          return reject(new Error(`${labelForError}嵌入失败: ${stderr}`));
         }
         try {
           const result = JSON.parse(stdout);
@@ -257,18 +288,37 @@ async function embedVideo(docToken, videoPath) {
 }
 
 /**
- * 生成文档 Markdown 内容（视频区 + 导览 + 逐字稿 + 原文）
+ * 生成文档 Markdown（交付物说明 + 导览 + 逐字稿 + 原文）
+ * @param {{ hasVideo?: boolean, hasPdf?: boolean }} media
  */
-function generateMarkdownContent(scenes, sourceUrl) {
+function generateMarkdownContent(scenes, sourceUrl, media = {}) {
+  const hasVideo = !!media.hasVideo;
+  const hasPdf = !!media.hasPdf;
   const lines = [];
 
-  // 1. 视频概览（自动插入在文档开头）
-  lines.push('## 📹 视频概览');
-  lines.push('');
-  lines.push(`- **页数**: ${scenes.length} 页`);
-  lines.push(`- **时长**: 约 ${Math.ceil(scenes.length * 0.8)} 分钟`);
-  lines.push(`- **分辨率**: 1920×1080 (H.264)`);
-  lines.push('');
+  if (hasPdf) {
+    lines.push('## 📄 PDF 概览');
+    lines.push('');
+    lines.push(`- **页数**: ${scenes.length} 页`);
+    lines.push('- **说明**: 静帧 PDF（`presentation.pdf`），适合分享与归档；下方文档内已嵌入附件。');
+    lines.push('');
+  }
+
+  if (hasVideo) {
+    lines.push('## 📹 视频概览');
+    lines.push('');
+    lines.push(`- **页数**: ${scenes.length} 页`);
+    lines.push(`- **时长**: 约 ${Math.ceil(scenes.length * 0.8)} 分钟`);
+    lines.push('- **分辨率**: 1920×1080 (H.264)');
+    lines.push('');
+  }
+
+  if (!hasVideo && !hasPdf) {
+    lines.push('## 交付物');
+    lines.push('');
+    lines.push('（无视频或 PDF 路径 — 不应出现）');
+    lines.push('');
+  }
 
   // 2. 内容导览表格
   lines.push('## 📋 内容导览');

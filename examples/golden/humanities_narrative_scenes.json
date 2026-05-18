@@ -1,0 +1,65 @@
+[
+  {
+    "id": "hn-cover",
+    "type": "cover",
+    "eyebrow": "策展笔记",
+    "title": "慢处的光",
+    "secondary": "城市博物馆特展 · 开幕对谈",
+    "visual_weight": "hero"
+  },
+  {
+    "id": "hn-open",
+    "type": "content",
+    "content_variant": "quote_context",
+    "visual_weight": "hero",
+    "title": "开幕词",
+    "quote_body": "我们记住的不是展品，而是与谁一同停驻的那几分钟。",
+    "context_body": "特展以「日常中的仪式」为主线，收集十二位市民的物件与口述。",
+    "quote_source": "策展人"
+  },
+  {
+    "id": "hn-breath",
+    "type": "content",
+    "content_variant": "text",
+    "visual_weight": "breathing",
+    "composition": "title-only",
+    "eyebrow": "第二幕",
+    "title": "玻璃柜里的热气",
+    "body": "一碗面、一封信、一把钥匙——被照亮的私人时间"
+  },
+  {
+    "id": "hn-two",
+    "type": "content",
+    "content_variant": "two_col",
+    "layout_hint": "wide-left",
+    "title": "叙事结构",
+    "left_body": "动线按「清晨—正午—深夜」展开。观众在三个光色房间里经历不同的声场密度，而非按年代排序。",
+    "key_points": [
+      "第一间：低照度与远处钟声",
+      "第二间：对白采样与反光地面",
+      "第三间：单人耳机与手写便签墙"
+    ]
+  },
+  {
+    "id": "hn-quote",
+    "type": "content",
+    "content_variant": "quote",
+    "visual_weight": "breathing",
+    "layout_hint": "full",
+    "title": "艺术家",
+    "quote_body": "好的展览让人敢于沉默。",
+    "quote_source": "参展艺术家访谈"
+  },
+  {
+    "id": "hn-close",
+    "type": "summary",
+    "visual_weight": "breathing",
+    "layout_hint": "cards",
+    "title": "感谢到场",
+    "key_points": [
+      "特展开放至 7 月 14 日",
+      "周末对谈需预约",
+      "museum.city/slow-light"
+    ]
+  }
+]

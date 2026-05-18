@@ -39,10 +39,10 @@
     "type": "content",
     "content_variant": "panel",
     "eyebrow": "THEME · PANEL",
-    "title": "本页用主题自带 02_panel（不走 shared 包壳）",
+    "title": "本页 panel 来自 _core/layouts + 包壳",
     "key_points": [
-      "对比：无 vp-shell-slot 包裹",
-      "仍是 notebook-tabs 目录样张"
+      "与 shared 变体一样走 notebook-tabs 纸面壳",
+      "HTML 单源 samples/_core/layouts/02_panel.html"
     ],
     "script_hint": "与第 2、3 页视觉框架应一致（都有 paper + tabs）。"
   }

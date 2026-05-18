@@ -40,7 +40,7 @@ jobs:
         run: |
           set -e
           fail=0
-          for f in examples/*scenes*.json; do
+          for f in examples/*scenes*.json examples/golden/*scenes*.json; do
             echo "── validate $f ──"
             result=$(printf '{"command":"validate","scenes":"%s"}' "$f" | node executor.js)
             echo "$result"
@@ -68,6 +68,9 @@ jobs:
           test -s ci_smoke/page_001.html      || { echo "::error::missing page_001.html"; exit 1; }
           test -s ci_smoke/page_004.html      || { echo "::error::missing page_004.html (expected 4 pages)"; exit 1; }
           echo "✅ all artifacts present"
+
+      - name: Golden decks — validate + html regression
+        run: npm run check:golden
 
       - name: Reject legacy stepN commands
         run: |

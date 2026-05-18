@@ -73,9 +73,9 @@ description: "Agent-first 演示生成 Skill：你（宿主 Agent）自己读源
 | `source` 是飞书 URL | `.env` 里 `FEISHU_APP_ID` / `FEISHU_APP_SECRET` |
 | `format` 含 `video` | `ffmpeg` / `ffprobe`；TTS：`edge-tts`（`pip install edge-tts`）或 macOS `say` |
 | `format` 含 `pdf` 或 `html` | Puppeteer 能启动浏览器（随依赖安装） |
-| `channel` 为 `feishu` | `lark-cli` + 飞书凭证 + JSON 里的 `doc_title` / `folder_token` |
+| `channel` 为 `feishu` | `lark-cli` + 飞书凭证 + `doc_title` / `folder_token`；**附件**：`presentation.mp4` 与/或 `presentation.pdf`（至少其一，`format` 含 `video` / `pdf` 或手传路径） |
 
-**典型报错落点**：`extract` 飞书源失败 → 飞书凭证；`screenshot` 浏览器启动失败 → Puppeteer Chrome；`tts` 找不到 → `edge-tts` / `say`；`package` video → `ffmpeg`；`deliver feishu` → `lark-cli` + 凭证。
+**典型报错落点**：`extract` 飞书源失败 → 飞书凭证；`screenshot` 浏览器启动失败 → Puppeteer Chrome；`tts` 找不到 → `edge-tts` / `say`；`package` video → `ffmpeg`；`deliver feishu` → `lark-cli` + 凭证；飞书交付缺附件 → `format` 至少含 `pdf` 或 `video`（或显式 `pdf_path` / `video_path`）。
 
 ---
 
@@ -107,6 +107,33 @@ echo '{"command":"extract","source":"<URL或路径>","output_dir":"./project"}' 
 5. **`script` 字段可选**：只在 `format` 含 `video` 时必填，zh 150–200 字 / en 50–80 词
 6. **`recommended_design_mode` 可选**：写在 `<output_dir>/project.json` 里；不写则交 `design` 命令兜底
 
+### 品质清单（要「作品感」时必做）
+
+完整字段表见 [docs/SCENES_SCHEMA.md](docs/SCENES_SCHEMA.md) **§0.7–§0.8**。写完后 `validate` 会额外给出 `quality_warnings[]`（**不阻塞** render，但应优先处理）。
+
+| 原则 | 怎么做 |
+|------|--------|
+| **节奏** | 全 deck 至少 3 种页型能量：冲击（`visual_weight:"hero"` + `number` / `compare` / `quote`）· 信息（`panel` / `stats_grid`）· 呼吸（`breathing` + `composition:"title-only"`） |
+| **少堆 panel** | 不要连续 ≥3 页 `panel`；长 deck 至少 1 页高能变体（`number` / `quote` / `compare` / `stats_grid` / `process_flow` 等） |
+| **标题** | content 页 `title` 建议 ≤48 字；细节放进 `key_points` / `body` |
+| **收尾** | `summary` 用 2–4 条短 CTA（`key_points`）；可加 `visual_weight:"breathing"`（`design` 会为 summary 选 `layout_hint: cards`） |
+| **封面** | `cover` 可加 `visual_weight:"hero"` |
+| **示范** | 可参考 `examples/golden/*.json`（产品 / 商业 / 人文三套金标） |
+| **主视觉（Q1）** | `panel` + `composition:"split-visual"` + `hero_image`（相对路径或 URL）；见 SCENES_SCHEMA §0.9 |
+
+```json
+{
+  "type": "content",
+  "content_variant": "number",
+  "visual_weight": "hero",
+  "composition": "stat-hero",
+  "eyebrow": "北极星",
+  "title": "上线首周",
+  "big_number": "3.2×",
+  "body": "一句解释指标含义"
+}
+```
+
 ### 自检
 
 ```bash
@@ -116,7 +143,9 @@ echo '{"command":"validate","scenes":"./project/scenes.json"}' | node executor.j
 npm run check -- ./project/scenes.json
 ```
 
-输出 `valid: true|false` + `errors[]` + `warnings[]`，每个错误自带 `hint` 字段直接告诉你怎么修。**`valid: false` 时按 `errors[]` 修订，再跑一次**，直到通过。`validate` 永远 exit 0，结果在 JSON 字段里。
+输出 `valid: true|false` + `errors[]` + `warnings[]` + `quality_warnings[]`，每条可带 `hint`。**`valid: false` 时按 `errors[]` 修订**；`quality_warnings` 用于抬品质（panel 堆砌、缺高能页、标题过长等），建议改完再 render。`validate` 永远 exit 0，结果在 JSON 字段里。
+
+开发/发版前可跑：`npm run check:golden`（金标 validate + 渲染 + HTML 回归）。
 
 > 多源融合的处理已在 §1.3 与第三步说明；本步骤对单/多源**无差别**。
 

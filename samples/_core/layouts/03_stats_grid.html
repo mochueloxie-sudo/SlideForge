@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>{{TITLE}}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { width: 1920px; height: 1080px; overflow: hidden; }
+
+  body {
+    width: 1920px; height: 1080px;
+    background: var(--sf-page-bg-stats);
+    font-family: var(--sf-font);
+    color: var(--sf-text-primary);
+    padding: 80px 120px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .eyebrow {
+    font-size: 13px; font-weight: 600; letter-spacing: 0.2em;
+    color: var(--sf-eyebrow); text-transform: uppercase; margin-bottom: 20px;
+  }
+  .eyebrow:empty { display: none; }
+  .title {
+    font-size: 58px; font-weight: 700; line-height: 1.05;
+    letter-spacing: -0.03em; margin-bottom: 56px; max-width: 900px;
+  }
+  .stats-row {
+    display: flex;
+    gap: 28px;
+    align-items: stretch;
+    max-width: 1680px;
+  }
+  .stat-card {
+    flex: 1;
+    background: var(--sf-stats-card-bg);
+    border: var(--sf-stats-card-border);
+    border-top: var(--sf-stats-card-border-top);
+    border-radius: 22px;
+    box-shadow: var(--sf-stats-card-shadow);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 36px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .stat-number {
+    font-size: 88px; font-weight: 700; line-height: 1;
+    letter-spacing: -0.04em; color: var(--sf-accent);
+    text-shadow: var(--sf-stats-number-shadow);
+  }
+  .stat-unit {
+    font-size: 34px; font-weight: 400; color: var(--sf-text-muted);
+    margin-left: 6px; vertical-align: super;
+  }
+  .stat-label {
+    font-size: 22px; font-weight: 600; color: var(--sf-stats-label); line-height: 1.35;
+  }
+  .stat-desc {
+    font-size: 16px; color: var(--sf-stats-desc); line-height: 1.5;
+  }
+  .hairline {
+    position: absolute; bottom: 80px; left: 120px; right: 120px; height: 1px;
+    background: var(--sf-hairline-gradient);
+  }
+  .page-num {
+    position: absolute; bottom: 56px; right: 120px;
+    font-size: 13px; color: var(--sf-page-num);
+  }
+
+  body.layout-hero-1 .stats-row { gap: 24px; align-items: stretch; }
+  body.layout-hero-1 .stat-card:first-child {
+    flex: 1.65;
+    border-color: var(--sf-stats-hero-border);
+    box-shadow: var(--sf-stats-hero-shadow);
+  }
+  body.layout-hero-1 .stat-card:first-child .stat-number {
+    font-size: clamp(120px, 10vw, 168px);
+  }
+  body.layout-hero-1 .stat-card:not(:first-child) .stat-number { font-size: 64px; }
+  body.vp-comp-stat-hero.layout-hero-1 .stat-card:first-child .stat-number {
+    font-size: clamp(140px, 11vw, 190px);
+  }
+  body.layout-2x2 .stats-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr; gap: 24px; max-width: 1400px;
+  }
+  body.layout-2x2 .stat-card { flex: unset; }
+</style>
+</head>
+<body>
+  <div class="eyebrow">{{EYEBROW}}</div>
+  <h1 class="title">{{TITLE}}</h1>
+  <div class="stats-row">{{STATS_HTML}}</div>
+  <div class="hairline"></div>
+  <span class="page-num">{{PAGE_NUM}} / {{TOTAL}}</span>
+</body>
+</html>

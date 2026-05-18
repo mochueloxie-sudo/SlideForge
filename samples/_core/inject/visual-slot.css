@@ -1,0 +1,16 @@
+/* Q1-B — visual slot (injected by html_generator) */
+.vp-visual-slot .vp-hero-image,
+.vp-visual-slot .vp-diagram-image,
+.vp-visual-slot .vp-brand-mark {
+  position: relative;
+  z-index: 2;
+}
+.vp-visual-slot:has(.vp-hero-image)::before,
+.vp-visual-slot:has(.vp-hero-image)::after,
+.vp-visual-slot:has(.vp-diagram-image)::before,
+.vp-visual-slot:has(.vp-diagram-image)::after {
+  display: none !important;
+}
+.vp-visual-slot:has(.vp-hero-image) .vp-visual-slot-label {
+  z-index: 3;
+}

@@ -1,6 +1,6 @@
 {
   "name": "slide-forge",
-  "version": "4.0.2",
+  "version": "4.1.1",
   "description": "Agent-first slide generation skill: turns a host Agent's structured scenes.json into a 1920×1080 deck (HTML / PDF / video) using 13 themes and 22+ content variants. Zero LLM dependency — the host Agent reads sources and writes scenes.json itself; SlideForge only renders.",
   "main": "executor.js",
   "type": "commonjs",
@@ -53,6 +53,10 @@
     "test:e2e": "rm -rf test_e2e && mkdir -p test_e2e && cp examples/four_new_variants_scenes.json test_e2e/scenes.json && echo '{\"command\":\"render\",\"scenes\":\"./test_e2e/scenes.json\",\"output_dir\":\"./test_e2e\",\"format\":[\"pdf\",\"html\"]}' | node executor.js",
     "check": "node scripts/check-scenes.js",
     "check:all": "node scripts/check-scenes.js --all",
+    "check:golden": "node scripts/check-golden.js",
+    "golden:render": "node scripts/golden-render.js",
+    "sync:depth-themes": "node scripts/sync-depth-from-neon.js",
+    "sync:shared-themes": "node scripts/sync-shared-to-themes.js",
     "test:validate": "echo '{\"command\":\"validate\",\"scenes\":\"./examples/scenes_example.json\"}' | node executor.js",
     "test:design": "echo '{\"command\":\"design\",\"scenes\":\"./examples/scenes_example.json\",\"output_dir\":\"./test_design\"}' | node executor.js",
     "test:html": "echo '{\"command\":\"html\",\"scenes\":\"./examples/scenes_example.json\",\"design_params\":\"./test_design/design_params.json\",\"output_dir\":\"./test_design\"}' | node executor.js",
