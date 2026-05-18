@@ -6,6 +6,14 @@
 
 ---
 
+## [Unreleased]
+
+### TODO
+
+- **升级历史 fixture 到 v4 schema**：`examples/tencent_intro_scenes_fixture.json` 与 `examples/verify_notebook_shell_scenes.json` 是 v3 时代写的，缺 `content_variant`（依赖 step2 推断）和 `two_col.left_body` 等必填字段。当前 CI validate 白名单只覆盖 v4 严格示例；这两个文件待逐页补 `content_variant` + 必填字段后从白名单解禁。
+
+---
+
 ## [4.0.1] — 2026-05-18 — 文档密度优化
 
 > **本次无功能/无 API 变更**，纯文档迭代。目的：把 v4.0.0 发布后首次接触本 Skill 的宿主 Agent 的「学习曲线」尽可能压低，同时清理 v4.0 ship 时还留下的版本叙事噪音。
