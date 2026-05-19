@@ -190,6 +190,24 @@ echo '{"command":"validate","scenes":"./project/scenes.json","strict":true}' | n
 | `examples/golden/editorial_notes_scenes.json` | 编辑长文 | `paper-ink` |
 | `examples/golden/variant_showcase_scenes.json` | shared 变体陈列 | `paper-ink` |
 | `examples/golden/tech_variants_scenes.json` | 技术叙事 + `auto` | `deep-tech-keynote` |
+| `examples/fixtures/heytea_office_scenes.json` | 喜茶办公三页固定版式 | `heytea` |
+
+### 0.8a 品牌主题 `heytea`（喜茶办公横版）
+
+`design_mode: "heytea"` 时 **封面 / 内容页** 与通用主题相同：走 `_core/layouts` + `shared` 的 **22 种 `content_variant`**；主题层只注入：
+
+| 文件 | 作用 |
+|------|------|
+| `tokens.css` | 白底、`#1D1818` 色板、透明 panel、无装饰渐变 |
+| `fonts.css` + `fonts/*` | 方正 FW 筑紫黑 R、Heytea Sans Serif Regular（`@font-face`） |
+| `typography.css` | 办公字号 / 字距（封面 60px、内容标题 40px、正文 32px 等） |
+| `cover-brand.css` | 封面固定 logo（PPT 坐标：左上区域 841×139，237×237） |
+
+**仅尾页固定**：`summary` → `overrides/summary.html` + `assets/closing-slide.png`（与 PPT 第 3 页一致）；`scenes.json` 中 `{ "type": "summary" }` 即可，**忽略** `title` / `subtitle` / `key_points`。
+
+渲染时品牌资源复制到 `<output_dir>/heytea-assets/`（含 `fonts/`、`closing-slide.png`）。
+
+推荐 deck：**`cover` → 任意 `content` 变体 → `summary`（固定）**。
 
 ### 0.9 主视觉资产（Q1-B · 可选）
 
@@ -842,9 +860,9 @@ echo '{"command":"critique","html_dir":"./project","scenes":"./project/scenes.js
 }
 ```
 
-- `recommended_design_mode`：13 个合法主题 id 之一。`design` 优先级为：**当次 JSON 显式 `design_mode` > project.json `recommended_design_mode` > 内容自动推断**。
+- `recommended_design_mode`：14 个合法主题 id 之一（含 `heytea`）。`design` 优先级为：**当次 JSON 显式 `design_mode` > project.json `recommended_design_mode` > 内容自动推断**。
 
-13 套主题 id 见 `_meta.json` 中 `design_mode.enum`，气质对照见 `README.md`。
+14 套主题 id 见 `_meta.json` 中 `design_mode.enum`，气质对照见 `README.md` / `refs/STYLE_PRESETS.md`。
 
 ---
 

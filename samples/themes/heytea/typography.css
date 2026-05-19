@@ -1,0 +1,35 @@
+/* heytea 办公字号 / 字距（叠加 _core · shared 变体，不限制版式） */
+body.vp-cover .title {
+  font-size: var(--sf-heytea-cover-title, 60px) !important;
+  font-weight: 400;
+  line-height: 1 !important;
+  letter-spacing: 1px;
+}
+body.vp-cover .subtitle {
+  font-size: var(--sf-heytea-cover-subtitle, 32px) !important;
+  line-height: 1 !important;
+  letter-spacing: 1px;
+}
+
+body:not(.vp-cover):not(.vp-heytea-closing-fixed) .title {
+  font-size: var(--sf-heytea-content-title, 40px) !important;
+  font-weight: 400;
+  line-height: 1 !important;
+  letter-spacing: 1px;
+}
+
+body:not(.vp-cover):not(.vp-heytea-closing-fixed) .kp-item,
+body:not(.vp-cover):not(.vp-heytea-closing-fixed) .body-text,
+body:not(.vp-cover):not(.vp-heytea-closing-fixed) .panel-body,
+body:not(.vp-cover):not(.vp-heytea-closing-fixed) .col-body,
+body:not(.vp-cover):not(.vp-heytea-closing-fixed) .stat-label,
+body:not(.vp-cover):not(.vp-heytea-closing-fixed) .quote-body {
+  font-size: var(--sf-heytea-body, 32px);
+  line-height: 1.5;
+  letter-spacing: 0.5px;
+}
+
+body:not(.vp-cover):not(.vp-heytea-closing-fixed) .big-number,
+body:not(.vp-cover):not(.vp-heytea-closing-fixed) .stat-value {
+  font-family: var(--sf-font-latin, var(--sf-font));
+}

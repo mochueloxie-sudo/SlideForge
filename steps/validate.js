@@ -43,7 +43,7 @@ const VALID_THEMES = new Set([
   'electric-studio', 'bold-signal', 'creative-voltage', 'dark-botanical',
   'neon-cyber', 'terminal-green', 'deep-tech-keynote',
   'notebook-tabs', 'paper-ink', 'pastel-geometry', 'split-pastel',
-  'swiss-modern', 'vintage-editorial'
+  'swiss-modern', 'vintage-editorial', 'heytea'
 ]);
 
 // 各变体「最少要有的字段」——只挑硬约束，弱建议放 warning
@@ -125,7 +125,7 @@ const MSG_PATTERN_HINTS = [
   { pattern: /script very long/,
     hint: '过长会让单页朗读时间偏长（>30s）；建议拆分到多页或精炼' },
   { pattern: /unknown theme id/,
-    hint: '13 个合法主题 id：electric-studio / bold-signal / creative-voltage / dark-botanical / neon-cyber / terminal-green / deep-tech-keynote / swiss-modern / paper-ink / vintage-editorial / notebook-tabs / pastel-geometry / split-pastel' },
+    hint: '14 个合法主题 id：electric-studio / bold-signal / creative-voltage / dark-botanical / neon-cyber / terminal-green / deep-tech-keynote / swiss-modern / paper-ink / vintage-editorial / notebook-tabs / pastel-geometry / split-pastel / heytea' },
   { pattern: /invalid type/,
     hint: 'type 必须是 "cover" | "content" | "summary" 三选一' },
   { pattern: /unknown content_variant/,

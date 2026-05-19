@@ -33,10 +33,16 @@ function themeOverrideFile(designMode, templateName) {
   return path.join(themeOverridesDir(designMode), `${templateName}.html`);
 }
 
+/** Copy brand PNGs next to generated page_*.html (heytea-assets/). */
+function heyteaAssetsSrcDir() {
+  return path.join(THEMES_DIR, 'heytea', 'assets');
+}
+
 module.exports = {
   ROOT,
   SAMPLES_DIR,
   THEMES_DIR,
+  heyteaAssetsSrcDir,
   CORE_LAYOUTS_DIR,
   SHARED_DIR,
   VISUAL_SLOT_CSS,

@@ -82,7 +82,7 @@ open ./project/presentation.html
 
 ## 设计主题
 
-13 套成品主题，**深色 7** + **浅色 6**，每套都是独立整包视觉系统（字体 / 色板 / 面板 / 装饰 / 动画在 `samples/{theme}/` 中一次性定稿）。
+14 套成品主题：**品牌** `heytea`（喜茶办公：白底 + 内置字体 + 尾页固定）+ **深色 7** + **浅色 6**。`heytea` 的封面 / 内容与其它主题共用 `_core` / `shared` 变体；仅 `summary` 为固定尾页。
 
 
 | 色系  | 主题 id               | 适用场景                            |
@@ -100,6 +100,7 @@ open ./project/presentation.html
 | 浅   | `notebook-tabs`     | 笔记 / 手账                         |
 | 浅   | `pastel-geometry`   | 轻快 / 活泼                         |
 | 浅   | `split-pastel`      | 温柔 / 女性化                        |
+| 品牌 | `heytea`            | 喜茶内部办公（内置字体 + 固定尾页；内容可用全部变体）   |
 
 
 JSON 里 `design_mode` 锁定其一；省略则由 `design` 命令按内容关键词自动匹配。优先级：**当次 JSON > `project.json` 的 `recommended_design_mode` > 内容规则兜底**。
@@ -108,7 +109,7 @@ JSON 里 `design_mode` 锁定其一；省略则由 `design` 命令按内容关�
 
 ## 样式变体
 
-22 种内置版式，覆盖叙事 / 数据 / 流程 / 对照 / 架构 / 卡片等常见演示需求。每种都接通了全部 13 主题。完整字段表、最小示例、决策树见 **[docs/SCENES_SCHEMA.md](docs/SCENES_SCHEMA.md)**。
+22 种内置版式，覆盖叙事 / 数据 / 流程 / 对照 / 架构 / 卡片等常见演示需求。全部 14 主题（含 `heytea`）均接通这 22 变体。完整字段表、最小示例、决策树见 **[docs/SCENES_SCHEMA.md](docs/SCENES_SCHEMA.md)**。
 
 ---
 

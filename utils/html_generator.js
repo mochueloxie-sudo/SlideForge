@@ -22,7 +22,9 @@ const { applyVisualSlot, loadVisualSlotCSS } = require('./visual_assets');
 const {
   CORE_LAYOUTS_DIR,
   SHARED_DIR,
-  themeOverrideFile
+  THEMES_DIR,
+  themeOverrideFile,
+  heyteaAssetsSrcDir
 } = require('./sample_paths');
 const { sanitizeArtDirectedCss, readCustomCssFile } = require('./art_directed_css');
 
@@ -54,10 +56,24 @@ function buildArtDirectedInject(scene, designParams) {
   return { block: `<style id="sf-art-directed">\n${css}\n</style>\n`, warnings };
 }
 
+function getHeyteaThemeCSS(name) {
+  const file = path.join(THEMES_DIR, 'heytea', name);
+  if (!fs.existsSync(file)) return '';
+  return fs.readFileSync(file, 'utf8').trim();
+}
+
 function buildQ1HeadInject(designMode, tpl) {
   const tokenCss = getThemeTokensCSS(designMode, tpl);
   const visualCss = loadVisualSlotCSS();
   let block = '';
+  if (designMode === 'heytea') {
+    const fontCss = getHeyteaThemeCSS('fonts.css');
+    if (fontCss) block += `<style id="sf-heytea-fonts">\n${fontCss}\n</style>\n`;
+    const typoCss = getHeyteaThemeCSS('typography.css');
+    if (typoCss) block += `<style id="sf-heytea-typography">\n${typoCss}\n</style>\n`;
+    const coverBrandCss = getHeyteaThemeCSS('cover-brand.css');
+    if (coverBrandCss) block += `<style id="sf-heytea-cover-brand">\n${coverBrandCss}\n</style>\n`;
+  }
   if (tokenCss) block += `<style id="sf-theme-tokens">\n${tokenCss}\n</style>\n`;
   if (visualCss) block += `<style id="sf-q1-visual">\n${visualCss}\n</style>\n`;
   return block;
@@ -345,7 +361,53 @@ const DESIGN_TEMPLATES = {
     eyebrowColor: '#8b7355',
     titleSize: { cover: '68px', section: '54px', summary: '54px' },
   },
+  heytea: {
+    font: 'Heytea Sans Serif',
+    bodyBg: '#ffffff',
+    textColor: '#1d1818',
+    accent: '#1d1818',
+    accentLight: '#3d3838',
+    textSecondary: '#1d1818',
+    textMuted: '#6b6565',
+    panelBg: 'transparent',
+    panelBorder: 'none',
+    panelBorderTop: 'none',
+    panelBorderBottom: 'none',
+    panelShadow: 'none',
+    panelInnerGlow: 'none',
+    panelBlur: '0px',
+    panelRadius: '0',
+    hairlineColor: 'rgba(29,24,24,0.12)',
+    eyebrowColor: '#6b6565',
+    titleSize: { cover: '60px', section: '40px', summary: '48px' },
+    coverTitleColor: '#1d1818',
+  },
 };
+
+function copyHeyteaAssetsIfNeeded(designMode, outputDir) {
+  if (designMode !== 'heytea' || !outputDir) return;
+  const themeDir = path.join(THEMES_DIR, 'heytea');
+  const dest = path.join(outputDir, 'heytea-assets');
+  fs.mkdirSync(dest, { recursive: true });
+
+  const assetsSrc = path.join(themeDir, 'assets');
+  if (fs.existsSync(assetsSrc)) {
+    for (const name of fs.readdirSync(assetsSrc)) {
+      if (!/\.(png|svg|webp|jpe?g)$/i.test(name)) continue;
+      fs.copyFileSync(path.join(assetsSrc, name), path.join(dest, name));
+    }
+  }
+
+  const fontsSrc = path.join(themeDir, 'fonts');
+  if (fs.existsSync(fontsSrc)) {
+    const destFonts = path.join(dest, 'fonts');
+    fs.mkdirSync(destFonts, { recursive: true });
+    for (const fontFile of fs.readdirSync(fontsSrc)) {
+      if (!/\.(ttf|otf|woff2?)$/i.test(fontFile)) continue;
+      fs.copyFileSync(path.join(fontsSrc, fontFile), path.join(destFonts, fontFile));
+    }
+  }
+}
 
 function loadTemplateWithSource(designMode, templateName) {
   const theme = designMode || 'electric-studio';
@@ -962,7 +1024,8 @@ function buildTokens(scene, tpl, pageNum, totalPages) {
 }
 
 function generateCover(scene, tpl, designMode, pageNum, totalPages, designParams) {
-  let html = loadTemplate(designMode || 'electric-studio', 'cover');
+  const designModeResolved = designMode || 'electric-studio';
+  let html = loadTemplate(designModeResolved, 'cover');
   if (!html) return null;
   const tokens = buildTokens(scene, tpl, pageNum, totalPages);
   tokens.TITLE_SIZE = tpl.titleSize.cover;
@@ -974,7 +1037,8 @@ function generateCover(scene, tpl, designMode, pageNum, totalPages, designParams
   const coverClasses = [
     scene.layout_hint ? `layout-${scene.layout_hint}` : null,
     art.visual_weight === 'hero' ? 'vp-vw-hero' : null,
-    'vp-cover'
+    'vp-cover',
+    designModeResolved === 'heytea' ? 'vp-heytea-cover' : null
   ].filter(Boolean);
   if (coverClasses.length > 0) {
     const classStr = coverClasses.join(' ');
@@ -998,7 +1062,7 @@ function generateCover(scene, tpl, designMode, pageNum, totalPages, designParams
     getTitleEnhancementCSS,
     getArtDirectionCSS
   });
-  html = injectQ1Head(html, designMode || 'electric-studio', tpl);
+  html = injectQ1Head(html, designModeResolved, tpl);
   const typoCss = shouldApplyTypographyAdapt(scene, designParams)
     ? buildTypographyVarsCss(scene, { pageType: 'cover' })
     : '';
@@ -1008,6 +1072,12 @@ function generateCover(scene, tpl, designMode, pageNum, totalPages, designParams
   const artBlock = artInj.block || '';
   html = html.replace('</head>',
     `<style>${style.readCSS}${style.densityCSS}${style.glassCSS}${style.artCSS}${style.titleCSS}\n  </style>\n${typoBlock}${artBlock}</head>`);
+  if (designModeResolved === 'heytea' && !html.includes('heytea-assets/logo-square.png')) {
+    html = html.replace(
+      /(<body[^>]*>)/i,
+      '$1\n  <img class="heytea-cover-logo" src="heytea-assets/logo-square.png" alt="" width="237" height="237" />'
+    );
+  }
   const footnoteText = scene.footnote || scene.annotation || '';
   if (footnoteText) {
     html = html.replace('</body>',
@@ -1652,13 +1722,27 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages, designPara
   return mergeAnimationIntoHtml(finalHtml, designParams);
 }
 
+function generateHeyteaSummary(scene, tpl, designMode, pageNum, totalPages, designParams) {
+  let html = loadTemplate('heytea', 'summary');
+  if (!html) return null;
+  // 尾页为位图固定版式（closing-slide.png），忽略 scene.title / subtitle / key_points 等
+  html = injectQ1Head(html, designMode || 'heytea', tpl);
+  return html;
+}
+
 function generateSummary(scene, tpl, designMode, pageNum, totalPages, designParams, outputDir) {
+  if ((designMode || 'electric-studio') === 'heytea') {
+    const html = generateHeyteaSummary(scene, tpl, designMode, pageNum, totalPages, designParams);
+    if (html) return html;
+  }
   return generateContent({ ...scene, type: 'content', use_panel: true }, tpl, designMode, pageNum, totalPages, designParams, outputDir);
 }
 
 function generateHtml(scenes, designMode, outputDir, designParamsOrDirections) {
-  const tpl = DESIGN_TEMPLATES[designMode] || DESIGN_TEMPLATES['electric-studio'];
+  const resolvedMode = designMode || 'electric-studio';
+  const tpl = DESIGN_TEMPLATES[resolvedMode] || DESIGN_TEMPLATES['electric-studio'];
   fs.mkdirSync(outputDir, { recursive: true });
+  copyHeyteaAssetsIfNeeded(resolvedMode, outputDir);
 
   const designParams = Array.isArray(designParamsOrDirections) || designParamsOrDirections == null
     ? { output_dir: outputDir }

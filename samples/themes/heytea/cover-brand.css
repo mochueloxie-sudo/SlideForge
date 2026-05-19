@@ -1,0 +1,12 @@
+/* 喜茶办公封面固定 logo（对照 PPT layout1 · image1）
+ * 画布 1920×1080：left 841px · top 139px · 237×237 */
+body.vp-heytea-cover .heytea-cover-logo {
+  position: absolute;
+  top: 139px;
+  left: 841px;
+  width: 237px;
+  height: 237px;
+  object-fit: contain;
+  pointer-events: none;
+  z-index: 6;
+}

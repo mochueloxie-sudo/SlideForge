@@ -294,6 +294,23 @@
         "pull-quote",
         "editorial-divider"
       ]
+    },
+    "heytea": {
+      "name": "Heytea Office",
+      "vibe": "Corporate, clean, brand-locked, office deck",
+      "layoutHint": "left_text_right_space",
+      "cssVars": {
+        "--bg-primary": "#ffffff",
+        "--text-primary": "#1d1818",
+        "--text-muted": "#6b6565"
+      },
+      "displayFont": "Heytea Sans Serif",
+      "bodyFont": "PingFang SC",
+      "signatureElements": [
+        "fixed-cover-content-closing",
+        "brand-logo-lockup",
+        "footer-bar"
+      ]
     }
   },
   "fontMap": {

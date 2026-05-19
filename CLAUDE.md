@@ -66,11 +66,13 @@ step7_publish.js     → steps/publish.js         (内部，被 deliver 调用)
 
 ## 样张系统
 
-### 主题（13 个）
+### 主题（14 个）
 
 **深色**：`electric-studio`、`bold-signal`、`creative-voltage`、`dark-botanical`、`neon-cyber`、`terminal-green`、`deep-tech-keynote`
 
 **浅色**：`notebook-tabs`、`paper-ink`、`pastel-geometry`、`split-pastel`、`swiss-modern`、`vintage-editorial`
+
+**品牌**：`heytea`（喜茶办公：`tokens.css` + 内置字体 + `typography.css`；封面/内容走 `_core`+`shared`；仅 `summary` 固定尾页，见 `samples/themes/heytea/`）
 
 ### 变体文件
 
@@ -244,7 +246,7 @@ echo '{"command":"package","scenes":"'"$P"'/scenes.json","screenshots_dir":"'"$P
 
 实现见 `steps/design.js`。**未**在当次 JSON 传入 `design_mode` 时，优先级为：
 
-1. `project.json` 的 `recommended_design_mode`（v4 起由**宿主 Agent** 写入；须为 13 个合法主题 id 之一）→ `mode_source: project.json`
+1. `project.json` 的 `recommended_design_mode`（v4 起由**宿主 Agent** 写入；须为 14 个合法主题 id 之一）→ `mode_source: project.json`
 2. `project.json` 的 `design_mode`（且不等于默认 `electric-studio`）→ `mode_source: project.json`
 3. `inferContentType()` + `CONTENT_TYPE_MAP` 内容规则兜底 → `mode_source: auto`
 

@@ -6,6 +6,24 @@
 
 ---
 
+## [4.3.2] — 2026-05-19 — 喜茶办公主题 `heytea`
+
+### 新增
+
+- **主题 `heytea`**：喜茶办公横版；`samples/themes/heytea/`（`tokens.css`、`fonts.css`、`typography.css`、`cover-brand.css`、内置 `fonts/`、品牌 `assets/`、固定尾页 `overrides/summary.html`）。
+- **封面**：`_core` 封面 + PPT 同位固定 logo（`logo-square.png`）；**内容**：22 种 `content_variant` 全接通；**尾页**：`closing-slide.png` 整页位图（忽略 scenes 文案）。
+- **示例**：`examples/fixtures/heytea_office_scenes.json`、`examples/demos/heytea_demo/`（含 PDF/HTML）；`SKILL.md` §喜茶办公、`validate` / `_meta.json` 已登记。
+
+---
+
+## [4.3.1] — 2026-05-18 — wave8 等节奏（首项不再放大）
+
+### 变更
+
+- **样张**：`timeline` 横向四步及 card/icon/process/funnel 等列表变体统一卡片尺寸与透明度；保留 `compare`、`stats_grid` + `hero-1` 语义布局。
+
+---
+
 ## [4.3.0] — 2026-05-18 — 仓库目录结构收敛
 
 ### Breaking（路径）

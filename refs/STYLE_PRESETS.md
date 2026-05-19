@@ -347,7 +347,7 @@ CSS does not allow a leading `-` before function names. The browser silently dis
 
 * * *
 
-## SlideForge 13 themes — temperament & avoid (Q0 / v4.2.4)
+## SlideForge 14 themes — temperament & avoid (Q0 / v4.2.4)
 
 宿主 Agent 选 `design_mode` 或写 `project.json` → `recommended_design_mode` 时参考。完整 token 见 `samples/themes/<id>/tokens.css`；样张加载顺序见 `CLAUDE.md`。
 
@@ -366,6 +366,7 @@ CSS does not allow a leading `-` before function names. The browser silently dis
 | `split-pastel` | 双栏叙事、柔和对比 | 单栏巨墙文字无节奏 |
 | `swiss-modern` | 商务报告、网格、极简指标 | 装饰插画、脚本字体 |
 | `vintage-editorial` | 文化艺术、杂志、复古 | 赛博渐变、终端 monospace 正文 |
+| `heytea` | 喜茶内部办公、白底极简、内置品牌字体；尾页固定 | 花哨渐变、非品牌字体；末页勿改 `summary` 文案 |
 
 **跨主题**：避免连续 ≥3 页 `panel`；专用字段优先于 `panel`（见 `docs/SCENES_SCHEMA.md` §0.2a）；可用 `content_variant:"auto"` 让字段驱动变体（§0.2c）。
 

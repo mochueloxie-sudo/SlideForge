@@ -29,6 +29,9 @@ const CONTENT_TYPE_MAP = {
   lifestyle: 'split-pastel',
   品牌展示: 'swiss-modern',
   brand: 'swiss-modern',
+  喜茶办公: 'heytea',
+  heytea: 'heytea',
+  喜茶: 'heytea',
   文化艺术: 'vintage-editorial',
   culture: 'vintage-editorial',
   人文社科: 'dark-botanical',
@@ -61,6 +64,7 @@ function inferContentType(bodyText, scenes) {
   if (/人文|社科|人类学|社会学|心理学|策展|民族志|博物馆学|田野调查|学术期刊|思辨|伦理/i.test(text)) return '人文社科';
   if (/历史|文化|艺术|传统|古典|非遗|博物|文学|诗|经典/i.test(text)) return '文化艺术';
   if (/时尚|美妆|穿搭|生活方式|种草|探店|好物|分享|日常|打卡/i.test(text)) return '生活方式';
+  if (/喜茶|Heytea|heytea|办公模板|办公横版/i.test(text)) return '喜茶办公';
   if (/品牌|VI|视觉|logo|设计规范|色彩|字体|企业形象|手册/i.test(text)) return '品牌展示';
   if (/创意|设计|插画|视觉|提案|灵感|风格|美学|配色|排版/i.test(text)) return '创意设计';
 

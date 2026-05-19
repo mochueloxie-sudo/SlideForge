@@ -1,6 +1,6 @@
 ---
 name: "slide-forge"
-description: "Agent-first 演示生成 Skill：你（宿主 Agent）自己读源材料、按 docs/SCENES_SCHEMA.md 写 scenes.json，本 Skill 把它渲染为 1920×1080 演示（HTML / PDF / video，可多选），13 套主题 + 22 变体由样张驱动。本 Skill 不依赖任何外部 LLM——scenes 与 script 全由你产出。可选工具：extract（飞书/网页/本地文件 → raw_content.txt）、validate（本地 schema 自检）。适用：你接到「把这堆材料做成 PPT」的任务，并能在用户本机执行 `node executor.js`。"
+description: "Agent-first 演示生成 Skill：你（宿主 Agent）自己读源材料、按 docs/SCENES_SCHEMA.md 写 scenes.json，本 Skill 把它渲染为 1920×1080 演示（HTML / PDF / video，可多选），14 套主题 + 22 变体由样张驱动（含喜茶办公 heytea 三页固定版式）。本 Skill 不依赖任何外部 LLM——scenes 与 script 全由你产出。可选工具：extract（飞书/网页/本地文件 → raw_content.txt）、validate（本地 schema 自检）。适用：你接到「把这堆材料做成 PPT」的任务，并能在用户本机执行 `node executor.js`。"
 ---
 
 # SlideForge — Agent-first Skill
@@ -47,7 +47,7 @@ description: "Agent-first 演示生成 Skill：你（宿主 Agent）自己读源
 | 1 | 内容从哪来？ | `source`：飞书 URL / 本地 `.md`/`.txt`/`.docx`/`.pdf` / 网页 URL |
 | 2 | 要哪些交付物？ | `format`：`pdf` / `html` / `video`，可数组。**默认建议 `pdf` 或 `html`**（主场景）；`video` 可选，耗时长且要 FFmpeg+TTS，页内动效不会进成片（录制动效帧未排期） |
 | 3 | 输出去哪？ | `output_dir`（默认 `./output`）；`channel`：`local`（默认）/ `feishu` |
-| 4 | 视觉主题？ | 用人话介绍 13 套（深色 7 / 浅色 6，id 见 [README](README.md) 主题节）；用户说「自动」时 JSON 省略 `design_mode` |
+| 4 | 视觉主题？ | 用人话介绍 14 套（喜茶内部办公选 **`heytea`**，见下节 §喜茶办公 `heytea`；其余深色 7 / 浅色 6，id 见 [README](README.md)）；用户说「自动」时 JSON 省略 `design_mode` |
 | 5 | 页内动效 | **不主动问**；用默认（开 + stagger）；用户明说才改 |
 
 ### 1.3 多源融合补充（仅当 §1.1 识别为多源融合）
@@ -110,7 +110,7 @@ echo '{"command":"extract","source":"<URL或路径>","output_dir":"./project"}' 
 ### 决策清单
 
 1. **页数**：短文（≤800 字）5–7 页 / 中（800–3000）7–10 / 长（>3000）10–14
-2. **首页必须 `type:"cover"`**；末页通常 `type:"summary"`
+2. **首页必须 `type:"cover"`**；末页通常 `type:"summary"`（`heytea` 主题末页固定，见 §喜茶办公 `heytea`）
 3. **变体**：按 §0.2a 字段表选；决策树见 SCENES_SCHEMA §0.2b / §3
 4. **不要连续两页同变体**——会被 validate 报 warning
 5. **`script` 字段可选**：只在 `format` 含 `video` 时必填，zh 150–200 字 / en 50–80 词
@@ -145,6 +145,56 @@ echo '{"command":"extract","source":"<URL或路径>","output_dir":"./project"}' 
 无 `subtitle` 时可写 `key_points`（渲染为标题下要点列表）。
 
 **渲染兜底（v4.2+）**：若仅有 `title` + `nav_items`、无 `subtitle`/`key_points`，`html` 会用 `nav_items` 自动生成标题下摘要列表（顶栏仍显示完整 `nav_items`）。`validate` 会报 **`QUALITY_NAV_BAR_LEDE_INFERRED`**（建议仍显式写 `subtitle`）；若连 `nav_items` 都没有则 **`QUALITY_NAV_BAR_NO_LEDE`**。均不阻塞 render。
+
+### 喜茶办公主题 `heytea`（品牌锁定 · 必读）
+
+**何时用**：用户要喜茶内部办公横版、品牌 PPT 同款、或明确说「喜茶模板 / heytea」→ `design_mode: "heytea"`（或 `project.json` → `recommended_design_mode: "heytea"`）。
+
+**版式规则**：
+
+| 页 | `scene.type` | 变体 | 说明 |
+|----|----------------|------|------|
+| 首页 | `cover` | 标准封面（`_core`） | 白底 + 品牌字体 + 办公字号；**右上固定品牌 logo**（与 PPT 第 1 页同位置，`logo-square.png`） |
+| 中间 | `content` | **全部 22 种 `content_variant`** | 与通用主题相同（`panel` / `stats_grid` / `compare` …）；按 [SCENES_SCHEMA](docs/SCENES_SCHEMA.md) 选字段即可 |
+| 末页 | `summary` | **固定** | `closing-slide.png` 整页位图，忽略 `title` / `subtitle` 等 |
+
+**内置品牌字体（已随仓库提交 Git）** — 无需用户本机安装：
+
+| 文件（仓库内） | 用途 |
+|----------------|------|
+| `samples/themes/heytea/fonts/FZFWZhuZiHeiR.ttf` | 中文标题 / 正文（方正 FW 筑紫黑 R） |
+| `samples/themes/heytea/fonts/HeyteaSansSerif-Regular.otf` | 数字 / 英文（Heytea Sans Serif Regular） |
+
+渲染时复制到 `<output_dir>/heytea-assets/fonts/`，由 `fonts.css` 注入 `@font-face`。封面与内容页自动使用；**尾页为固定位图**，不走字体。
+
+**最小 scenes 示例**（抄 `examples/fixtures/heytea_office_scenes.json`）：
+
+```json
+[
+  { "id": "cover", "type": "cover", "title": "汇报标题", "subtitle": "副标题可选" },
+  {
+    "id": "p1",
+    "type": "content",
+    "content_variant": "panel",
+    "title": "列举页",
+    "key_points": ["要点一", "要点二"]
+  },
+  {
+    "id": "p2",
+    "type": "content",
+    "content_variant": "stats_grid",
+    "title": "指标页",
+    "stats": [{ "value": "3.2×", "label": "增长" }, { "value": "98%", "label": "满意度" }]
+  },
+  { "id": "closing", "type": "summary" }
+]
+```
+
+```bash
+echo '{"command":"render","scenes":"./project/scenes.json","output_dir":"./project","design_mode":"heytea","format":["pdf","html"]}' | node executor.js
+```
+
+主题层只提供 **白底、品牌字体、办公字号**；版式结构与其它 13 主题共用 `_core` / `shared` 样张。字段细节见 [docs/SCENES_SCHEMA.md](docs/SCENES_SCHEMA.md) §0.8a。
 
 ### 品质清单（要「作品感」时必做）
 

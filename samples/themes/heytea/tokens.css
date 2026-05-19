@@ -1,0 +1,72 @@
+/* heytea — 喜茶办公横版模板（对照 PPT 11.26）
+ * 内置字体见 fonts.css + samples/themes/heytea/fonts/
+ * 中文：方正 FW 筑紫黑 R · 数字/英文：Heytea Sans Serif Regular
+ */
+:root {
+  --sf-font: 'FZFW ZhuZi Hei R', 'Heytea Sans Serif', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --sf-font-zh: 'FZFW ZhuZi Hei R', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --sf-font-latin: 'Heytea Sans Serif', 'PingFang SC', sans-serif;
+  --sf-body-bg: #ffffff;
+  --sf-body-gradient: #ffffff;
+  --sf-text-primary: #1d1818;
+  --sf-text-secondary: #1d1818;
+  --sf-text-muted: #6b6565;
+  --sf-text-subtitle: #4a4545;
+  --sf-accent: #1d1818;
+  --sf-accent-secondary: #1d1818;
+  --sf-accent-light: #3d3838;
+  --sf-eyebrow: #6b6565;
+  --sf-eyebrow-ring: none;
+  --sf-subtitle-lede: #4a4545;
+  --sf-page-num: rgba(29, 24, 24, 0.45);
+
+  --sf-panel-bg: transparent;
+  --sf-panel-border: none;
+  --sf-panel-border-top: none;
+  --sf-panel-border-bottom: none;
+  --sf-panel-shadow: none;
+  --sf-panel-radius: 0;
+
+  --sf-hairline: rgba(29, 24, 24, 0.12);
+  --sf-hairline-gradient: rgba(29, 24, 24, 0.12);
+
+  --sf-cover-bg: #ffffff;
+  --sf-corner-accent: none;
+  --sf-bottom-line-gradient: none;
+  --sf-accent-bar-gradient: none;
+  --sf-cover-title-glow: none;
+
+  --sf-page-bg-text: #ffffff;
+  --sf-page-bg-panel: #ffffff;
+  --sf-page-bg-number: #ffffff;
+  --sf-page-bg-stats: #ffffff;
+  --sf-page-bg-compare: #ffffff;
+  --sf-page-bg-process: #ffffff;
+  --sf-page-bg-quote: #ffffff;
+
+  --sf-kp-text: #1d1818;
+  --sf-kp-divider: rgba(29, 24, 24, 0.08);
+  --sf-kp-arrow-glow: none;
+  --sf-card-muted-border: none;
+  --sf-card-muted-bg: transparent;
+
+  --sf-visual-slot-border: 1px solid rgba(29, 24, 24, 0.12);
+  --sf-visual-slot-bg: #fafafa;
+  --sf-visual-slot-shadow: none;
+  --sf-visual-slot-grid-line-a: rgba(29, 24, 24, 0.08);
+  --sf-visual-slot-grid-line-b: rgba(29, 24, 24, 0.04);
+  --sf-visual-slot-bar: rgba(29, 24, 24, 0.06);
+  --sf-visual-slot-bar-shadow: none;
+  --sf-visual-slot-frame-border: 1px solid rgba(29, 24, 24, 0.12);
+  --sf-visual-slot-label: rgba(29, 24, 24, 0.55);
+
+  --sf-cta-pill-border: 1px solid rgba(29, 24, 24, 0.2);
+  --sf-cta-pill-bg: rgba(29, 24, 24, 0.04);
+
+  /* 办公模板字号（1920×1080 画布，对照 PPT pt×2） */
+  --sf-heytea-cover-title: 60px;
+  --sf-heytea-cover-subtitle: 32px;
+  --sf-heytea-content-title: 40px;
+  --sf-heytea-body: 32px;
+  --sf-heytea-closing-title: 48px;
+}
