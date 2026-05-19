@@ -46,6 +46,17 @@ test_icon_fix.html
 # Local walkthroughs / v4 ad-hoc test outputs (deck artifacts, not source)
 skill_walkthrough/
 v4_*/
+test_heytea/
+
+# examples/demos — only README + scenes.json are tracked; render locally
+examples/demos/*/page_*.html
+examples/demos/*/presentation*
+examples/demos/*/screenshots/
+examples/demos/*/heytea-assets/
+examples/demos/*/design_params.json
+examples/demos/*/outline.md
+examples/demos/*/script.md
+examples/demos/*/MANIFEST.md
 
 # macOS
 .DS_Store

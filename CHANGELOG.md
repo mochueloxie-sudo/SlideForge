@@ -14,6 +14,11 @@
 - **封面**：`_core` 封面 + PPT 同位固定 logo（`logo-square.png`）；**内容**：22 种 `content_variant` 全接通；**尾页**：`closing-slide.png` 整页位图（忽略 scenes 文案）。
 - **示例**：`examples/fixtures/heytea_office_scenes.json`、`examples/demos/heytea_demo/`（含 PDF/HTML）；`SKILL.md` §喜茶办公、`validate` / `_meta.json` 已登记。
 
+### 变更（仓库整理）
+
+- **演示目录**：`examples/demos/*/` 仅保留 `README.md` + `scenes.json`；HTML/PDF/截图/重复字体等生成物移出 Git，由 `.gitignore` + `npm run clean` 管理。
+- **本地**：`test_heytea/`、`output/`、`output_golden/`、`tmp_slot_test/` 等过程目录可安全删除。
+
 ---
 
 ## [4.3.1] — 2026-05-18 — wave8 等节奏（首项不再放大）

@@ -12,7 +12,7 @@
 
 [SKILL.md](SKILL.md) · [SCENES_SCHEMA](docs/SCENES_SCHEMA.md) · [CRITIQUE](docs/CRITIQUE.md) · [CLAUDE.md](CLAUDE.md) · [CHANGELOG](CHANGELOG.md)
 
-**[查看示例输出 →](examples/demos/demo-output/)** 在浏览器打开 `presentation.html`（iframe 壳 + 同目录 `page_*.html`，支持 hover / 入场动画；**勿只拷贝单个 HTML**）；纯截图单文件轮播见 `presentation_static.html`。
+**[喜茶办公演示 →](examples/demos/heytea_demo/)** 见目录内 README，本地 `render` 后打开 `presentation.pdf` / `presentation.html`。其它主题可用 `examples/fixtures/` + `design_mode` 自行渲染。
 
 ---
 

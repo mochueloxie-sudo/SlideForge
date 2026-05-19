@@ -12,7 +12,7 @@
 
 [SKILL.md](SKILL.md) · [SCENES_SCHEMA](docs/SCENES_SCHEMA.md) · [CRITIQUE](docs/CRITIQUE.md) · [CLAUDE.md](CLAUDE.md) · [CHANGELOG](CHANGELOG.md)
 
-**[View demo output →](examples/demos/demo-output/)** Open `presentation.html` (iframe shell + co-located `page_*.html`; **never ship a single HTML alone**). For single-file sharing use `presentation_static.html`.
+**[Heytea office demo →](examples/demos/heytea_demo/)** See README — run `render` locally, then open `presentation.pdf` / `presentation.html`. Other themes: `examples/fixtures/` + `design_mode`.
 
 ---
 

@@ -1,32 +1,23 @@
-# heytea 主题演示案例
+# heytea 主题演示
 
-4 页示例 deck，展示喜茶办公模板能力。
+源分镜：`scenes.json`（与 `examples/fixtures/heytea_office_scenes.json` 相同）。
 
+| 页 | 类型 | 说明 |
+|----|------|------|
+| 1 | `cover` | 标准封面 + 右上固定 logo |
+| 2 | `panel` | 要点列举 |
+| 3 | `stats_grid` | 四宫格指标 |
+| 4 | `summary` | 固定尾页 |
 
-| 页   | 类型                       | 说明                            |
-| --- | ------------------------ | ----------------------------- |
-| 1   | `cover`                  | 标准封面 + 右上固定 logo + 品牌字体       |
-| 2   | `content` · `panel`      | 要点列举                          |
-| 3   | `content` · `stats_grid` | 四宫格指标（演示可用全部变体）               |
-| 4   | `summary`                | **固定尾页**（`closing-slide.png`） |
-
-
-## 预览
+## 本地生成预览（不提交仓库）
 
 ```bash
-# 推荐：本地预览壳（键盘翻页）
-npm run preview:html -- examples/demos/heytea_demo
+cd "$(git rev-parse --show-toplevel)"
 
-# 或直接打开 PDF
-open examples/demos/heytea_demo/presentation.pdf
-
-# 单页 HTML（需同目录 heytea-assets/）
-open examples/demos/heytea_demo/page_001.html
-```
-
-## 复现
-
-```bash
 echo '{"command":"render","scenes":"./examples/demos/heytea_demo/scenes.json","output_dir":"./examples/demos/heytea_demo","design_mode":"heytea","format":["html","pdf"]}' | node executor.js
+
+open examples/demos/heytea_demo/presentation.pdf
+# 或：npm run preview:html -- examples/demos/heytea_demo
 ```
 
+生成物（`page_*.html`、`presentation.pdf`、`screenshots/`、`heytea-assets/` 等）已在 `.gitignore` 中，勿提交。
