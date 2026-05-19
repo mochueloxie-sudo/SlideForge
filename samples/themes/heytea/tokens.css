@@ -68,5 +68,8 @@
   --sf-heytea-cover-subtitle: 32px;
   --sf-heytea-content-title: 40px;
   --sf-heytea-body: 32px;
+  --sf-heytea-stat-number: 56px;
+  --sf-heytea-stat-label: 22px;
+  --sf-heytea-stat-desc: 18px;
   --sf-heytea-closing-title: 48px;
 }

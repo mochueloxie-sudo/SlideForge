@@ -1,6 +1,6 @@
 ---
 name: "slide-forge"
-description: "Agent-first 演示生成 Skill：你（宿主 Agent）自己读源材料、按 docs/SCENES_SCHEMA.md 写 scenes.json，本 Skill 把它渲染为 1920×1080 演示（HTML / PDF / video，可多选），14 套主题 + 22 变体由样张驱动（含喜茶办公 heytea 三页固定版式）。本 Skill 不依赖任何外部 LLM——scenes 与 script 全由你产出。可选工具：extract（飞书/网页/本地文件 → raw_content.txt）、validate（本地 schema 自检）。适用：你接到「把这堆材料做成 PPT」的任务，并能在用户本机执行 `node executor.js`。"
+description: "Agent-first 演示生成 Skill：你（宿主 Agent）自己读源材料、按 docs/SCENES_SCHEMA.md 写 scenes.json，本 Skill 把它渲染为 1920×1080 演示（HTML / PDF / video，可多选），14 套主题 + 22 变体由样张驱动（含喜茶办公 heytea：封面 logo + 固定尾页，页数与其它主题相同不限）。本 Skill 不依赖任何外部 LLM——scenes 与 script 全由你产出。可选工具：extract（飞书/网页/本地文件 → raw_content.txt）、validate（本地 schema 自检）。适用：你接到「把这堆材料做成 PPT」的任务，并能在用户本机执行 `node executor.js`。"
 ---
 
 # SlideForge — Agent-first Skill
@@ -150,7 +150,9 @@ echo '{"command":"extract","source":"<URL或路径>","output_dir":"./project"}' 
 
 **何时用**：用户要喜茶内部办公横版、品牌 PPT 同款、或明确说「喜茶模板 / heytea」→ `design_mode: "heytea"`（或 `project.json` → `recommended_design_mode: "heytea"`）。
 
-**版式规则**：
+**页数（常见误解）**：与其它 13 套主题 **完全相同**——`cover` + **任意多篇** `content` + `summary`，**没有 3 页 / 4 页上限**。品牌只锁定 **首页 logo** 与 **末页位图**；中间页数量、变体由你的 `scenes.json` 决定。`examples/fixtures/heytea_office_minimal_4p_scenes.json`（旧名 `heytea_office_scenes.json` 同内容）与 `examples/demos/heytea_demo/` 只是 **4 页短示例**（1 封面 + 2 内容 + 1 尾页），便于抄结构，**不是**「固定三页版式」。
+
+**品牌约束（仅首尾）**：
 
 | 页 | `scene.type` | 变体 | 说明 |
 |----|----------------|------|------|
@@ -167,7 +169,7 @@ echo '{"command":"extract","source":"<URL或路径>","output_dir":"./project"}' 
 
 渲染时复制到 `<output_dir>/heytea-assets/fonts/`，由 `fonts.css` 注入 `@font-face`。封面与内容页自动使用；**尾页为固定位图**，不走字体。
 
-**最小 scenes 示例**（抄 `examples/fixtures/heytea_office_scenes.json`）：
+**最小 scenes 示例**（短 demo；中间 `content` 可继续追加，见 fixture）：
 
 ```json
 [

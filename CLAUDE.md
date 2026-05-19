@@ -72,7 +72,7 @@ step7_publish.js     → steps/publish.js         (内部，被 deliver 调用)
 
 **浅色**：`notebook-tabs`、`paper-ink`、`pastel-geometry`、`split-pastel`、`swiss-modern`、`vintage-editorial`
 
-**品牌**：`heytea`（喜茶办公：`tokens.css` + 内置字体 + `typography.css`；封面/内容走 `_core`+`shared`；仅 `summary` 固定尾页，见 `samples/themes/heytea/`）
+**品牌**：`heytea`（喜茶办公：`tokens.css` + 内置字体 + `typography.css`；封面/内容走 `_core`+`shared`，**页数不限**；封面 logo + 仅 `summary` 固定尾页；fixture 为 4 页短示例，见 `samples/themes/heytea/`）
 
 ### 变体文件
 

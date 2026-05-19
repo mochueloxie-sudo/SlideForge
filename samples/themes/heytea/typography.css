@@ -22,7 +22,6 @@ body:not(.vp-cover):not(.vp-heytea-closing-fixed) .kp-item,
 body:not(.vp-cover):not(.vp-heytea-closing-fixed) .body-text,
 body:not(.vp-cover):not(.vp-heytea-closing-fixed) .panel-body,
 body:not(.vp-cover):not(.vp-heytea-closing-fixed) .col-body,
-body:not(.vp-cover):not(.vp-heytea-closing-fixed) .stat-label,
 body:not(.vp-cover):not(.vp-heytea-closing-fixed) .quote-body {
   font-size: var(--sf-heytea-body, 32px);
   line-height: 1.5;
@@ -32,4 +31,38 @@ body:not(.vp-cover):not(.vp-heytea-closing-fixed) .quote-body {
 body:not(.vp-cover):not(.vp-heytea-closing-fixed) .big-number,
 body:not(.vp-cover):not(.vp-heytea-closing-fixed) .stat-value {
   font-family: var(--sf-font-latin, var(--sf-font));
+}
+
+/* stats_grid / panel_stat — 数据页数字克制（压过 art_direction stat-hero / vp-vw-hero） */
+body:not(.vp-cover):not(.vp-heytea-closing-fixed).vp-vw-hero .title,
+body:not(.vp-cover):not(.vp-heytea-closing-fixed).vp-vw-hero .section-title {
+  font-size: var(--sf-heytea-content-title, 40px) !important;
+  margin-bottom: 32px !important;
+  line-height: 1 !important;
+}
+
+body:not(.vp-cover):not(.vp-heytea-closing-fixed) .stat-card .stat-number,
+body:not(.vp-cover):not(.vp-heytea-closing-fixed) .stat-number,
+body:not(.vp-cover):not(.vp-heytea-closing-fixed).vp-comp-stat-hero .stat-number,
+body:not(.vp-cover):not(.vp-heytea-closing-fixed).vp-comp-stat-hero .big-number,
+body:not(.vp-cover):not(.vp-heytea-closing-fixed).vp-vw-hero .stat-number,
+body:not(.vp-cover):not(.vp-heytea-closing-fixed).layout-hero-1 .stat-card .stat-number {
+  font-size: var(--sf-heytea-stat-number, 56px) !important;
+  font-weight: 400 !important;
+  line-height: 1.1 !important;
+  letter-spacing: 0 !important;
+  text-shadow: none !important;
+}
+
+body:not(.vp-cover):not(.vp-heytea-closing-fixed) .stat-card .stat-label {
+  font-size: var(--sf-heytea-stat-label, 22px) !important;
+  font-weight: 400 !important;
+  line-height: 1.35 !important;
+  letter-spacing: 0.5px;
+}
+
+body:not(.vp-cover):not(.vp-heytea-closing-fixed) .stat-card .stat-desc {
+  font-size: var(--sf-heytea-stat-desc, 18px) !important;
+  line-height: 1.45 !important;
+  letter-spacing: 0;
 }

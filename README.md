@@ -82,7 +82,7 @@ open ./project/presentation.html
 
 ## 设计主题
 
-14 套成品主题：**品牌** `heytea`（喜茶办公：白底 + 内置字体 + 尾页固定）+ **深色 7** + **浅色 6**。`heytea` 的封面 / 内容与其它主题共用 `_core` / `shared` 变体；仅 `summary` 为固定尾页。
+14 套成品主题：**品牌** `heytea`（喜茶办公：白底 + 内置字体 + 封面 logo + 固定尾页）+ **深色 7** + **浅色 6**。`heytea` 的封面 / 内容与其它主题共用 `_core` / `shared` 变体，**页数不限**；仅 `summary` 为固定尾页（fixture/demo 为 4 页短示例，非上限）。
 
 
 | 色系  | 主题 id               | 适用场景                            |

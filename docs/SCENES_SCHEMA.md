@@ -190,9 +190,12 @@ echo '{"command":"validate","scenes":"./project/scenes.json","strict":true}' | n
 | `examples/golden/editorial_notes_scenes.json` | 编辑长文 | `paper-ink` |
 | `examples/golden/variant_showcase_scenes.json` | shared 变体陈列 | `paper-ink` |
 | `examples/golden/tech_variants_scenes.json` | 技术叙事 + `auto` | `deep-tech-keynote` |
-| `examples/fixtures/heytea_office_scenes.json` | 喜茶办公三页固定版式 | `heytea` |
+| `examples/fixtures/heytea_office_minimal_4p_scenes.json` | 喜茶办公 **4 页短示例**（非页数上限；`heytea_office_scenes.json` 为兼容别名） | `heytea` |
 
 ### 0.8a 品牌主题 `heytea`（喜茶办公横版）
+
+> **页数**：与其它主题相同，结构为 `cover` → **任意数量** `content` → `summary`。**没有**「只能 3 页 / 4 页」限制。上表 fixture（`heytea_office_minimal_4p_scenes.json`）与 `examples/demos/heytea_demo/` 仅为演示用的短 deck；中间 `content` 可随意增减，22 种 `content_variant` 均可用。  
+> **品牌硬约束仅两处**：① 封面自动加固定 logo；② 末页 `summary` 使用固定位图（忽略文案字段）。
 
 `design_mode: "heytea"` 时 **封面 / 内容页** 与通用主题相同：走 `_core/layouts` + `shared` 的 **22 种 `content_variant`**；主题层只注入：
 
@@ -207,7 +210,7 @@ echo '{"command":"validate","scenes":"./project/scenes.json","strict":true}' | n
 
 渲染时品牌资源复制到 `<output_dir>/heytea-assets/`（含 `fonts/`、`closing-slide.png`）。
 
-推荐 deck：**`cover` → 任意 `content` 变体 → `summary`（固定）**。
+推荐 deck 骨架（页数不限）：**`cover` → 1..N 页 `content`（任意变体）→ `summary`（固定尾页）**。
 
 ### 0.9 主视觉资产（Q1-B · 可选）
 

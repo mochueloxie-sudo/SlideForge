@@ -12,7 +12,7 @@
 
 - **主题 `heytea`**：喜茶办公横版；`samples/themes/heytea/`（`tokens.css`、`fonts.css`、`typography.css`、`cover-brand.css`、内置 `fonts/`、品牌 `assets/`、固定尾页 `overrides/summary.html`）。
 - **封面**：`_core` 封面 + PPT 同位固定 logo（`logo-square.png`）；**内容**：22 种 `content_variant` 全接通；**尾页**：`closing-slide.png` 整页位图（忽略 scenes 文案）。
-- **示例**：`examples/fixtures/heytea_office_scenes.json`、`examples/demos/heytea_demo/`（含 PDF/HTML）；`SKILL.md` §喜茶办公、`validate` / `_meta.json` 已登记。
+- **示例**：`examples/fixtures/heytea_office_minimal_4p_scenes.json`（`heytea_office_scenes.json` 为别名）、`examples/demos/heytea_demo/`；`SKILL.md` §喜茶办公、`validate` / `_meta.json` 已登记。
 
 ### 变更（仓库整理）
 
@@ -56,6 +56,16 @@
 
 - **`_core` wave6** + **`shared` wave7** DOM 抛光；**10 套金标**；13 主题 token 矩阵；`QUALITY_VARIANT_RUN`；`GOLDEN_MAX_CRITIQUE_WARNINGS=0`。
 - **`design`**：`panel` + `hero_image` / `diagram` / `brand_mark` 任一 → 自动 `composition: split-visual`。
+
+---
+
+## [Unreleased]
+
+### 变更
+
+- **heytea 主题**：`stats_grid` / `panel_stat` 数据页字号克制（数字 56px、标签 22px、说明 18px），压过 `stat-hero` / `vp-vw-hero` 全局放大。
+- **示例**：`examples/demos/ai_native_heytea/`（AI Native 超级个体 · 喜茶 8 页 scenes）。
+- **文档**：`heytea` 澄清「页数不限」；fixture 重命名为 `heytea_office_minimal_4p_scenes.json`，保留 `heytea_office_scenes.json` 符号链接别名；新增 `examples/fixtures/FIXTURES.md`。
 
 ---
 

@@ -1,0 +1,158 @@
+[
+  {
+    "id": 1,
+    "type": "cover",
+    "title": "AI Native 赋能超级个体",
+    "subtitle": "信息技术中心 · 内部分享 · 2026",
+    "eyebrow": "内部分享",
+    "meta": {
+      "presenter": "信息技术中心",
+      "date": "2026"
+    }
+  },
+  {
+    "id": 2,
+    "type": "content",
+    "content_variant": "panel",
+    "visual_weight": "normal",
+    "eyebrow": "认知框架",
+    "title": "我们为什么需要 AI Native",
+    "layout_hint": "grid-2",
+    "key_points": [
+      "范式转移：AI 嵌入决策环节，而非事后求助",
+      "组织杠杆：破解餐饮行业效率瓶颈",
+      "产出跃迁：增强人，而非简单取代人",
+      "行动起点：从「会用工具」到「人机协作设计」"
+    ],
+    "key_point_descs": [
+      "工作方式从「人做完再求助 AI」变为「设计时就把 AI 算进去」",
+      "门店、供应链、会员运营等场景都缺「一个人顶一支小队」的能力",
+      "稀缺的是判断力与品味，执行成本正在快速下降",
+      "先选一条高频工作流，用 Agent 跑通闭环再扩面"
+    ]
+  },
+  {
+    "id": 3,
+    "type": "content",
+    "content_variant": "stats_grid",
+    "visual_weight": "normal",
+    "eyebrow": "效率证据",
+    "title": "AI 带来的效率变化",
+    "stats": [
+      {
+        "number": "2-5×",
+        "label": "个体产出提升",
+        "desc": "编程、文档、数据分析等通用场景"
+      },
+      {
+        "number": "70%+",
+        "label": "重复工作减少",
+        "desc": "客服排班、数据录入、巡检报表"
+      },
+      {
+        "number": "10×",
+        "label": "方案迭代速度",
+        "desc": "从周级缩短到天级的决策循环"
+      },
+      {
+        "number": "3h/天",
+        "label": "释放管理时间",
+        "desc": "把精力留给判断与协同"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "type": "content",
+    "content_variant": "compare",
+    "visual_weight": "hero",
+    "layout_hint": "equal",
+    "eyebrow": "模式对比",
+    "title": "传统团队 vs 超级个体",
+    "compare_left_title": "传统模式",
+    "compare_left_points": [
+      "多角色协作才能完成一件事",
+      "信息层层传递，损耗大",
+      "决策依赖汇报与审批链",
+      "个人能力受限于单一职能"
+    ],
+    "compare_right_title": "AI Native 超级个体",
+    "compare_right_points": [
+      "一个人 + Agent ≈ 一个小团队",
+      "信息即得，决策即做",
+      "减少沟通摩擦，加速执行",
+      "一个人跑通完整交付链路"
+    ]
+  },
+  {
+    "id": 5,
+    "type": "content",
+    "content_variant": "timeline",
+    "eyebrow": "演进路径",
+    "title": "从传统到 AI Native 的四步跃迁",
+    "layout_hint": "vertical",
+    "steps": [
+      {
+        "num": "01",
+        "label": "工具辅助",
+        "desc": "写作、翻译、搜索 — 效率小幅提升"
+      },
+      {
+        "num": "02",
+        "label": "流程嵌入",
+        "desc": "报告、代码、分析嵌入日常工作流"
+      },
+      {
+        "num": "03",
+        "label": "Agent 协作",
+        "desc": "多步骤任务自动执行，人做判断"
+      },
+      {
+        "num": "04",
+        "label": "AI Native 组织",
+        "desc": "组织设计起点即人机协作，个体具备团队级产出"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "type": "content",
+    "content_variant": "card_grid",
+    "layout_hint": "2x2",
+    "eyebrow": "能力模型",
+    "title": "超级个体的四大能力支柱",
+    "cards": [
+      {
+        "title": "领域判断力",
+        "body": "知道什么是好的、什么值得做"
+      },
+      {
+        "title": "Agent 驾驭力",
+        "body": "设计 Prompt、编排 Agent 工作流"
+      },
+      {
+        "title": "数据直觉",
+        "body": "用数据说话，让 AI 辅助分析"
+      },
+      {
+        "title": "执行闭环力",
+        "body": "从想法到交付，一个人跑完整条链路"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "type": "content",
+    "content_variant": "text",
+    "visual_weight": "breathing",
+    "composition": "title-only",
+    "eyebrow": "收束",
+    "title": "从今天开始，改一条工作流",
+    "body": "选场景 → 配 Agent → 跑通闭环 → 复制到团队"
+  },
+  {
+    "id": 8,
+    "type": "summary",
+    "title": "谢谢"
+  }
+]

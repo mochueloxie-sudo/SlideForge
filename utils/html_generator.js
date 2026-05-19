@@ -1725,7 +1725,7 @@ function generateContent(scene, tpl, designMode, pageNum, totalPages, designPara
 function generateHeyteaSummary(scene, tpl, designMode, pageNum, totalPages, designParams) {
   let html = loadTemplate('heytea', 'summary');
   if (!html) return null;
-  // 尾页为位图固定版式（closing-slide.png），忽略 scene.title / subtitle / key_points 等
+  // 尾页为固定位图（closing-slide.png），非 deck 页数限制；忽略 scene.title / subtitle / key_points 等
   html = injectQ1Head(html, designMode || 'heytea', tpl);
   return html;
 }
